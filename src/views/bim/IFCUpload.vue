@@ -17,7 +17,7 @@
                 @current-change="paginChange"></el-pagination>
         </el-row>
         <el-row type="flex" justify="start" style="margin:20px 5px">
-            <el-upload class="upload-demo" action="http://localhost:9999" 
+            <el-upload class="upload-demo" :action="this.bimServer" 
                 ref="upload"
                 :auto-upload="false"
                 :multiple="false"
@@ -62,6 +62,7 @@ export default {
 	name: "IFCUpload",
 	data() {
 		return {
+            bimServer : this.$store.state.uv.bimServer,
             curUserId:this.$store.state.uv.userId, //当前用户ID
             tableData:[],
             loading:false, //table的loading
@@ -90,10 +91,11 @@ export default {
         };
     },
 	methods: {
+        //手动提交ifc文件上传
         submitUpload() {
             this.$refs.upload.submit();
         },
-
+        //上传开始前的钩子
         onBeforeUpload(file){
             //文件格式判断
             const isIFC = (file.name.endsWith(".ifc") || file.name.endsWith(".IFC"));
@@ -120,8 +122,8 @@ export default {
             this.ifc.uploader = this.$store.state.uv.userId;
             this.$store.dispatch("ifc/addIFC",this.ifc).then(data => {
                 this.$notify({
-                    title: '上传成功',
-                    message: 'IFC文件已成功上传至BIM服务器，已加入解析任务处理队列',
+                    title: '任务通知',
+                    message: 'IFC文件上传至BIM服务器，加入解析任务处理队列。',
                     type: 'success',
                     position: 'bottom-right',
                     duration: 3000
@@ -148,6 +150,7 @@ export default {
                 this.tabelPagin(1);
             });
         },
+        //分页事件
         paginChange(curPage) {
 			this.tabelPagin(curPage);
         },
@@ -177,7 +180,27 @@ export default {
                 this.loading = false;
             })
         },
-        //初始化目录树
+        //删除ifc上传记录
+        onDeleteIfc(row){
+            
+            this.$confirm("确定删除BIM文件吗?", "提示", {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(()=>{
+                let ifcId = row.ifcId;
+                this.$store.dispatch("ifc/deleteIFC",ifcId).then(()=>{
+                    this.initIFCTabel();
+                    this.$notify({
+                        title: '消息',
+                        message: '删除成功',
+                        type: 'success',
+                        duration:3000
+                    });
+                });
+            });
+        },
+        //弹出对话框初始化目录树
         initDirTree(){
             this.$store.dispatch("ifc/getIFCDir").then(data => {
                 this.dirTree = data;
@@ -209,13 +232,6 @@ export default {
 	mounted() {
        this.initIFCTabel();
        this.initDirTree();
-        this.$notify({
-                    title: '上传成功',
-                    message: 'IFC文件已成功上传至BIM服务器，已加入解析任务处理队列',
-                    type: 'success',
-                    position: 'bottom-right',
-                    duration: 0
-                });
     },
 	beforeDestroy() {}
 };

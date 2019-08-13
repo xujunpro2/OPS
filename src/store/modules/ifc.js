@@ -30,6 +30,13 @@ const actions = {
             })
         })
     },
+    deleteIFC(context, ifcId) {
+        return new Promise((resolve,reject)=>{
+            ifcService.deleteIFC(ifcId).then(data=>{
+                resolve();
+            })
+        })
+    }
 }
 
 export default {

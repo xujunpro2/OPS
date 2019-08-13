@@ -12,7 +12,8 @@ const state = {
     rule:null,
     avatar: '', //头像
     myRouter: [], //路由,通过对动态路由定义的拷贝进行编辑
-    specail:{} //个性化设置
+    specail:{}, //个性化设置
+    bimServer:null //bim服务器地址
 }
 
 //getter 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。
@@ -33,6 +34,7 @@ const mutations = {
         state.userId = user.userId;
         state.avatar = user.avatar;
         state.rule = {ruleId:user.ruleId,ruleName:user.ruleName};
+        state.bimServer = user.bim;
     },
 
     SET_ROUTER: (state, router) => {
@@ -71,7 +73,8 @@ const actions = {
                                             username:data.username,
                                             avatar:data.avatar,
                                             ruleId:data.ruleId,
-                                            ruleName:data.ruleName});
+                                            ruleName:data.ruleName,
+                                            bim:data.bim});
                 context.commit("CREATE_ROUTER",data.routes);
                 let userId = data.userId;
                 await context.dispatch("getUserSpecail",userId);//调用同模块的另一个action，不需要加模块名称
@@ -104,7 +107,8 @@ const actions = {
                                             username:data.username,
                                             avatar:data.avatar,
                                             ruleId:data.ruleId,
-                                            ruleName:data.ruleName});
+                                            ruleName:data.ruleName,
+                                            bim:data.bim});
                 context.commit("CREATE_ROUTER",data.routes);
                 //获得用户个性化设置
                 await context.dispatch("getUserSpecail",data.userId);//调用同模块的另一个action，不需要加模块名称

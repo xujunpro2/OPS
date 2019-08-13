@@ -6,13 +6,13 @@ var IFCService = function(){
      */
     IFCService.prototype.getIFCCount = function(userId){
         
-        return request.get("ifc/ifcCount.action",{ params: {userId:userId} });
+        return request.get("ifc/count.action",{ params: {userId:userId} });
     }
     /**
      * 分页查询某个用户的ifc文件
      */
     IFCService.prototype.getIFCPage = function(userId,startIndex,rows){
-        return request.get("ifc/ifcPage.action",{ params: {userId:userId,startIndex:startIndex,rows:rows} });
+        return request.get("ifc/page.action",{ params: {userId:userId,startIndex:startIndex,rows:rows} });
     }
 
      /**
@@ -26,7 +26,14 @@ var IFCService = function(){
      * 新建一个ifc上传记录
      */
     IFCService.prototype.addIFC = function(ifc){
-        return request.post("ifc/addIfc.action",ifc);
+        return request.post("ifc/add.action",ifc);
+    }
+
+    /**
+     * 删除一个ifc上传记录
+     */
+    IFCService.prototype.deleteIFC = function(ifcId){
+        return request.get("ifc/delete.action",{params:{ifcId:ifcId}});
     }
 
 }
