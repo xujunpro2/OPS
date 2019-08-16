@@ -1,27 +1,27 @@
 <template>
 	<div class="rootDiv">
-		<el-upload class="upload-demo" drag action="http://localhost:9999" :multiple="false"
-            :on-success="onUploadSuccess">
-			<i class="el-icon-upload"></i>
-			<div class="el-upload__text">
-				将文件拖到此处，或<em>点击上传</em>
-			</div>
-		</el-upload>
+		<el-row>
+            <el-col :span="6">
+                <x-panel :bindObj="p1">
+                    <div style="height:100px;background:#e0e0e0">ddd</div>
+                </x-panel>
+            </el-col>
+		</el-row>
 	</div>
 </template>
 
 <script>
+import XPanel from "@/components/Controls/XPanel";
 export default {
-	name: "RateCreate",
+    name: "RateCreate",
+    components: { XPanel},
 	data() {
-		return {};
+		return {
+            p1:{title:"第一个面板",color:"box box-primary",height:"height:200px"}
+        };
 	},
 	methods: {
-		onUploadSuccess(response, file, fileList) {
-            //上传成功后，会返回转换任务的guid，这个是查询进度的凭证
-            let taskId = response;
-            console.info("转换任务GUID："+taskId);
-        }
+	
     },
 	mounted() {},
 	beforeDestroy() {}

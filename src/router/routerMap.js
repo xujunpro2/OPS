@@ -60,7 +60,7 @@ const dynamicRoutes = [
         {
             path: 'bim',
             name: 'Bim',
-            component: () => import('@/views/bim/index'),
+            component: () => import('@/views/bim/IFCShow'),
             meta: { title: '三维展示', icon: 'international' }
         },
         {

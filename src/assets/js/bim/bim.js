@@ -34,10 +34,7 @@ xBinaryReader.prototype.load = function (source) {
             }
             //throw exception as a warning
             if (xhr.readyState == 4 && xhr.status != 200) {
-                var msg = 'Failed to fetch binary data from server. Server code: ' + xhr.status +
-                    '. This might be due to CORS policy of your browser if you run this as a local file.';
-                if (self.onerror) self.onerror(msg);
-                throw msg;
+                if (self.onerror) self.onerror('bim file not found');
             }
         };
         xhr.responseType = 'blob';

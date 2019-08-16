@@ -19,7 +19,7 @@ var IFCService = function(){
      * ifc文件夹树
      */
     IFCService.prototype.getIFCDir = function(){
-        return request.get("ifc/tree.action");
+        return request.get("dir/ifcDirTree.action");
     }
 
     /**

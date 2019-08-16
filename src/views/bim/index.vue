@@ -29,7 +29,6 @@
 import { xViewer, xState } from "@/assets/js/bim/bim";
 import { Loading } from "element-ui";
 import viewerHelper from "@/utils/viewHelper";
-// import BimTree from "../components/bim/MeCard";
 import BimTree from "@/components/bim/BimTree";
 import Rate from "@/components/bim/Rate";
 import Quality from "@/components/bim/Quality";
