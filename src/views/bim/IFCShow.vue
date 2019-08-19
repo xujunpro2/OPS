@@ -24,6 +24,12 @@
                 <el-button type="primary"  icon="el-icon-bell" circle></el-button>    
             </el-tooltip>
         </div>
+        <!--BIM文件-->
+        <div style="clear:both"></div> 
+        <div class="bimDirDiv">
+
+        </div>
+        <!--空间结构-->
 	</div>
 </template>
 
@@ -110,7 +116,7 @@ export default {
 	},
 	mounted() {
         this.initView();
-		this.loadView('冷站.bimi');
+		//this.loadView('冷站.bimi');
 	},
 	beforeDestroy() {
 		this.unloadView();
@@ -120,6 +126,7 @@ export default {
 
 <style scoped>
 .bimDiv {
+    position: relative;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -138,5 +145,13 @@ export default {
     bottom: 10px;
     margin: 0px 0px 0px -170px;/*50%为自身尺寸的一半*/
     width: 342px;
+}
+.bimDirDiv{
+    position: absolute;
+    background: #e0e0e0; 
+    top:10px;
+    left:10px;
+    width:300px;
+    height:300px
 }
 </style>

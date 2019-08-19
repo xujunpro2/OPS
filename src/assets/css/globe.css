@@ -5,15 +5,16 @@ a {
 }
 
 b,
-strong {
+strong {    
   font-weight: 700;
 }
 
 .rootDiv {
-  width: 100%;
-  height: 100%;
-  padding: 5px;
-  overflow: auto;
+    position: relative; /*这个是rootDiv中有绝对布局的div而做的*/
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    overflow: auto;
 }
 
 /* 默认tree控件不会被包裹在div的size中，需要这样设置，并且X方向的滚动条需要下面设置.el-tree的display: inline-block; */
