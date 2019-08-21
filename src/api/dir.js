@@ -20,7 +20,18 @@ var DirService = function(){
     DirService.prototype.renameDir = function(dir){
         return request.get("dir/rename.action",{params:{dirId:dir.dirId,newName:dir.dirName}});
     }
-
+     /**
+     * IFC一级目录
+     */
+    DirService.prototype.rootIFCDirs = function(){
+        return request.get("dir/rootIFCDirs.action");
+    }
+     /**
+     * 子目录
+     */
+    DirService.prototype.childDirsAndIFCS = function(parentId){
+        return request.get("dir/childDirsAndIFCS.action",{params:{parentId:parentId}});
+    }
 }
 //单例无状态对象，直接导出
 const dirService = new DirService();

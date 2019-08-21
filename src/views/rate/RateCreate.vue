@@ -14,6 +14,7 @@ export default {
 	data() {
 		return {
             p1:{
+                visiable:true,
                 title:"第一个面板",
                 color:"box box-primary",
                 width:"300px",

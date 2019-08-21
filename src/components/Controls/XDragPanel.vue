@@ -1,14 +1,14 @@
 <template>
-	<div ref="dragPanel" :class="this.bindObj.color" :style="{width:this.bindObj.width,left:this.bindObj.left,top:this.bindObj.top,
+	<div v-if="this.bindObj.visiable" ref="dragPanel" :class="this.bindObj.color" :style="{width:this.bindObj.width,left:this.bindObj.left,top:this.bindObj.top,
             right:this.bindObj.right,bottom:this.bindObj.bottom}">
 		<div class="box-header with-border" @mousedown="onDrag">
-			<h3 class="box-title">{{this.bindObj.title}}</h3>
+			<span class="box-title">{{this.bindObj.title}}</span>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" @click="onChangeSize">
 					<i :class="sizeIcon"></i>
 				</button>
 				<button type="button" class="btn btn-box-tool">
-					<i class="el-icon-close"></i>
+					<i class="el-icon-close" @click="onClose"></i>
 				</button>
 			</div>
 		</div>
@@ -31,14 +31,15 @@ export default {
         type: Object,
         default:()=>{
           return {
-            title: "标题",
-            color:"box box-primary",
-            width:"300px",
-            height:"200px",
-            top:"150px",
-            left:"200px",
-            right:"100px",
-            botton:"10px"
+                visiable:true,
+                title: "标题",
+                color:"box box-primary",
+                width:"300px",
+                height:"200px",
+                top:"150px",
+                left:"200px",
+                right:"100px",
+                botton:"10px"
           };
         }
       }
@@ -78,6 +79,9 @@ export default {
             {
                 this.sizeIcon = 'el-icon-minus'
             }
+        },
+        onClose(){
+            this.bindObj.visiable = false;
         },
         //拖动面板
         onDrag(event){
@@ -142,7 +146,7 @@ export default {
 .box {
 	position: absolute;
 	border-radius: 3px;
-	background: #ffffff;
+	background:  rgba(255, 255, 255, 0.8);;
 	border-top: 3px solid #d2d6de;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -166,18 +170,24 @@ export default {
 	border-bottom: 1px solid #f4f4f4;
 }
 .box-header {
-	color: #444;
+    color:#303133;
 	display: block;
 	padding: 10px;
     position: relative;
     cursor:move;
+    /*以下4行设置title不可选中*/
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
 }
+
 .box-header > .fa,
 .box-header > .glyphicon,
 .box-header > .ion,
 .box-header .box-title {
 	display: inline-block;
-	font-size: 18px;
+	font-size: 14px;
 	margin: 0;
 	line-height: 1;
 }
@@ -218,10 +228,5 @@ export default {
     background: transparent;
     color: #97a0b3;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: 200px 2.0s
-}
-.fade-enter, .fade-leave-active {
-  opacity: 0px
-}
+
 </style>

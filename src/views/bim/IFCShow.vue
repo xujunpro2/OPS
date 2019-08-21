@@ -2,11 +2,11 @@
 	<div class="bimDiv">
 		<canvas id="bim"></canvas>
         <div class="toolbarDiv">
-            <el-tooltip class="item" effect="dark" content="BIM文件" placement="top-start">
-                <el-button type="primary"  icon="el-icon-folder-opened" circle></el-button>    
+            <el-tooltip class="item" effect="dark" content="三维模型" placement="top-start">
+                <el-button type="primary"  icon="el-icon-folder-opened" circle @click="showBimFilesPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="空间结构" placement="top-start">
-                <el-button type="primary"  icon="el-icon-office-building" circle></el-button>    
+                <el-button type="primary"  icon="el-icon-office-building" circle @click="showSpatialPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="构件属性" placement="top-start">
                 <el-button type="primary"  icon="el-icon-setting" circle></el-button>    
@@ -20,16 +20,17 @@
             <el-tooltip class="item" effect="dark" content="质量隐患" placement="top-start">
                 <el-button type="primary"  icon="el-icon-view" circle></el-button>    
             </el-tooltip>
-             <el-tooltip class="item" effect="dark" content="安全隐患" placement="top-start">
+            <el-tooltip class="item" effect="dark" content="安全隐患" placement="top-start">
                 <el-button type="primary"  icon="el-icon-bell" circle></el-button>    
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="设为默认模型" placement="top-start">
+                <el-button type="primary"  icon="el-icon-s-home" circle @click="setDefaultBim"></el-button>    
             </el-tooltip>
         </div>
         <!--BIM文件-->
-        <div style="clear:both"></div> 
-        <div class="bimDirDiv">
-
-        </div>
+        <bim-files ref="bimFilesPanel" @bimFileChange="onBimFileChange"></bim-files>
         <!--空间结构-->
+        <spatial-tree ref="spatialPanel"></spatial-tree>
 	</div>
 </template>
 
@@ -37,17 +38,19 @@
 import { xViewer, xState } from "@/assets/js/bim/bim";
 import { Loading } from "element-ui";
 import viewerHelper from "@/utils/viewHelper";
+import BimFiles from "@/components/bim/BimFiles";
+import SpatialTree from "@/components/bim/SpatialTree";
 
 export default {
 	name: "Bim",
-	components: {},
+	components: {BimFiles,SpatialTree},
 	data() {
 		return {
-			jsonFile: "qiandaohu.json",
-			xRay: false,
+            curTaskId:this.$store.state.uv.specail.defaultBim,
             bimId: -1,
             loadingInstance:null,
-			bimLoaded: false
+            bimLoaded: false,
+            spatialFile:''
 		};
 	},
 	methods: {
@@ -57,7 +60,7 @@ export default {
             viewer.on("error",error=>{
                 if(error.message === 'bim file not found')
                 {
-                    this.$message.error('BIM文件不存在，请检查BIM服务器上的文件仓库中是否存在该文件!');
+                    this.$message.error('无法访问模型，请检查与BIM服务器的网络连接,以及BIM文件仓库中是否存在该模型!');
                     this.loadingInstance.close();
                 }
                 else
@@ -74,7 +77,9 @@ export default {
 				// 	-80231.4375,
 				// 	90642.9296875
 				// ]);
-				viewer.start();
+                viewer.start();
+                //加载结构、属性等文件
+                this.$refs.spatialPanel.loadIFCData(this.spatialFile);
 			});
 
 			viewer.on("dblclick", args => {
@@ -83,25 +88,35 @@ export default {
 					viewer.resetStates();
 					viewer.zoomTo(id);
 					viewer.setCameraTarget(id);
-					//viewer.setState(xState.HIGHLIGHTED, [id]);
+					viewer.setState(xState.HIGHLIGHTED, [id]);
 				}
-			});
+            });
+            
+            viewer.on("pick",args=>{
+                var id = args.id;
+				if (id) {
+					viewer.resetStates();
+					viewer.setState(xState.HIGHLIGHTED, [id]);
+				}
+            })
         },
 		loadView(fileName) {
+            let bimiFile = fileName+".bimi";
+            this.spatialFile =fileName+".tree.json";
+           
             this.unloadView();
 			this.loadingInstance = Loading.service({
 				target: ".bimDiv",
-				text: "正在加载BIM"
+				text: "正在加载三维模型"
             });
-            let url = this.$store.state.uv.bimServer+"/?action=getFile&fileName="+fileName;
-            let encodeUrl = encodeURI(url);//预防中文
+            //预防中文，但发现C#还是有几率出现最后一个字乱码，所以现在bimi文件都是taskId当文件名
+            let url = this.$store.state.uv.bimServer+"/?action=getFile&fileName="+encodeURI(bimiFile);
             let viewer = viewerHelper.getViewer();
             if(viewer)
             {
-                viewer.load(encodeUrl);
+                viewer.load(url);
             }
         },
-        
         unloadView(){
             if (this.bimId != -1) 
             {
@@ -112,14 +127,62 @@ export default {
                     viewer.unload(this.bimId);
                 }
 		    }
+        },
+        //切换bim文件
+        onBimFileChange(arg){
+            let taskId = arg.taskId;
+            //bim不一样才加载
+            if(taskId !== this.curTaskId)
+            {
+                this.loadView(taskId);
+                this.curTaskId = taskId;
+            }
+        },
+        //显示bim文件面板
+        showBimFilesPanel(){
+            this.$refs.bimFilesPanel.showPanel();
+        },
+        //显示结构树面板
+        showSpatialPanel(){
+            this.$refs.spatialPanel.showPanel();
+        },
+        //设置默认模型
+        setDefaultBim(){
+            if(this.curTaskId && this.curTaskId !== "")
+            {
+                this.$confirm("确定设置当前模型为默认模型吗?", "提示", {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then(()=>{
+                    let specailObj = {defaultBim:this.curTaskId};
+                    this.$store.dispatch("uv/setUserSpecail",specailObj).then(()=>{
+                        this.$notify({
+                            title: '消息',
+                            message: '默认模型设置成功。',
+                            type: 'success',
+                            duration:3000
+                        });
+                    })
+                })
+            }
         }
 	},
 	mounted() {
         this.initView();
-		//this.loadView('冷站.bimi');
+        //如果设置了默认bim
+        if(this.curTaskId && this.curTaskId !=="")
+        {
+            this.loadView(this.curTaskId);
+        }
+        document.oncontextmenu = function() {
+            return false;
+        };
 	},
 	beforeDestroy() {
-		this.unloadView();
+        this.unloadView();
+         document.oncontextmenu = function() {
+            return true;
+        };
 	}
 };
 </script>
@@ -140,18 +203,11 @@ export default {
 }
 .toolbarDiv {
 	position: absolute;
-    /* background: #e0e0e0; */
+    /* background: #ffffff; */
     left:50%;
     bottom: 10px;
-    margin: 0px 0px 0px -170px;/*50%为自身尺寸的一半*/
-    width: 342px;
+    margin: 0px 0px 0px -200px;/*50%为自身尺寸的一半*/
+    width: 400px;
 }
-.bimDirDiv{
-    position: absolute;
-    background: #e0e0e0; 
-    top:10px;
-    left:10px;
-    width:300px;
-    height:300px
-}
+
 </style>

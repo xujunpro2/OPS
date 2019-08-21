@@ -22,7 +22,21 @@ const actions = {
                 resolve();
             })
         })
-    }
+    },
+    rootIFCDirs(context){
+        return new Promise((resolve,reject)=>{
+            dirService.rootIFCDirs().then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    childDirsAndIFCS(context,parentId){
+        return new Promise((resolve,reject)=>{
+            dirService.childDirsAndIFCS(parentId).then(data=>{
+                resolve(data);
+            })
+        })
+    },
 }
 
 export default {

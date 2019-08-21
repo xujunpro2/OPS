@@ -203,7 +203,7 @@ export default {
                     
                     item.uploadTimeFmt = parseTime(item.uploadTime);
                     item.taskState === 0?item.taskStateDesc='等待处理':item.taskStateDesc='解析完成';
-                    item.taskState === 0?item.taskStateIcon='el-icon-time':item.taskStateIcon='el-icon-circle-check';
+                    item.taskState === 0?item.taskStateIcon='el-icon-loading':item.taskStateIcon='el-icon-circle-check';
                 });
                 this.loading = false;
             })
@@ -217,6 +217,7 @@ export default {
                 type: 'warning'
             }).then(()=>{
                 let ifcId = row.ifcId;
+                //删除数据库记录
                 this.$store.dispatch("ifc/deleteIFC",ifcId).then(()=>{
                     this.initIFCTabel();
                     this.$notify({
@@ -226,6 +227,12 @@ export default {
                         duration:3000
                     });
                 });
+                //删除bim服务器上文件，这个不要求一定成功
+                let ifcPath = row.ifcPath;
+                let taskId = row.taskId;
+                bimAxios.get("/",{ params: {action:"deleteFile",taskId:taskId,ifcPath:ifcPath} }).then(data=>{
+
+                })
             });
         },
         //弹出对话框初始化目录树

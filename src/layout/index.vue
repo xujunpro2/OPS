@@ -48,9 +48,7 @@ export default {
     }
   },
   mounted() {
-    document.oncontextmenu = function() {
-      return false;
-    };
+    
   }
 }
 </script>

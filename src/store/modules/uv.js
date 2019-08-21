@@ -44,7 +44,7 @@ const mutations = {
     SET_SPECAIL:(state,specailList) =>{
         let temp = {};
         specailList.forEach(item => {
-            temp[item.specialName] = item.specailValue
+            temp[item.specailName] = item.specailValue
         });
         state.specail = temp;
     },

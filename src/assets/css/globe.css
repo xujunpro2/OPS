@@ -58,7 +58,7 @@ strong {
 #bimTree .el-tree-node:focus>.el-tree-node__content {
   /* background-color: #545c64; */
   background: transparent;
-  color: #ffd04b;
+  color: #409EFF;
 }
 
 /*以下两个css，都是padding大了一点，空间不够了，通常是不需要改的*/

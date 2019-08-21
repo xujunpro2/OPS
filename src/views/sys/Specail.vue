@@ -28,7 +28,7 @@ export default {
   data() {
     return {
         specailForm: {
-            pageSize: this.$store.state.uv.specail.pageSize
+            pageSize: Number(this.$store.state.uv.specail.pageSize)
         },
         specailRules:{
             pageSize:[

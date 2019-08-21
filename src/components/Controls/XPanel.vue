@@ -1,13 +1,13 @@
 <template>
 	<div :class="this.bindObj.color">
 		<div class="box-header with-border">
-			<h3 class="box-title">{{this.bindObj.title}}</h3>
+			<span class="box-title">{{this.bindObj.title}}</span>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" @click="onChangeSize">
 					<i :class="sizeIcon"></i>
 				</button>
 				<button type="button" class="btn btn-box-tool">
-					<i class="el-icon-close"></i>
+					<i class="el-icon-close" @click="onClose"></i>
 				</button>
 			</div>
 		</div>
@@ -31,6 +31,7 @@ export default {
         type: Object,
         default:()=>{
           return {
+            visiable:true,
             title: "标题",
             color:"box box-primary",
             height:"height:200px"
@@ -56,6 +57,9 @@ export default {
             {
                 this.sizeIcon = 'el-icon-minus'
             }
+        },
+        onClose(){
+            this.bindObj.visiable = false;
         }
     },
 
@@ -91,17 +95,22 @@ export default {
 	border-bottom: 1px solid #f4f4f4;
 }
 .box-header {
-	color: #444;
+	color:#303133;
 	display: block;
 	padding: 10px;
-	position: relative;
+    position: relative;
+    /*以下4行设置title不可选中*/
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
 }
 .box-header > .fa,
 .box-header > .glyphicon,
 .box-header > .ion,
 .box-header .box-title {
 	display: inline-block;
-	font-size: 18px;
+	font-size: 14px;
 	margin: 0;
 	line-height: 1;
 }

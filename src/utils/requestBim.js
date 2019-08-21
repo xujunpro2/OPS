@@ -18,30 +18,6 @@ bimAxios.interceptors.response.use(
         return jsonData;
     },
     error => {
-        if (error.response && error.response.status !== 401) 
-        {
-            const res = error.response.data
-            let message = error.message
-            if (res.responseStatus && res.responseStatus.message) 
-            {
-                message = res.responseStatus.message
-            }
-            Message({
-                message: message,
-                type: 'error',
-                showClose: true,
-                duration: 5 * 1000
-            })
-        }
-        else
-        {
-            Message({
-                message: "与BIM服务器的网络中断",
-                type: 'error',
-                showClose: true,
-                duration: 5 * 1000
-            })
-        }
         return Promise.reject(error)
     })
 
