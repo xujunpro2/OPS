@@ -1,0 +1,8 @@
+FlashPlugin:
+            var ids = [42582];
+            let flashPlugin = viewerHelper.getViewer().getPlugin("flash");
+        	flashPlugin.addProds(ids);
+        	
+        	setTimeout(function(){
+        		flashPlugin.removeProds([42582]);
+        	},4000);

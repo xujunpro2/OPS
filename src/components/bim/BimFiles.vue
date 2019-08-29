@@ -39,12 +39,9 @@ export default {
 				isLeaf: "isLeaf"
 			}
 		};
-	},
+    },
+
 	methods: {
-		//显示面板
-		showPanel() {
-			this.panel.visiable = true;
-		},
 		//Tree的load绑定
 		loadNode(node, resolve) {
 			//root目录

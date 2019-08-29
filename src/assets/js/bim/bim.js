@@ -1253,6 +1253,12 @@ function xViewer(canvas, preserveDrawingBuffer) {
     */
     this.renderingMode = 'normal';
 
+     /**
+    * When focusing on an entity, this method will reduce the zoom distance relational to the size of the model.
+    * @member {Number} xViewer#autoZoomRelationalDistance
+    */
+    this.autoZoomRelationalDistance = 0;
+
     /** 
     * Clipping plane [a, b, c, d] defined as normal equation of the plane ax + by + cz + d = 0. [0,0,0,0] is for no clipping plane.
     * @member {Number[]} xViewer#clippingPlane
@@ -1340,6 +1346,8 @@ function xViewer(canvas, preserveDrawingBuffer) {
 
     //Navigation settings - coordinates in the WCS of the origin used for orbiting and panning
     this._origin = [0, 0, 0]
+    //Default distance when the model first loads, used to get idea of model size
+    this._baseDistance = 0;
     //Default distance for default views (top, bottom, left, right, front, back)
     this._distance = 0;
     //shader program used for rendering
@@ -1520,10 +1528,9 @@ xViewer.prototype.setState = function (state, target) {
 xViewer.prototype.getState = function (id) {
     var state = null;
     this._handles.forEach(function (handle) {
-        state = handle.getState(id);
-        if (state !== null) {
-            return;
-        }
+        if (state == null) {
+	        state = handle.getState(id);
+	    }
     }, this);
     return state;
 };
@@ -1614,11 +1621,11 @@ xViewer.prototype.setStyle = function (style, target) {
 * @param {Number} id - Id of the product. You would typically get the id from {@link xViewer#event:pick pick event} or similar event.
 */
 xViewer.prototype.getStyle = function (id) {
+    var style = null;
     this._handles.forEach(function (handle) {
-        var style = handle.getStyle(id);
-        if (style !== null) {
-            return style;
-        }
+        if (style == null) {
+	        style = handle.getStyle(id);
+	    }
     }, this);
     return null;
 };
@@ -1660,7 +1667,29 @@ xViewer.prototype.setCameraPosition = function (coordinates) {
     if (typeof (coordinates) == 'undefined') throw 'Parameter coordinates must be defined';
     mat4.lookAt(this._mvMatrix, coordinates, this._origin, [0,0,1]);
 }
-
+/**
+ * 获得构件的三维中心点
+ * */
+xViewer.prototype.getProdOrigin = function(prodId)
+{
+    var bbox = null;
+    this._handles.every(function(handle)
+    {
+        var map = handle.getProductMap(prodId);
+        if(map)
+        {
+            bbox = map.bBox;
+            return false;
+        }
+        return true;
+    });
+    if(bbox)
+    {
+        var prodOrigin = [bbox[0] + bbox[3] / 2.0, bbox[1] + bbox[4] / 2.0, bbox[2] + bbox[5] / 2.0];
+        return prodOrigin;
+    }
+    return null;
+}
 /**
 * This method sets navigation origin to the centroid of specified product's bounding box or to the centre of model if no product ID is specified.
 * This method doesn't affect the view itself but it has an impact on navigation. Navigation origin is used as a centre for orbiting and it is used
@@ -1675,7 +1704,9 @@ xViewer.prototype.setCameraTarget = function (prodId) {
     var setDistance = function (bBox) {
         var size = Math.max(bBox[3], bBox[4], bBox[5]);
         var ratio = Math.max(viewer._width, viewer._height) / Math.min(viewer._width, viewer._height);
-        viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.0;
+        //viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.0;
+        viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.2;
+        if(viewer._baseDistance) viewer._distance += viewer._baseDistance * viewer.autoZoomRelationalDistance;
     }
 
     //set navigation origin and default distance to the product BBox
@@ -1707,6 +1738,7 @@ xViewer.prototype.setCameraTarget = function (prodId) {
             if (region) {
                 this._origin = [region.centre[0], region.centre[1], region.centre[2]]
                 setDistance(region.bbox);
+                if(!viewer._baseDistance) viewer._baseDistance = viewer._distance;
             }
         }
         return true;
@@ -1736,9 +1768,9 @@ xViewer.prototype.set = function (settings) {
 * @fires xViewer#loaded
 */
 xViewer.prototype.load = function (model, tag) {
-    if (typeof (model) == 'undefined') throw 'You have to specify model to load.';
+    if (typeof (model) == 'undefined') throw '缺少必须的模型文件对象.';
     if (typeof(model) != 'string' && !(model instanceof Blob) && !(model instanceof File))
-        throw 'Model has to be specified either as a URL to wexBIM file or Blob object representing the wexBIM file.';
+        throw '模型文件错误.';
     var viewer = this;
 
     var geometry = new xModelGeometry();
@@ -1803,8 +1835,16 @@ xViewer.prototype._addHandle = function (geometry, tag) {
      * @param {Any} tag - tag which was passed to 'xViewer.load()' function
      * 
     */
-    viewer._fire('loaded', { id: handle.id, tag: tag })
+    var eventData = { id: handle.id, tag: tag };
+    viewer._fire('loaded', eventData);
     viewer._geometryLoaded = true;
+    //XUJUN 插件回调
+    viewer._plugins.forEach(function(plugin){
+        if(plugin.onLoaded)
+        {
+            plugin.onLoaded(eventData);
+        }
+    });
 };
 
 /**
@@ -1906,6 +1946,68 @@ xViewer.prototype._initAttributesAndUniforms = function () {
     gl.enableVertexAttribArray(this._pointers.transformationAttrPointer);
 };
 
+//XUJUN:暴露navigate方法
+xViewer.prototype.navigate = function(type, deltaX, deltaY) {
+    let viewer = this;
+    if(!viewer._handles || !viewer._handles[0]) return;
+    //translation in WCS is position from [0, 0, 0]
+    var origin = viewer._origin;
+    var camera = viewer.getCameraPosition();
+
+    //get origin coordinates in view space
+    var mvOrigin = vec3.transformMat4(vec3.create(), origin, viewer._mvMatrix)
+
+    //movement factor needs to be dependant on the distance but one meter is a minimum so that movement wouldn't stop when camera is in 0 distance from navigation origin
+    var distanceVec = vec3.subtract(vec3.create(), origin, camera);
+    var distance = Math.max(vec3.length(distanceVec), viewer._handles[0]._model.meter);
+
+    //move to the navigation origin in view space
+    var transform = mat4.translate(mat4.create(), mat4.create(), mvOrigin)
+
+    //function for conversion from degrees to radians
+    function degToRad(deg) {
+        return deg * Math.PI / 180.0;
+    }
+
+    switch (type) {
+        case 'free-orbit':
+            transform = mat4.rotate(mat4.create(), transform, degToRad(deltaY / 4), [1, 0, 0]);
+            transform = mat4.rotate(mat4.create(), transform, degToRad(deltaX / 4), [0, 1, 0]);
+            break;
+
+        case 'fixed-orbit':
+        case 'orbit':
+            mat4.rotate(transform, transform, degToRad(deltaY / 4), [1, 0, 0]);
+
+            //z rotation around model z axis
+            var mvZ = vec3.transformMat3(vec3.create(), [0, 0, 1], mat3.fromMat4(mat3.create(), viewer._mvMatrix));
+            mvZ = vec3.normalize(vec3.create(), mvZ);
+            transform = mat4.rotate(mat4.create(), transform, degToRad(deltaX / 4), mvZ);
+
+            break;
+
+        case 'pan':
+            mat4.translate(transform, transform, [deltaX * distance / 150, 0, 0]);
+            mat4.translate(transform, transform, [0, (-1.0 * deltaY) * distance / 150, 0]);
+            break;
+
+        case 'zoom':
+            mat4.translate(transform, transform, [0, 0, deltaX * distance / 20]);
+            mat4.translate(transform, transform, [0, 0, deltaY * distance / 20]);
+            break;
+
+        default:
+            break;
+    }
+
+    //reverse the translation in view space and leave only navigation changes
+    var translation = vec3.negate(vec3.create(), mvOrigin);
+    transform = mat4.translate(mat4.create(), transform, translation);
+
+    //apply transformation in right order
+    viewer._mvMatrix = mat4.multiply(mat4.create(), transform, viewer._mvMatrix);
+}
+
 xViewer.prototype._initMouseEvents = function () {
     var viewer = this;
 
@@ -1917,6 +2019,7 @@ xViewer.prototype._initMouseEvents = function () {
     var button = 'L';
     var id = -1;
 
+    var self = this;
     //set initial conditions so that different gestures can be identified
     function handleMouseDown(event) {
         mouseDown = true;
@@ -1998,7 +2101,7 @@ xViewer.prototype._initMouseEvents = function () {
         viewer._enableTextSelection();
     }
 
-		//XUJUN : 这里是鼠标操作,我改成左键移动，右键旋转
+	//XUJUN : 这里是鼠标操作,我改成左键移动，右键旋转
     function handleMouseMove(event) {
         if (!mouseDown) {
             return;
@@ -2020,20 +2123,20 @@ xViewer.prototype._initMouseEvents = function () {
         if (button == 'right') {
             switch (viewer.navigationMode) {
                 case 'free-orbit':
-                    navigate('free-orbit', deltaX, deltaY);
+                    self.navigate('free-orbit', deltaX, deltaY);
                     break;
 
                 case 'fixed-orbit':
                 case 'orbit':
-                    navigate('orbit', deltaX, deltaY);
+                    self.navigate('orbit', deltaX, deltaY);
                     break;
 
                 case 'pan':
-                    navigate('pan', deltaX, deltaY);
+                    self.navigate('pan', deltaX, deltaY);
                     break;
 
                 case 'zoom':
-                    navigate('zoom', deltaX, deltaY);
+                    self.navigate('zoom', deltaX, deltaY);
                     break;
 
                 default:
@@ -2043,7 +2146,7 @@ xViewer.prototype._initMouseEvents = function () {
         }
         if (button == 'left') { 
         	//XUJUN 修改*0.2 降低pan速度，体验更好
-            navigate('pan', deltaX*0.2, deltaY*0.2);
+            self.navigate('pan', deltaX*0.2, deltaY*0.2);
         }
 
     }
@@ -2066,68 +2169,68 @@ xViewer.prototype._initMouseEvents = function () {
         }
 
         //deltaX and deltaY have very different values in different web browsers so fixed value is used for constant functionality.
-        navigate('zoom', 0, sign(event.deltaY) * -1.0);
+        self.navigate('zoom', 0, sign(event.deltaY) * -1.0);
     }
 
-    function navigate(type, deltaX, deltaY) {
-        if(!viewer._handles || !viewer._handles[0]) return;
-        //translation in WCS is position from [0, 0, 0]
-        var origin = viewer._origin;
-        var camera = viewer.getCameraPosition();
+    // function navigate(type, deltaX, deltaY) {
+    //     if(!viewer._handles || !viewer._handles[0]) return;
+    //     //translation in WCS is position from [0, 0, 0]
+    //     var origin = viewer._origin;
+    //     var camera = viewer.getCameraPosition();
 
-        //get origin coordinates in view space
-        var mvOrigin = vec3.transformMat4(vec3.create(), origin, viewer._mvMatrix)
+    //     //get origin coordinates in view space
+    //     var mvOrigin = vec3.transformMat4(vec3.create(), origin, viewer._mvMatrix)
 
-        //movement factor needs to be dependant on the distance but one meter is a minimum so that movement wouldn't stop when camera is in 0 distance from navigation origin
-        var distanceVec = vec3.subtract(vec3.create(), origin, camera);
-        var distance = Math.max(vec3.length(distanceVec), viewer._handles[0]._model.meter);
+    //     //movement factor needs to be dependant on the distance but one meter is a minimum so that movement wouldn't stop when camera is in 0 distance from navigation origin
+    //     var distanceVec = vec3.subtract(vec3.create(), origin, camera);
+    //     var distance = Math.max(vec3.length(distanceVec), viewer._handles[0]._model.meter);
 
-        //move to the navigation origin in view space
-        var transform = mat4.translate(mat4.create(), mat4.create(), mvOrigin)
+    //     //move to the navigation origin in view space
+    //     var transform = mat4.translate(mat4.create(), mat4.create(), mvOrigin)
 
-        //function for conversion from degrees to radians
-        function degToRad(deg) {
-            return deg * Math.PI / 180.0;
-        }
+    //     //function for conversion from degrees to radians
+    //     function degToRad(deg) {
+    //         return deg * Math.PI / 180.0;
+    //     }
 
-        switch (type) {
-            case 'free-orbit':
-                transform = mat4.rotate(mat4.create(), transform, degToRad(deltaY / 4), [1, 0, 0]);
-                transform = mat4.rotate(mat4.create(), transform, degToRad(deltaX / 4), [0, 1, 0]);
-                break;
+    //     switch (type) {
+    //         case 'free-orbit':
+    //             transform = mat4.rotate(mat4.create(), transform, degToRad(deltaY / 4), [1, 0, 0]);
+    //             transform = mat4.rotate(mat4.create(), transform, degToRad(deltaX / 4), [0, 1, 0]);
+    //             break;
 
-            case 'fixed-orbit':
-            case 'orbit':
-                mat4.rotate(transform, transform, degToRad(deltaY / 4), [1, 0, 0]);
+    //         case 'fixed-orbit':
+    //         case 'orbit':
+    //             mat4.rotate(transform, transform, degToRad(deltaY / 4), [1, 0, 0]);
 
-                //z rotation around model z axis
-                var mvZ = vec3.transformMat3(vec3.create(), [0, 0, 1], mat3.fromMat4(mat3.create(), viewer._mvMatrix));
-                mvZ = vec3.normalize(vec3.create(), mvZ);
-                transform = mat4.rotate(mat4.create(), transform, degToRad(deltaX / 4), mvZ);
+    //             //z rotation around model z axis
+    //             var mvZ = vec3.transformMat3(vec3.create(), [0, 0, 1], mat3.fromMat4(mat3.create(), viewer._mvMatrix));
+    //             mvZ = vec3.normalize(vec3.create(), mvZ);
+    //             transform = mat4.rotate(mat4.create(), transform, degToRad(deltaX / 4), mvZ);
 
-                break;
+    //             break;
 
-            case 'pan':
-                mat4.translate(transform, transform, [deltaX * distance / 150, 0, 0]);
-                mat4.translate(transform, transform, [0, (-1.0 * deltaY) * distance / 150, 0]);
-                break;
+    //         case 'pan':
+    //             mat4.translate(transform, transform, [deltaX * distance / 150, 0, 0]);
+    //             mat4.translate(transform, transform, [0, (-1.0 * deltaY) * distance / 150, 0]);
+    //             break;
 
-            case 'zoom':
-                mat4.translate(transform, transform, [0, 0, deltaX * distance / 20]);
-                mat4.translate(transform, transform, [0, 0, deltaY * distance / 20]);
-                break;
+    //         case 'zoom':
+    //             mat4.translate(transform, transform, [0, 0, deltaX * distance / 20]);
+    //             mat4.translate(transform, transform, [0, 0, deltaY * distance / 20]);
+    //             break;
 
-            default:
-                break;
-        }
+    //         default:
+    //             break;
+    //     }
 
-        //reverse the translation in view space and leave only navigation changes
-        var translation = vec3.negate(vec3.create(), mvOrigin);
-        transform = mat4.translate(mat4.create(), transform, translation);
+    //    //reverse the translation in view space and leave only navigation changes
+    //     var translation = vec3.negate(vec3.create(), mvOrigin);
+    //     transform = mat4.translate(mat4.create(), transform, translation);
 
-        //apply transformation in right order
-        viewer._mvMatrix = mat4.multiply(mat4.create(), transform, viewer._mvMatrix);
-    }
+    //     //apply transformation in right order
+    //     viewer._mvMatrix = mat4.multiply(mat4.create(), transform, viewer._mvMatrix);
+    // }
 
     //监视canvas的resize事件，每隔500ms捕捉
     var elementHeight = viewer.height;
@@ -2303,16 +2406,67 @@ xViewer.prototype._isChanged = function () {
 * @function xViewer#getCameraPosition
 */
 xViewer.prototype.getCameraPosition = function () {
-    var transform = mat4.create();
-    mat4.multiply(transform, this._pMatrix, this._mvMatrix);
-    var inv = mat4.create()
-    mat4.invert(inv, transform);
-    var eye = vec3.create();
-    vec3.transformMat4(eye, vec3.create(), inv);
+    // var transform = mat4.create();
+    // mat4.multiply(transform, this._pMatrix, this._mvMatrix);
+    // var inv = mat4.create()
+    // mat4.invert(inv, transform);
+    // var eye = vec3.create();
+    // vec3.transformMat4(eye, vec3.create(), inv);
 
-    return eye;
+    // return eye;
+    var eye = vec3.create();
+	return vec3.transformMat4(eye, eye, mat4.invert(mat4.create(), this._mvMatrix));
+}
+//XUJUN 世界坐标转浏览器body坐标
+xViewer.prototype.wcsToScreen = function(postion)
+{
+    var viewCoord = this.wcsToView(postion);
+    let canvasLeft = this.getElementLeft(this._canvas);
+    let canvasTop = this.getElementTop(this._canvas);
+    viewCoord[0] = viewCoord[0]+canvasLeft;
+    viewCoord[1] = viewCoord[1]+canvasTop;
+    return viewCoord;
+}
+xViewer.prototype.getElementTop = function(element) {
+    var actualTop = element.offsetTop,
+        current = element.offsetParent;
+    while (current !== null) {
+        actualTop += current.offsetTop;
+        current = current.offsetParent;
+    }
+    return actualTop;
 }
 
+xViewer.prototype.getElementLeft = function(element) {
+    var actualLeft = element.offsetLeft,
+        current = element.offsetParent;
+    while (current !== null) {
+        actualLeft += current.offsetLeft;
+        current = current.offsetParent;
+    }
+    return actualLeft;
+}
+//XUJUN 世界坐标转控件坐标
+xViewer.prototype.wcsToView = function(postion)
+{
+	var glCoord = this.wcsToGL(postion);
+    var x = glCoord[0];
+    var y = glCoord[1];
+    var viewX = (x+1) * (this._width /2.0);
+	//控件Y坐标要取反，webgl坐标顶部是1	
+    var viewY = -((y-1) * (this._height / 2.0));
+    return [viewX,viewY];
+}
+
+//XUJUN 世界坐标转GL坐标
+xViewer.prototype.wcsToGL = function(postion)
+{
+		var transform = mat4.create();
+    mat4.multiply(transform, this._pMatrix, this._mvMatrix);
+    var glCoord = vec3.create();
+    vec3.transformMat4(glCoord, postion, transform);
+    return glCoord;
+}
 /**
 * Use this method to zoom to specified element. If you don't specify a product ID it will zoom to full extent.
 * @function xViewer#zoomTo
@@ -2901,6 +3055,18 @@ xViewer.prototype.unclip = function () {
       */
     this._fire('unclipped', {});
 };
+
+xViewer.prototype.getPlugin = function(name){
+    let find = null;
+    this._plugins.forEach(plugin => {
+        if(plugin.name &&  plugin.name == name)
+        {
+            find = plugin;
+            return false;
+        }
+    });
+    return find;
+}
 /*
  * Copyright 2010, Google Inc.
  * All rights reserved.

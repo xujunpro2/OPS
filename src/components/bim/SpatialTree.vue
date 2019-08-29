@@ -47,10 +47,6 @@ export default {
 		};
 	},
 	methods: {
-         //显示面板
-        showPanel(){
-            this.panel.visiable = true;
-        },
 		loadIFCData(spatialFile) {
 			if (spatialFile != null && spatialFile !== "") {
                 bimAxios.get("/",{ params: {action:"getFile",fileName:spatialFile} }).then(data=>{

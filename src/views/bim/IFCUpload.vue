@@ -11,7 +11,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="uploadTimeFmt" label="上传时间"></el-table-column>
-            <el-table-column prop="ruleId" label="操作" width="230">
+            <el-table-column prop="ruleId" label="操作" width="100">
                 <template slot-scope="scope">
                 <el-button @click="onDeleteIfc(scope.row)" type="text" size="small"><span  id="deleteButton">删除</span></el-button>
                 </template>
@@ -21,16 +21,16 @@
             <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
                 @current-change="paginChange"></el-pagination>
         </el-row>
-        <el-row type="flex" justify="start" style="margin:20px 5px">
+        <el-row type="flex" justify="start">
             <el-upload class="upload-demo" :action="this.bimServer" 
                 ref="upload"
                 :auto-upload="false"
                 :multiple="false"
+                :on-change="onFileChange"
                 :before-upload="onBeforeUpload"
                 :on-success="onUploadSuccess">
-                <el-button size="small" style="margin-left: 10px;" @click="onBtnDirClick">{{this.ifc.dirName}}</el-button>
-                <el-button slot="trigger" size="small">选择IFC文件</el-button>
-                <el-button size="small" type="primary" icon="el-icon-upload" @click="submitUpload" :disabled="this.startTask">开始上传</el-button>
+                <!-- <el-button size="small" style="margin-left: 10px;" @click="onBtnDirClick">{{this.ifc.dirName}}</el-button> -->
+                <el-button slot="trigger" type="primary" icon="el-icon-upload" size="small">上传我的文件</el-button>
 		    </el-upload>
         </el-row>
         <!-- vue动画效果 -->
@@ -49,10 +49,7 @@
 
         <el-dialog title="选择文件夹" :visible.sync="dialogVisible"  width="30%" :close-on-click-modal="false">
             <el-row type="flex" justify="end" style="margin-right:5px">
-                <el-tooltip class="item" effect="dark" content="新建根文件夹" placement="top-start">
-                    <el-button type="primary" size="mini" icon="el-icon-folder-opened" circle @click="onAddDir(true)"></el-button>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="新建子文件夹" placement="top-start">
+                <el-tooltip class="item" effect="dark" content="新建文件夹" placement="top-start">
                     <el-button type="primary" size="mini" icon="el-icon-folder-add" circle @click="onAddDir(false)"></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="删除文件夹" placement="top-start">
@@ -64,14 +61,18 @@
             </el-row>
             <el-row style="margin-top:10px">
                 <!--要让tree有纵向滚动条就要包到bimTree的div中-->
-                <div id="bimTree" style="height: 300px;border:1px solid #f0f0f0">
-                    <el-tree ref="dirTree" :data="dirTree" :expand-on-click-node="false" :props="dirTreeProps" 
-                        :default-expand-all="true" ></el-tree>
+                <div id="bimTree" tabindex="0" @click="onBlur" style="height: 300px;border:1px solid #f0f0f0">
+                    <el-tree ref="dirTree" 
+                    node-key="dirId"
+                    :data="dirTree" 
+                    :expand-on-click-node="false" 
+                    :props="dirTreeProps" 
+                    :default-expand-all="true"></el-tree>
                 </div>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button size="small" type="primary" @click="onSelectedDir">确 定</el-button>
+                <el-button size="small" @click="onCancelUpload">取 消</el-button>
+                <el-button size="small" type="primary" @click="onSubmitUpload">确 定</el-button>
             </span>
         </el-dialog>
 	</div>
@@ -118,9 +119,13 @@ export default {
         };
     },
 	methods: {
-        //手动提交ifc文件上传
-        submitUpload() {
-            this.$refs.upload.submit();
+        //on-change绑定事件，文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+        onFileChange(file, fileList){
+            //只有当前事件源的file状态是ready才表示是选择文件，上传成功是success
+            if(file.status === 'ready')
+            {
+                this.dialogVisible = true;//显示目录选择对话框，然后在该对话框确定按钮事件里上传文件
+            }
         },
         //上传开始前的钩子
         onBeforeUpload(file){
@@ -134,7 +139,7 @@ export default {
             //检查目录
             if(this.ifc.dirId === -1)
             {
-                this.$message.error('请为上传的IFC文件选择一个保存文件夹!');
+                this.$message.error('请为上传的IFC文件选择一个文件夹!');
                 return false;
             }
             //客户端直接传字节大小，服务端转kb后保存数据库
@@ -160,8 +165,11 @@ export default {
                 });
             })
             .then(()=>{
+                this.$refs.upload.clearFiles();//清除文件列表
                 //上传成功后，轮询进度
                 this.initIFCTabel();
+                //上传成功后，清除上次选中的目录
+                this.ifc.dirId = -1;
                 this.pollingTaskProgress();
             });
         },
@@ -210,7 +218,6 @@ export default {
         },
         //删除ifc上传记录
         onDeleteIfc(row){
-            
             this.$confirm("确定删除BIM文件吗?", "提示", {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -245,14 +252,26 @@ export default {
         onBtnDirClick(){
             this.dialogVisible = true;
         },
+        //模拟目录树失去焦点,取消tree选中节点，必须用这个函数，不能用setCurrentNode(null)
+        onBlur(){
+            this.$refs.dirTree.setCurrentKey(null);
+        },
+        //目录树对话框取消按钮
+        onCancelUpload(){
+            this.dialogVisible = false;
+            this.ifc.dirId=-1;
+            this.$refs.upload.clearFiles();
+        },
         //目录树对话框确定按钮
-        onSelectedDir(){
+        onSubmitUpload(){
             let selectedNode = this.$refs.dirTree.getCurrentNode();
             if(selectedNode != null)
             {
                 this.ifc.dirId = selectedNode.dirId;
                 this.ifc.dirName = selectedNode.dirName;
                 this.dialogVisible = false;
+                //手动提交上传
+                this.$refs.upload.submit();
             }
             else
             {
@@ -313,19 +332,15 @@ export default {
         },
 
         //----------------------文件夹的添加、删除、重命名
-        onAddDir(isRoot){
+        onAddDir(){
             let text = "请输入文件夹名称" ;//对话框lable
             let parentId = -1;
-            if(!isRoot)
+
+            let selectedNode = this.$refs.dirTree.getCurrentNode();
+            if(selectedNode != null)
             {
-                let selectedNode = this.$refs.dirTree.getCurrentNode();
-                if(selectedNode == null)
-                {
-                    this.$message.error('请选择要父级文件夹!');
-                    return;
-                }
                 parentId = selectedNode.dirId;
-                text = "创建 ["+selectedNode.dirName+"] 下的子文件夹"
+                text = "创建 ["+selectedNode.dirName+"] 下的子目录"
             }
             this.$prompt(text,'新建文件夹',{
                 confirmButtonText: '确定',

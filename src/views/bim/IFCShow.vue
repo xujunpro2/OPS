@@ -21,7 +21,7 @@
                 <el-button type="primary"  icon="el-icon-view" circle></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="安全隐患" placement="top-start">
-                <el-button type="primary"  icon="el-icon-bell" circle></el-button>    
+                <el-button type="primary"  icon="el-icon-bell" circle @click="test"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="设为默认模型" placement="top-start">
                 <el-button type="primary"  icon="el-icon-s-home" circle @click="setDefaultBim"></el-button>    
@@ -36,6 +36,8 @@
 
 <script>
 import { xViewer, xState } from "@/assets/js/bim/bim";
+import FlashPlugin from "@/assets/js/bim/plugins/FlashPlugin";
+import TipPlugin from "@/assets/js/bim/plugins/TipPlugin";
 import { Loading } from "element-ui";
 import viewerHelper from "@/utils/viewHelper";
 import BimFiles from "@/components/bim/BimFiles";
@@ -54,9 +56,20 @@ export default {
 		};
 	},
 	methods: {
+        test(){
+            var ids = [42582];
+            let tipPlugin = viewerHelper.getViewer().getPlugin('tip');
+            tipPlugin.addTip({id:104878,width:200,height:100,prodId:104878,html:'dfdfdfdf'});
+        },
         initView(){
             let viewer = new xViewer("bim");
             viewerHelper.setViewer(viewer);
+
+            let flashPlugin = new FlashPlugin();
+            viewer.addPlugin(flashPlugin);
+            let tipPlugin = new TipPlugin();
+            viewer.addPlugin(tipPlugin);
+
             viewer.on("error",error=>{
                 if(error.message === 'bim file not found')
                 {
@@ -140,11 +153,11 @@ export default {
         },
         //显示bim文件面板
         showBimFilesPanel(){
-            this.$refs.bimFilesPanel.showPanel();
+            this.$refs.bimFilesPanel.panel.visiable = !this.$refs.bimFilesPanel.panel.visiable
         },
         //显示结构树面板
         showSpatialPanel(){
-            this.$refs.spatialPanel.showPanel();
+            this.$refs.spatialPanel.panel.visiable = !this.$refs.spatialPanel.panel.visiable;
         },
         //设置默认模型
         setDefaultBim(){
