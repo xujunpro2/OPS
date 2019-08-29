@@ -5,6 +5,8 @@ class TipPlugin {
         this.loaded = false; //这个插件只有在bim加载完成后才能计算postion坐标,需要一个标记
     }
     addTip(tip) {
+        //增加一个显示tip的默认属性，为hidAllTips服务
+        tip.show = true;
         var containerWidth = tip.width + "px";
         var containerHeight = tip.height + "px";
         //添加锚线svg
@@ -30,6 +32,7 @@ class TipPlugin {
     removeTip(tipId) {
         let index = -1;
         for (let i = 0; i < this.tips.length; i++) {
+            let tip = this.tips[i];
             if (tip.id === tipId) {
                 tip.arrow.remove();
                 tip.arrow = null;
@@ -44,6 +47,14 @@ class TipPlugin {
         if (index > -1) {
             this.tips.splice(index, 1);
         }
+    }
+    hidAllTips(){
+        //遍历处理
+        this.tips.forEach(tip => {
+            tip.show = false;
+            this._refreshTip(tip);
+        });
+        //刷新下
     }
 
     _createDom(domStr) {
@@ -69,6 +80,12 @@ class TipPlugin {
     }
     _refreshTip(tip) {
         if (!this.loaded) {
+            return;
+        }
+        //tip是否要显示,如果不显示，就不用计算坐标了
+        tip.show ? tip.arrow.style.display = 'block':tip.arrow.style.display = 'none';
+        tip.show ? tip.container.style.display = 'block':tip.container.style.display = 'none';
+        if(!tip.show){
             return;
         }
         //如果绑定了构件，那么就只会计算一次，以后直接使用postion

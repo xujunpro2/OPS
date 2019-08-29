@@ -1253,11 +1253,12 @@ function xViewer(canvas, preserveDrawingBuffer) {
     */
     this.renderingMode = 'normal';
 
+    //XUJUN:这里增加了一个距离的定义，但暂时没有用到
      /**
     * When focusing on an entity, this method will reduce the zoom distance relational to the size of the model.
     * @member {Number} xViewer#autoZoomRelationalDistance
     */
-    this.autoZoomRelationalDistance = 0;
+    this.autoZoomRelationalDistance =0;
 
     /** 
     * Clipping plane [a, b, c, d] defined as normal equation of the plane ax + by + cz + d = 0. [0,0,0,0] is for no clipping plane.
@@ -1705,7 +1706,7 @@ xViewer.prototype.setCameraTarget = function (prodId) {
         var size = Math.max(bBox[3], bBox[4], bBox[5]);
         var ratio = Math.max(viewer._width, viewer._height) / Math.min(viewer._width, viewer._height);
         //viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.0;
-        viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.2;
+        viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.0;
         if(viewer._baseDistance) viewer._distance += viewer._baseDistance * viewer.autoZoomRelationalDistance;
     }
 

@@ -58,11 +58,10 @@ export default {
 	methods: {
         test(){
             var ids = [42582];
-            let tipPlugin = viewerHelper.getViewer().getPlugin('tip');
-            tipPlugin.addTip({id:104878,width:200,height:100,prodId:104878,html:'dfdfdfdf'});
+
         },
         initView(){
-            let viewer = new xViewer("bim");
+            let viewer = new xViewer("bim",true);
             viewerHelper.setViewer(viewer);
 
             let flashPlugin = new FlashPlugin();
