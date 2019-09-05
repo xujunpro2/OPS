@@ -48,7 +48,7 @@ export default {
 	components: {BimFiles,SpatialTree},
 	data() {
 		return {
-            curTaskId:this.$store.state.uv.specail.defaultBim,
+            curTaskId:this.$store.state.uv.specail.defaultBim, //specail表中的个人默认bim
             bimId: -1,
             loadingInstance:null,
             bimLoaded: false,
