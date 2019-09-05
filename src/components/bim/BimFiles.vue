@@ -19,7 +19,6 @@ import XDragPanel from "@/components/Controls/XDragPanel";
 export default {
 	name: "",
 	components: { XDragPanel },
-	props: {},
 	data() {
 		return {
 			panel: {

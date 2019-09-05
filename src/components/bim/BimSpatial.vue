@@ -1,5 +1,5 @@
 <template>
-	<x-drag-panel :bindObj="panel">
+	<x-drag-panel ref="dragPanel" :bindObj="panel">
 		<!--要让tree有纵向滚动条就要包到bimTree的div中-->
 		<div id="bimTree" style="height:100%;">
 			<el-tree
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import axios from "axios"; //@/ 指src目录   ./ 表示当前目录下   ../ 表示父级目录下
+// import axios from "axios"; //@/ 指src目录   ./ 表示当前目录下   ../ 表示父级目录下
 import { xViewer, xState } from "@/assets/js/bim/bim";
 import viewerHelper from "@/utils/viewHelper";
 import XDragPanel from "@/components/Controls/XDragPanel";
@@ -22,9 +22,6 @@ import bimAxios from "@/utils/requestBim";
 export default {
 	name: "",
 	components: { XDragPanel },
-	props: {
-		
-	},
 	data() {
 		return {
             panel:{
@@ -36,8 +33,7 @@ export default {
                 height:(document.body.clientHeight -200)+"px", 
                 top:"50px",
                 right:"50px",
-                    //right:"10px",
-                    //bottom:"10px"
+                zIndex:1
             },
 			spatialData: [],
 			props: {
@@ -47,7 +43,7 @@ export default {
 		};
 	},
 	methods: {
-		loadIFCData(spatialFile) {
+		getFile(spatialFile) {
 			if (spatialFile != null && spatialFile !== "") {
                 bimAxios.get("/",{ params: {action:"getFile",fileName:spatialFile} }).then(data=>{
                     this.spatialData = data;
@@ -69,7 +65,7 @@ export default {
 					viewer.setState(xState.HIGHLIGHTED, [ifcId]);
 				}
 			}
-		}
+        }
 	},
 
 	mounted() {

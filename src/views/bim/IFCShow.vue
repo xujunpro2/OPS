@@ -9,7 +9,7 @@
                 <el-button type="primary"  icon="el-icon-office-building" circle @click="showSpatialPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="构件属性" placement="top-start">
-                <el-button type="primary"  icon="el-icon-setting" circle></el-button>    
+                <el-button type="primary"  icon="el-icon-setting" circle @click="showPropertiesPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="构件材质" placement="top-start">
                 <el-button type="primary"  icon="el-icon-picture-outline" circle></el-button>    
@@ -28,9 +28,11 @@
             </el-tooltip>
         </div>
         <!--BIM文件-->
-        <bim-files ref="bimFilesPanel" @bimFileChange="onBimFileChange"></bim-files>
+        <bim-files ref="filesPanel" @bimFileChange="onBimFileChange"></bim-files>
         <!--空间结构-->
-        <spatial-tree ref="spatialPanel"></spatial-tree>
+        <bim-spatial ref="spatialPanel"></bim-spatial>
+        <!--构件属性-->
+        <bim-properties ref="propertiesPanel"></bim-properties>
 	</div>
 </template>
 
@@ -41,18 +43,20 @@ import TipPlugin from "@/assets/js/bim/plugins/TipPlugin";
 import { Loading } from "element-ui";
 import viewerHelper from "@/utils/viewHelper";
 import BimFiles from "@/components/bim/BimFiles";
-import SpatialTree from "@/components/bim/SpatialTree";
+import BimSpatial from "@/components/bim/BimSpatial";
+import BimProperties from "@/components/bim/BimProperties"
 
 export default {
 	name: "Bim",
-	components: {BimFiles,SpatialTree},
+	components: {BimFiles,BimSpatial,BimProperties},
 	data() {
 		return {
             curTaskId:this.$store.state.uv.specail.defaultBim, //specail表中的个人默认bim
             bimId: -1,
             loadingInstance:null,
             bimLoaded: false,
-            spatialFile:''
+            spatialFile:'',
+            propertiesFile:''
 		};
 	},
 	methods: {
@@ -90,8 +94,10 @@ export default {
 				// 	90642.9296875
 				// ]);
                 viewer.start();
-                //加载结构、属性等文件
-                this.$refs.spatialPanel.loadIFCData(this.spatialFile);
+                //加载空间结构文件
+                this.$refs.spatialPanel.getFile(this.spatialFile);
+                //加载构件属性文件
+                this.$refs.propertiesPanel.getFile(this.propertiesPanel);
 			});
 
 			viewer.on("dblclick", args => {
@@ -108,14 +114,15 @@ export default {
                 var id = args.id;
 				if (id) {
 					viewer.resetStates();
-					viewer.setState(xState.HIGHLIGHTED, [id]);
+                    viewer.setState(xState.HIGHLIGHTED, [id]);
+                    this.$refs.propertiesPanel.setCurProperty(id);
 				}
             })
         },
 		loadView(fileName) {
             let bimiFile = fileName+".bimi";
             this.spatialFile =fileName+".tree.json";
-           
+            this.propertiesPanel = fileName+".property.json";
             this.unloadView();
 			this.loadingInstance = Loading.service({
 				target: ".bimDiv",
@@ -152,11 +159,27 @@ export default {
         },
         //显示bim文件面板
         showBimFilesPanel(){
-            this.$refs.bimFilesPanel.panel.visiable = !this.$refs.bimFilesPanel.panel.visiable
+            this.$refs.filesPanel.panel.visiable = !this.$refs.filesPanel.panel.visiable;
+            this.setPanelTop(this.$refs.filesPanel.panel);
         },
         //显示结构树面板
         showSpatialPanel(){
             this.$refs.spatialPanel.panel.visiable = !this.$refs.spatialPanel.panel.visiable;
+            this.setPanelTop(this.$refs.spatialPanel.panel);
+        },
+        //显示构件属性面板
+        showPropertiesPanel(){
+            this.$refs.propertiesPanel.panel.visiable = !this.$refs.propertiesPanel.panel.visiable;
+            this.setPanelTop(this.$refs.propertiesPanel.panel);
+        },
+        setPanelTop(panel){
+            if(panel.visiable)
+            {
+                this.$refs.spatialPanel.panel.zIndex = 1;
+                this.$refs.filesPanel.panel.zIndex = 1;
+                this.$refs.propertiesPanel.panel.zIndex = 1;
+                panel.zIndex = 2;
+            }
         },
         //设置默认模型
         setDefaultBim(){
@@ -192,7 +215,7 @@ export default {
 	},
 	beforeDestroy() {
         this.unloadView();
-         document.oncontextmenu = function() {
+        document.oncontextmenu = function() {
             return true;
         };
 	}

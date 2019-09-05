@@ -1,6 +1,6 @@
 <template>
 	<div v-if="this.bindObj.visiable" ref="dragPanel" :class="this.bindObj.color" :style="{width:this.bindObj.width,left:this.bindObj.left,top:this.bindObj.top,
-            right:this.bindObj.right,bottom:this.bindObj.bottom}">
+            right:this.bindObj.right,bottom:this.bindObj.bottom,zIndex:this.bindObj.zIndex}">
 		<div class="box-header with-border" @mousedown="onDrag">
 			<span class="box-title">{{this.bindObj.title}}</span>
 			<div class="box-tools pull-right">
@@ -39,7 +39,8 @@ export default {
                 top:"150px",
                 left:"200px",
                 right:"100px",
-                botton:"10px"
+                botton:"10px",
+                zIndex:1
           };
         }
       }
@@ -132,7 +133,7 @@ export default {
             }
         }
     },
-
+    
 	mounted() {
        
     },

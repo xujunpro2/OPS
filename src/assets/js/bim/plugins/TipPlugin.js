@@ -9,7 +9,7 @@ class TipPlugin {
         tip.show = true;
         var containerWidth = tip.width + "px";
         var containerHeight = tip.height + "px";
-        //添加锚线svg
+        //添加锚线svg,注意要屏蔽鼠标事件
         var markSvg = '<svg style="position: absolute;pointer-events: none;" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="30"><path style="fill:none;stroke:#000000;" d="M3 4L100 30"/><ellipse rx="3" ry="3" style="fill:#00000,stroke:none;" cx="3" cy="3"/></svg> ';
         tip.arrow = this._createDom(markSvg);
         //如果添加到body中，需要多一次计算控件坐标到浏览器坐标的损耗，所以要求canvas上面套一个div，这样就append到这个div中

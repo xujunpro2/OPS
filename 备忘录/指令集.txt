@@ -34,6 +34,12 @@
 <div v-for="item of items"></div>   //使用of
 注意：当v-for和v-if同处于一个节点时，v-for的优先级比v-if更高。这意味着v-if将运行在每个v-for循环中
 
+<!-- 对象遍历 -->
+<div v-for="(value, key, index) in object">
+    {{ index }}. {{ key }} - {{ value }}
+</div>
+
+
 //v-bind 简写 ：
 //使用style绑定局部样式 ,css名称要驼峰写法
 <p ref="p1" :style="{color:color}">vue通过ref获得css</p>
