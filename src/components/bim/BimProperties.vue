@@ -5,6 +5,7 @@
 				<th width="40%">名称</th>
 				<th width="60%">值</th>
 			</tr>
+            <!--属性-->
             <template v-if="curProperty!=null">
                 <!--vue遍历Object属性-->
                 <tr v-for="(value, key) in curProperty.gens">
@@ -20,7 +21,18 @@
                     </tr>
                 </template>
             </template>
-            
+            <!--材质-->
+            <template v-if="curMaterials!=null">
+                <tr>
+                    <td colspan="2" class="group">材质</td>
+                </tr>
+                <!--双重循环-->
+                <template v-for="(value, key) in curMaterials.materials">
+                     <tr v-for="(item,index) in value">
+                        <td colspan="2">{{item}}</td>
+                    </tr>
+                </template>
+            </template>
 		</table>
 	</x-drag-panel>
 </template>
@@ -34,21 +46,23 @@ export default {
 		return {
 			panel: {
 				visiable: true,
-				title: "构件属性",
+                title: "构件属性",
+                icon:"el-icon-picture-outline",
 				color: "box box-primary",
 				width: "360px",
-				height: document.body.clientHeight - 200 + "px",
+				height: document.body.clientHeight - 250 + "px",
 				top: "40px",
                 right: "40px",
                 zIndex:1
             },
             propertiesMap:new Map(),
-            curProperty:null
+            materialsMap:new Map(),
+            curProperty:null,//当前属性
+            curMaterials:null //当前材质
 		};
     },
     methods:{
-        getFile(propertiesFile) {
-            var self = this;
+        getFile(propertiesFile,materialsFile) {
             if (propertiesFile != null && propertiesFile !== "") 
             {
                 bimAxios.get("/",{ params: {action:"getFile",fileName:propertiesFile} }).then(data=>{
@@ -58,16 +72,31 @@ export default {
                         let value = item;
                         this.propertiesMap.set(key,value);
                     });
-                    ////初始化当前构件属性表格
+                    //初始化当前构件材质
+                    this.curMaterials = null;
+                })
+                .catch(error => {
+                });
+            }
+            if (materialsFile != null && materialsFile !== "") 
+            {
+                bimAxios.get("/",{ params: {action:"getFile",fileName:materialsFile} }).then(data=>{
+                    this.materialsMap.clear();
+                    data.forEach(item => {
+                        let key = item.entityId;
+                        let value = item;
+                        this.materialsMap.set(key,value);
+                    });
+                    //初始化当前构件材质
                     this.curProperty = null;
                 })
                 .catch(error => {
-                   //bimi文件加载做了message，这里不用处理了
                 });
-			}
+            }
         },
         setCurProperty(prodId){
             this.curProperty = this.propertiesMap.get(prodId);
+            this.curMaterials = this.materialsMap.get(prodId);
         }
     },
     mounted() {

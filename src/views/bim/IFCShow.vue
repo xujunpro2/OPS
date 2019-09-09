@@ -9,10 +9,7 @@
                 <el-button type="primary"  icon="el-icon-office-building" circle @click="showSpatialPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="构件属性" placement="top-start">
-                <el-button type="primary"  icon="el-icon-setting" circle @click="showPropertiesPanel"></el-button>    
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="构件材质" placement="top-start">
-                <el-button type="primary"  icon="el-icon-picture-outline" circle></el-button>    
+                <el-button type="primary"  icon="el-icon-picture-outline" circle @click="showPropertiesPanel"></el-button>    
             </el-tooltip>
              <el-tooltip class="item" effect="dark" content="进度模拟" placement="top-start">
                 <el-button type="primary"  icon="el-icon-refresh-left" circle></el-button>    
@@ -56,7 +53,8 @@ export default {
             loadingInstance:null,
             bimLoaded: false,
             spatialFile:'',
-            propertiesFile:''
+            propertiesFile:'',
+            materialsFile:''
 		};
 	},
 	methods: {
@@ -97,7 +95,7 @@ export default {
                 //加载空间结构文件
                 this.$refs.spatialPanel.getFile(this.spatialFile);
                 //加载构件属性文件
-                this.$refs.propertiesPanel.getFile(this.propertiesPanel);
+                this.$refs.propertiesPanel.getFile(this.propertiesPanel,this.materialsFile);
 			});
 
 			viewer.on("dblclick", args => {
@@ -123,6 +121,7 @@ export default {
             let bimiFile = fileName+".bimi";
             this.spatialFile =fileName+".tree.json";
             this.propertiesPanel = fileName+".property.json";
+            this.materialsFile = fileName+".material.json";
             this.unloadView();
 			this.loadingInstance = Loading.service({
 				target: ".bimDiv",

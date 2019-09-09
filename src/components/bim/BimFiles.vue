@@ -23,7 +23,8 @@ export default {
 		return {
 			panel: {
 				visiable: false,
-				title: "三维模型",
+                title: "三维模型",
+                icon:"el-icon-folder-opened",
 				color: "box box-primary",
 				width: "300px",
 				height: document.body.clientHeight - 300 + "px",

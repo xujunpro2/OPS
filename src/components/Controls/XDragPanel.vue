@@ -2,7 +2,7 @@
 	<div v-if="this.bindObj.visiable" ref="dragPanel" :class="this.bindObj.color" :style="{width:this.bindObj.width,left:this.bindObj.left,top:this.bindObj.top,
             right:this.bindObj.right,bottom:this.bindObj.bottom,zIndex:this.bindObj.zIndex}">
 		<div class="box-header with-border" @mousedown="onDrag">
-			<span class="box-title">{{this.bindObj.title}}</span>
+			<span class="box-title"><i :class="bindObj.icon"></i> {{this.bindObj.title}}</span>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" @click="onChangeSize">
 					<i :class="sizeIcon"></i>
@@ -33,6 +33,7 @@ export default {
           return {
                 visiable:true,
                 title: "标题",
+                icon:"el-icon-folder-opened",
                 color:"box box-primary",
                 width:"300px",
                 height:"200px",
@@ -189,6 +190,7 @@ export default {
 .box-header .box-title {
 	display: inline-block;
 	font-size: 14px;
+    font-weight: bold;
 	margin: 0;
 	line-height: 1;
 }

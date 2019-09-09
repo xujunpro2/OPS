@@ -27,6 +27,7 @@ export default {
             panel:{
                 visiable:false,
                 title:"空间结构",
+                icon:"el-icon-office-building",
                 color:"box box-primary",
                 width:"300px",
                 //height:"300px", 
