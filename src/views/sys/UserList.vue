@@ -191,7 +191,7 @@ export default {
                         duration:3000
                     });
                 })
-            });
+            }).catch(() => {});
             
         },
 		onDeptTreeNodeClick(data, node) {

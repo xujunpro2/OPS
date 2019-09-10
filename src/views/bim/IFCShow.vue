@@ -103,8 +103,6 @@ export default {
                 this.$refs.spatialPanel.getFile(this.spatialFile);
                 //加载构件属性文件
                 this.$refs.propertiesPanel.getFile(this.propertiesPanel,this.materialsFile);
-                //加载扩展属性
-                this.$refs.extPropertiesPanel.getExtProperties(this.bimGUID);
 			});
 
 			viewer.on("dblclick", args => {
@@ -123,6 +121,7 @@ export default {
 					viewer.resetStates();
                     viewer.setState(xState.HIGHLIGHTED, [id]);
                     this.$refs.propertiesPanel.setCurProperty(id);
+                    this.$refs.extPropertiesPanel.setCurProperty(this.bimGUID,id);
 				}
             })
         },
@@ -212,7 +211,7 @@ export default {
                             duration:3000
                         });
                     })
-                })
+                }).catch(() => {});
             }
         }
 	},

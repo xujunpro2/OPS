@@ -2,9 +2,30 @@ import ifcService from '@/api/ifc'
 
 
 const actions = {
-    getExtProperties(context,bimId){
+    addExtProperties(context,extProperties){
         return new Promise((resolve,reject)=>{
-            ifcService.getExtProperties(bimId).then(data=>{
+            ifcService.addExtProperties(extProperties).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    updateExtProperties(context,extProperties){
+        return new Promise((resolve,reject)=>{
+            ifcService.updateExtProperties(extProperties).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    deleteExtProperties(context, extId) {
+        return new Promise((resolve,reject)=>{
+            ifcService.deleteExtProperties(extId).then(data=>{
+                resolve();
+            })
+        })
+    },
+    getExtProperties(context,query){
+        return new Promise((resolve,reject)=>{
+            ifcService.getExtProperties(query.bimId,query.prodId).then(data=>{
                 resolve(data);
             })
         })

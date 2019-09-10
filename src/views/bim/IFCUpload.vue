@@ -240,7 +240,7 @@ export default {
                 bimAxios.get("/",{ params: {action:"deleteFile",taskId:taskId,ifcPath:ifcPath} }).then(data=>{
 
                 })
-            });
+            }).catch(() => {});
         },
         //弹出对话框初始化目录树
         initDirTree(){
@@ -382,7 +382,7 @@ export default {
                         duration:3000
                     });
                 });
-            });
+            }).catch(() => {});
         },
         onRenameDir(){
             let selectedNode = this.$refs.dirTree.getCurrentNode();

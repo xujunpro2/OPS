@@ -96,7 +96,7 @@ export default {
                     duration:3000
                 });
             });
-        });
+        }).catch(() => {});;
     },
     onSubmit() {
         if(this.ruleName.trim() === "")

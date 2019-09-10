@@ -46,7 +46,7 @@
                 <el-button  @click="dialogVisible = false">取 消</el-button>
                 <el-button  type="primary" @click="onSubmit">确 定</el-button>
             </span>
-            </el-dialog>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -131,7 +131,7 @@ export default {
                         duration:3000
                     });
                 });
-            });
+            }).catch(() => {});
         },
         onDialogOpen(){
             //清除之前验证消息，否则会保留
