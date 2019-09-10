@@ -12,7 +12,7 @@
             <el-button
               @click="handlePartCell(scope.row)"
               type="text"
-              size="small"
+              
             >{{scope.row.part}}</el-button>
           </template>
         </el-table-column>
@@ -21,7 +21,7 @@
         <el-table-column prop="date" label="发现时间" min-width="100"></el-table-column>
         <el-table-column width="60">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" >详情</el-button>
           </template>
         </el-table-column>
       </el-table>

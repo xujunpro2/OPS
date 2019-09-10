@@ -3,25 +3,28 @@
 		<canvas id="bim"></canvas>
         <div class="toolbarDiv">
             <el-tooltip class="item" effect="dark" content="三维模型" placement="top-start">
-                <el-button type="primary"  icon="el-icon-folder-opened" circle @click="showBimFilesPanel"></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-folder-opened" circle @click="showBimFilesPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="空间结构" placement="top-start">
-                <el-button type="primary"  icon="el-icon-office-building" circle @click="showSpatialPanel"></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-office-building" circle @click="showSpatialPanel"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="构件属性" placement="top-start">
-                <el-button type="primary"  icon="el-icon-picture-outline" circle @click="showPropertiesPanel"></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-picture-outline" circle @click="showPropertiesPanel"></el-button>    
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="扩展属性" placement="top-start">
+                <el-button size="medium" type="primary"  icon="el-icon-picture-outline-round" circle @click="showExtPropertiesPanel"></el-button>    
             </el-tooltip>
              <el-tooltip class="item" effect="dark" content="进度模拟" placement="top-start">
-                <el-button type="primary"  icon="el-icon-refresh-left" circle></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-refresh-left" circle></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="质量隐患" placement="top-start">
-                <el-button type="primary"  icon="el-icon-view" circle></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-view" circle></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="安全隐患" placement="top-start">
-                <el-button type="primary"  icon="el-icon-bell" circle @click="test"></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-bell" circle @click="test"></el-button>    
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="设为默认模型" placement="top-start">
-                <el-button type="primary"  icon="el-icon-s-home" circle @click="setDefaultBim"></el-button>    
+                <el-button size="medium" type="primary"  icon="el-icon-s-home" circle @click="setDefaultBim"></el-button>    
             </el-tooltip>
         </div>
         <!--BIM文件-->
@@ -30,28 +33,32 @@
         <bim-spatial ref="spatialPanel"></bim-spatial>
         <!--构件属性-->
         <bim-properties ref="propertiesPanel"></bim-properties>
+        <!--构件扩展属性-->
+        <bim-ext-properties ref="extPropertiesPanel"></bim-ext-properties>
 	</div>
 </template>
 
 <script>
-import { xViewer, xState } from "@/assets/js/bim/bim";
-import FlashPlugin from "@/assets/js/bim/plugins/FlashPlugin";
-import TipPlugin from "@/assets/js/bim/plugins/TipPlugin";
-import { Loading } from "element-ui";
-import viewerHelper from "@/utils/viewHelper";
-import BimFiles from "@/components/bim/BimFiles";
-import BimSpatial from "@/components/bim/BimSpatial";
+import { xViewer, xState } from "@/assets/js/bim/bim"
+import FlashPlugin from "@/assets/js/bim/plugins/FlashPlugin"
+import TipPlugin from "@/assets/js/bim/plugins/TipPlugin"
+import { Loading } from "element-ui"
+import viewerHelper from "@/utils/viewHelper"
+import BimFiles from "@/components/bim/BimFiles"
+import BimSpatial from "@/components/bim/BimSpatial"
 import BimProperties from "@/components/bim/BimProperties"
+import BimExtProperties from "@/components/bim/BimExtProperties"
 
 export default {
 	name: "Bim",
-	components: {BimFiles,BimSpatial,BimProperties},
+	components: {BimFiles,BimSpatial,BimProperties,BimExtProperties},
 	data() {
 		return {
             curTaskId:this.$store.state.uv.specail.defaultBim, //specail表中的个人默认bim
             bimId: -1,
             loadingInstance:null,
             bimLoaded: false,
+            bimGUID:null,
             spatialFile:'',
             propertiesFile:'',
             materialsFile:''
@@ -96,6 +103,8 @@ export default {
                 this.$refs.spatialPanel.getFile(this.spatialFile);
                 //加载构件属性文件
                 this.$refs.propertiesPanel.getFile(this.propertiesPanel,this.materialsFile);
+                //加载扩展属性
+                this.$refs.extPropertiesPanel.getExtProperties(this.bimGUID);
 			});
 
 			viewer.on("dblclick", args => {
@@ -118,6 +127,7 @@ export default {
             })
         },
 		loadView(fileName) {
+            this.bimGUID = fileName;//bim的guid
             let bimiFile = fileName+".bimi";
             this.spatialFile =fileName+".tree.json";
             this.propertiesPanel = fileName+".property.json";
@@ -170,6 +180,11 @@ export default {
         showPropertiesPanel(){
             this.$refs.propertiesPanel.panel.visiable = !this.$refs.propertiesPanel.panel.visiable;
             this.setPanelTop(this.$refs.propertiesPanel.panel);
+        },
+        //显示构件扩展属性面板
+        showExtPropertiesPanel(){
+            this.$refs.extPropertiesPanel.panel.visiable = !this.$refs.extPropertiesPanel.panel.visiable;
+            this.setPanelTop(this.$refs.extPropertiesPanel.panel);
         },
         setPanelTop(panel){
             if(panel.visiable)

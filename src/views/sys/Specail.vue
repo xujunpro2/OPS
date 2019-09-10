@@ -1,6 +1,6 @@
 <template>
     <div class="rootDiv">
-        <el-form ref="form" :model="specailForm" :rules="specailRules" :hide-required-asterisk="true"  label-width="80px" size="small" >
+        <el-form ref="form" :model="specailForm" :rules="specailRules" :hide-required-asterisk="true"  label-width="80px"  >
             <el-row style="margin-top:10px">
                 <el-col :span="6">
                     <el-form-item label="表格分页" prop="pageSize" >
@@ -13,7 +13,7 @@
                 </el-col>
             </el-row>
             <el-row type="flex" justify="end" style="margin:20px 10px">
-                <el-button size="small" type="primary" @click="onSave()">保存
+                <el-button  type="primary" @click="onSave()">保存
                 </el-button>
             </el-row>
             

@@ -172,7 +172,7 @@ export default {
 	border-bottom: 1px solid #f4f4f4;
 }
 .box-header {
-    color:#303133;
+    color:#606266;
 	display: block;
 	padding: 10px;
     position: relative;

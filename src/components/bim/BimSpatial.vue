@@ -32,8 +32,8 @@ export default {
                 width:"300px",
                 //height:"300px", 
                 height:(document.body.clientHeight -200)+"px", 
-                top:"50px",
-                right:"50px",
+                top:"20px",
+                right:"20px",
                 zIndex:1
             },
 			spatialData: [],

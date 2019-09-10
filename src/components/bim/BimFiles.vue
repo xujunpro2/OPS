@@ -28,8 +28,8 @@ export default {
 				color: "box box-primary",
 				width: "300px",
 				height: document.body.clientHeight - 300 + "px",
-				top: "50px",
-				left: "50px"
+				top: "20px",
+				left: "20px"
 				//right:"10px",
 				//bottom:"10px"
 			},

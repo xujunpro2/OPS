@@ -13,7 +13,8 @@ import '@/icons' // icon
 import '@/assets/css/globe.css'
 
 // set ElementUI lang to EN
-Vue.use(ElementUI)
+//Vue.use(ElementUI)
+Vue.use(ElementUI, { size: 'small'});
 
 Vue.config.productionTip = false
 

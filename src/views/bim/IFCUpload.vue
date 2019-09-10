@@ -13,7 +13,7 @@
             <el-table-column prop="uploadTimeFmt" label="上传时间"></el-table-column>
             <el-table-column prop="ruleId" label="操作" width="100">
                 <template slot-scope="scope">
-                <el-button @click="onDeleteIfc(scope.row)" type="text" size="small"><span  id="deleteButton">删除</span></el-button>
+                <el-button @click="onDeleteIfc(scope.row)" type="text" ><span  id="deleteButton">删除</span></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -29,8 +29,8 @@
                 :on-change="onFileChange"
                 :before-upload="onBeforeUpload"
                 :on-success="onUploadSuccess">
-                <!-- <el-button size="small" style="margin-left: 10px;" @click="onBtnDirClick">{{this.ifc.dirName}}</el-button> -->
-                <el-button slot="trigger" type="primary" icon="el-icon-upload" size="small">上传我的文件</el-button>
+                <!-- <el-button  style="margin-left: 10px;" @click="onBtnDirClick">{{this.ifc.dirName}}</el-button> -->
+                <el-button slot="trigger" type="primary" icon="el-icon-upload" >上传我的文件</el-button>
 		    </el-upload>
         </el-row>
         <!-- vue动画效果 -->
@@ -71,8 +71,8 @@
                 </div>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="onCancelUpload">取 消</el-button>
-                <el-button size="small" type="primary" @click="onSubmitUpload">确 定</el-button>
+                <el-button  @click="onCancelUpload">取 消</el-button>
+                <el-button  type="primary" @click="onSubmitUpload">确 定</el-button>
             </span>
         </el-dialog>
 	</div>

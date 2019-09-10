@@ -9,7 +9,7 @@
         <el-table-column :fixed="true" prop="sn" label width="30"></el-table-column>
         <el-table-column :fixed="true" prop="part" label="部位" width="100">
            <template slot-scope="scope">
-            <el-button @click="handlePartCell(scope.row)" type="text" size="small">{{scope.row.part}}</el-button>
+            <el-button @click="handlePartCell(scope.row)" type="text" >{{scope.row.part}}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="隐患内容" width="120"></el-table-column>
@@ -17,7 +17,7 @@
         <el-table-column prop="date" label="发现时间" width="100"></el-table-column>
         <el-table-column width="50">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">详情</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" >详情</el-button>
           </template>
         </el-table-column>
       </el-table>

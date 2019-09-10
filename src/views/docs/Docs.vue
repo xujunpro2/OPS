@@ -55,8 +55,8 @@
         </el-table-column>
         <el-table-column width="120">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row,'download')" type="text" size="small">下载</el-button>
-            <el-button @click="handleClick(scope.row,'delete')" type="text" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row,'download')" type="text" >下载</el-button>
+            <el-button @click="handleClick(scope.row,'delete')" type="text" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

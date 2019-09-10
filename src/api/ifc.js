@@ -1,6 +1,12 @@
 import request from '@/utils/request'
 var IFCService = function(){
-
+    /**
+     * 查询某个bim的扩展属性
+     */
+    IFCService.prototype.getExtProperties = function(bimId){
+        
+        return request.get("ifc/extProperties.action",{ params: {bimId:bimId} });
+    }
     /**
      * 查询某个用户的ifc文件数量
      */

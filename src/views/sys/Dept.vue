@@ -10,17 +10,17 @@
             </el-table-column>
             <el-table-column prop="ruleId" label="操作" width="230">
                 <template slot-scope="scope">
-                <el-button @click="onUpdateDept(scope.row)" type="text" size="small">修改</el-button>
-                <el-button @click="onDeleteDept(scope.row)" type="text" size="small"><span id="deleteButton">删除</span></el-button>
+                <el-button @click="onUpdateDept(scope.row)" type="text" >修改</el-button>
+                <el-button @click="onDeleteDept(scope.row)" type="text" ><span id="deleteButton">删除</span></el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-row type="flex" justify="end" style="margin:20px 5px">
-            <el-button icon="el-icon-circle-plus-outline" size="small" type="primary" @click="onAddDept()">添加
+            <el-button icon="el-icon-circle-plus-outline"  type="primary" @click="onAddDept()">添加
             </el-button>
         </el-row>
         <el-dialog title="部门编辑" :visible.sync="dialogVisible" @open="onDialogOpen"  width="30%" :close-on-click-modal="false">
-            <el-form ref="form" :model="deptForm" :rules="deptFormRules" label-width="80px" size="small">
+            <el-form ref="form" :model="deptForm" :rules="deptFormRules" label-width="80px" >
                 <el-form-item label="部门名称" prop="deptName">
                     <el-input v-model="deptForm.deptName"></el-input>
                 </el-form-item>
@@ -43,8 +43,8 @@
             </el-form>
             
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button size="small" type="primary" @click="onSubmit">确 定</el-button>
+                <el-button  @click="dialogVisible = false">取 消</el-button>
+                <el-button  type="primary" @click="onSubmit">确 定</el-button>
             </span>
             </el-dialog>
     </div>

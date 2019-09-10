@@ -45,7 +45,7 @@ export default {
 	data() {
 		return {
 			panel: {
-				visiable: true,
+				visiable: false,
                 title: "构件属性",
                 icon:"el-icon-picture-outline",
 				color: "box box-primary",
@@ -107,6 +107,7 @@ export default {
 <style scoped>
 table {
 	width: 100%;
+    color:#606266;
 	font-size: 12px;
 	border-collapse: collapse;
 	border-spacing: 0;

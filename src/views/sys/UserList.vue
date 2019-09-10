@@ -7,9 +7,9 @@
             </el-col>
             <el-col :span="19">
                 <el-row type="flex" justify="end" style="margin:20px 10px">
-                    <el-input size="small" clearable v-model="queryName" placeholder="请等待后续开发"
+                    <el-input clearable v-model="queryName" placeholder="请等待后续开发"
                         prefix-icon="el-icon-search" style="width:200px" @input="onInputTextChange"></el-input>&emsp;
-                    <el-button icon="el-icon-circle-plus-outline" size="small" type="primary" @click="onAddUser()">添加
+                    <el-button icon="el-icon-circle-plus-outline"  type="primary" @click="onAddUser()">添加
                     </el-button>
                 </el-row>
                 <el-row style="margin-top:-10px">
@@ -21,8 +21,8 @@
                         <el-table-column prop="ruleName" label="角色"></el-table-column>
                         <el-table-column label="操作" width="130">
                             <template slot-scope="scope">
-                                <el-button @click="onUpdateUser(scope.row)" type="text" size="small">修改</el-button>
-                                <el-button @click="onDeleteUser(scope.row)" type="text" size="small">
+                                <el-button @click="onUpdateUser(scope.row)" type="text">修改</el-button>
+                                <el-button @click="onDeleteUser(scope.row)" type="text">
                                     <span id="deleteButton">删除</span>
                                 </el-button>
                             </template>
@@ -37,7 +37,7 @@
         </el-row>
         <!--表单对话框-->
         <el-dialog title="用户编辑" :visible.sync="dialogVisible" @open="onDialogOpen" width="40%" :close-on-click-modal="false">
-            <el-form ref="form" :model="userForm" :rules="userFormRules" label-width="80px" size="small">
+            <el-form ref="form" :model="userForm" :rules="userFormRules" label-width="80px" >
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="用户名" prop="username">
@@ -78,8 +78,8 @@
             </el-form>
 
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button size="small" type="primary" @click="onSubmit">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
         </el-dialog>
     </div>

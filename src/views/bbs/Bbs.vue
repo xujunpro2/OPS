@@ -38,7 +38,7 @@
       <el-form :model="formData" :inline="true" label-suffix=":">
         <el-form-item label="开始时间" class="boldLabel">
           <el-date-picker
-            size="small"
+            
             v-model="formData.startDay"
             type="date"
             placeholder="选择日期"
@@ -47,7 +47,7 @@
         </el-form-item>
         <el-form-item label="结束时间" class="boldLabel">
           <el-date-picker
-            size="small"
+            
             v-model="formData.endDay"
             type="date"
             placeholder="选择日期"
@@ -55,19 +55,19 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="主题" class="boldLabel">
-          <el-input size="small" v-model="formData.topic" style="width:120px"></el-input>
+          <el-input  v-model="formData.topic" style="width:120px"></el-input>
         </el-form-item>
         <el-form-item label="关键字" class="boldLabel">
-          <el-input size="small" v-model="formData.keywords" style="width:120px"></el-input>
+          <el-input  v-model="formData.keywords" style="width:120px"></el-input>
         </el-form-item>
         <el-form-item label>
           <div style="width:50px"></div>
         </el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-search" size="small" type="primary" @click="handleQuery()">查询</el-button>
+          <el-button icon="el-icon-search"  type="primary" @click="handleQuery()">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-circle-plus-outline" size="small" type="primary" @click="handleAdd()">新增</el-button>
+          <el-button icon="el-icon-circle-plus-outline"  type="primary" @click="handleAdd()">新增</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -83,9 +83,9 @@
         <el-table-column prop="state" label="状态" width="80"></el-table-column>
         <el-table-column width="130">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row,'new')" type="text" size="small">发布</el-button>
-            <el-button @click="handleClick(scope.row,'update')" type="text" size="small">修改</el-button>
-            <el-button @click="handleClick(scope.row,'delete')" type="text" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row,'new')" type="text" >发布</el-button>
+            <el-button @click="handleClick(scope.row,'update')" type="text" >修改</el-button>
+            <el-button @click="handleClick(scope.row,'delete')" type="text" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -106,10 +106,10 @@
       </el-row>
       <el-row style="margin-bottom: 20px;">
         <el-col :span="20">
-          <el-input size="small" clearable v-model="sendMessage" placeholder="请输入内容"></el-input>
+          <el-input  clearable v-model="sendMessage" placeholder="请输入内容"></el-input>
         </el-col>
         <el-col :span="4">
-          <el-button size="small" type="primary" style="border-radius: 0px;">发送</el-button>
+          <el-button  type="primary" style="border-radius: 0px;">发送</el-button>
         </el-col>
       </el-row>
     </el-dialog>

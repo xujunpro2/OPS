@@ -4,15 +4,14 @@
       <el-table-column prop="ruleName" label="角色"></el-table-column>
       <el-table-column prop="ruleId" label="操作" width="230">
         <template slot-scope="scope">
-          <el-button @click="onUpdateRule(scope.row)" type="text" size="small">修改</el-button>
-          <el-button @click="onDeleteRule(scope.row)" type="text" size="small"><span  id="deleteButton">删除</span></el-button>
+          <el-button @click="onUpdateRule(scope.row)" type="text" >修改</el-button>
+          <el-button @click="onDeleteRule(scope.row)" type="text" ><span  id="deleteButton">删除</span></el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-row type="flex" justify="end" style="margin:20px 5px">
       <el-button
         icon="el-icon-circle-plus-outline"
-        size="small"
         type="primary"
         @click="onAddRule()"
       >添加</el-button>
@@ -34,8 +33,8 @@
         </div>
       </el-row>
       <span slot="footer" class="dialog-footer">
-          <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-          <el-button size="small" type="primary" @click="onSubmit">确 定</el-button>
+          <el-button  @click="dialogVisible = false">取 消</el-button>
+          <el-button  type="primary" @click="onSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>

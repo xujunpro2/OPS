@@ -21,7 +21,7 @@
 					<el-button
 						@click="login"
 						type="primary"
-						size="small"
+						
 						:loading="loading"
 					>登&nbsp;&nbsp;&nbsp;&nbsp;陆</el-button>
 				</el-row>

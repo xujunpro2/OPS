@@ -2,6 +2,13 @@ import ifcService from '@/api/ifc'
 
 
 const actions = {
+    getExtProperties(context,bimId){
+        return new Promise((resolve,reject)=>{
+            ifcService.getExtProperties(bimId).then(data=>{
+                resolve(data);
+            })
+        })
+    },
     getIFCCount(context,userId){
         return new Promise((resolve,reject)=>{
             ifcService.getIFCCount(userId).then(data=>{
