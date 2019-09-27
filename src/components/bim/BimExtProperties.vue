@@ -44,7 +44,7 @@ export default {
             bimId: null,
             prodId:null,
 			panel: {
-				visiable: true,
+				visiable: false,
 				title: "扩展属性",
 				icon: "el-icon-picture-outline-round",
 				color: "box box-primary",
@@ -78,10 +78,14 @@ export default {
         setCurProperty(bimId,prodId){
             this.bimId = bimId;
             this.prodId = prodId;
-			this.$store.dispatch("ifc/getExtProperties", {bimId:bimId,prodId:prodId}).then(data => {
-                this.extData = data;
-                this.restoreTable();
-			});
+            if(this.panel.visiable)
+            {
+                this.$store.dispatch("ifc/getExtProperties", {bimId:bimId,prodId:prodId}).then(data => {
+                    this.extData = data;
+                    this.restoreTable();
+                });
+            }
+			
         },
 		//Table行点击
 		onRowClick(event) {
@@ -190,14 +194,17 @@ export default {
         },
         //在选择，修改，删除操作之后，都需要恢复table
         restoreTable(){
-            //恢复默认
+            //dialog中的当前属性条目编辑表单恢复默认
 			this.extForm = { pName: null, pValue: null };
-			this.curRowId = null;
-			let trNodes = this.$refs.table.childNodes;
-			trNodes.forEach(tr => {
-				tr.style.background = "transparent";
-				tr.style.color = "#606266";
-			});
+            this.curRowId = null;
+            if(this.$refs.table.childNodes)
+            {
+                let trNodes = this.$refs.table.childNodes;
+                trNodes.forEach(tr => {
+                    tr.style.background = "transparent";
+                    tr.style.color = "#606266";
+                });
+            }
         }
 	},
 	mounted() {}

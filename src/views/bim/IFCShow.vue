@@ -42,6 +42,7 @@
 import { xViewer, xState } from "@/assets/js/bim/bim"
 import FlashPlugin from "@/assets/js/bim/plugins/FlashPlugin"
 import TipPlugin from "@/assets/js/bim/plugins/TipPlugin"
+import NavCube from "@/assets/js/bim/plugins/NavCube/NavCube"
 import { Loading } from "element-ui"
 import viewerHelper from "@/utils/viewHelper"
 import BimFiles from "@/components/bim/BimFiles"
@@ -72,12 +73,6 @@ export default {
         initView(){
             let viewer = new xViewer("bim",true);
             viewerHelper.setViewer(viewer);
-
-            let flashPlugin = new FlashPlugin();
-            viewer.addPlugin(flashPlugin);
-            let tipPlugin = new TipPlugin();
-            viewer.addPlugin(tipPlugin);
-
             viewer.on("error",error=>{
                 if(error.message === 'bim file not found')
                 {
@@ -99,6 +94,7 @@ export default {
 				// 	90642.9296875
 				// ]);
                 viewer.start();
+                this.addPlugins();
                 //加载空间结构文件
                 this.$refs.spatialPanel.getFile(this.spatialFile);
                 //加载构件属性文件
@@ -154,6 +150,19 @@ export default {
                     viewer.unload(this.bimId);
                 }
 		    }
+        },
+        //加载bim插件
+        addPlugins(){
+            let viewer = viewerHelper.getViewer();
+            if(viewer)
+            {
+                let flashPlugin = new FlashPlugin();
+                viewer.addPlugin(flashPlugin);
+                let tipPlugin = new TipPlugin();
+                viewer.addPlugin(tipPlugin);
+                let navCube = new NavCube();
+                viewer.addPlugin(navCube);
+            } 
         },
         //切换bim文件
         onBimFileChange(arg){

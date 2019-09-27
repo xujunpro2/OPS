@@ -1822,7 +1822,7 @@ xViewer.prototype._addHandle = function (geometry, tag) {
 
         //set default view
         viewer.setCameraTarget();
-        var dist = Math.sqrt(viewer._distance * viewer._distance / 3.0);
+        var dist = Math.sqrt(viewer._distance * viewer._distance / 10.0); //XUJUN 原来是/3.0，我嫌小
         viewer.setCameraPosition([region.centre[0] + dist * -1.0, region.centre[1] + dist * -1.0, region.centre[2] + dist]);
     }
 
@@ -2502,6 +2502,7 @@ xViewer.prototype.zoomTo = function (id) {
 xViewer.prototype.show = function (type) {
     var origin = this._origin;
     var distance = this._distance;
+    console.info(distance);
     var camera = [0, 0, 0];
     var heading = [0, 0, 1];
     switch (type) {
