@@ -12,8 +12,7 @@ const state = {
     rule:null,
     avatar: '', //头像
     myRouter: [], //路由,通过对动态路由定义的拷贝进行编辑
-    specail:{}, //个性化设置
-    bimServer:null //bim服务器地址
+    specail:{} //个性化设置
 }
 
 //getter 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。
@@ -34,7 +33,6 @@ const mutations = {
         state.userId = user.userId;
         state.avatar = user.avatar;
         state.rule = {ruleId:user.ruleId,ruleName:user.ruleName};
-        state.bimServer = user.bim;
     },
 
     SET_ROUTER: (state, router) => {

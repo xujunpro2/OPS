@@ -4,14 +4,14 @@
 		<div class="login-box">
 			<div class="login-logo">
 				<a href="#">
-					<b>NARI BIM</b>
+					<b>XCONTROL</b>
 				</a>
 			</div>
 			<div class="login-box-body">
 				<div class="logo">
 					<img src="../../assets/icons/logo.png" />
 					<p></p>
-					<span class="project">BIM建筑管理平台</span>
+					<span class="project">演示系统</span>
 				</div>
 				<el-input placeholder="用户" suffix-icon="el-icon-user" v-model="username"></el-input>
 				<p></p>

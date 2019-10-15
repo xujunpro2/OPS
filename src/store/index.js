@@ -5,8 +5,6 @@ import app from './modules/app'
 import settings from './modules/settings'
 import uv from './modules/uv'
 import dept from './modules/dept'
-import ifc from './modules/ifc'
-import dir from './modules/dir'
 
 Vue.use(Vuex)
 
@@ -15,9 +13,7 @@ const store = new Vuex.Store({
     app,
     settings,
     uv,
-    dept,
-    ifc,
-    dir
+    dept
   },
   getters
 })

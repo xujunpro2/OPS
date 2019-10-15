@@ -20,7 +20,7 @@
         <i class="el-icon-help"></i>
       </div> -->
 
-      <div class="navbar-icon"></div>
+      <!-- <div class="navbar-icon"></div> -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img src="user.jpg" class="user-avatar">
@@ -131,21 +131,21 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        margin-top: 10px;
         position: relative;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 20px;
+          width: 30px;
+          height: 30px;
+          border-radius: 15px;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 15px;
           font-size: 12px;
         }
       }

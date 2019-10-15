@@ -1,16 +1,16 @@
-
 a {
-  color: #337ab7;
-  text-decoration: none;
+    color: #337ab7;
+    text-decoration: none;
 }
 
 b,
-strong {    
-  font-weight: 700;
+strong {
+    font-weight: 700;
 }
 
 .rootDiv {
-    position: relative; /*这个是rootDiv中有绝对布局的div而做的*/
+    position: relative;
+    /*这个是rootDiv中有绝对布局的div而做的*/
     width: 100%;
     height: 100%;
     padding: 5px;
@@ -34,79 +34,115 @@ strong {
 /*设置tree背景透明*/
 
 #bimTree {
-  width: 100%;
-  overflow-y: auto;
-  overflow-x: auto;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 #bimTree .el-tree {
-  display: inline-block;
-  position: relative;
-  cursor: default;
+    display: inline-block;
+    position: relative;
+    cursor: default;
 
-  background: transparent;
-  /* color: #fff;  */
+    background: transparent;
+    /* color: #fff;  */
 }
 
 /*替换树节点悬浮样式，一定不能scope*/
 #bimTree .el-tree-node__content:hover {
-  background: rgba(0, 0, 0, 0.0);
+    background: rgba(0, 0, 0, 0.0);
 }
 
 
 /*节点选中高亮样式，默认highlight-current这个属性是关闭的*/
 #bimTree .el-tree-node:focus>.el-tree-node__content {
-  /* background-color: #545c64; */
-  background: transparent;
-  color: #409EFF;
+    /* background-color: #545c64; */
+    background: transparent;
+    color: #409EFF;
 }
 
 /*以下两个css，都是padding大了一点，空间不够了，通常是不需要改的*/
 .rateDiv .el-calendar__body {
-  padding: 5px 20px 5px;
+    padding: 5px 20px 5px;
 }
+
 .rateDiv .el-calendar__header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  padding:0px 10px 5px 10px;
-  border-bottom: 1px solid #EBEEF5;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 0px 10px 5px 10px;
+    border-bottom: 1px solid #EBEEF5;
 }
+
 /*设置年月标题字体为14,默认的太大了*/
 .rateDiv .el-calendar__title {
-  color: #000;
-  -ms-flex-item-align: center;
-  align-self: center;
-  font-size: 14px;
+    color: #000;
+    -ms-flex-item-align: center;
+    align-self: center;
+    font-size: 14px;
 }
 
 /*设置星期标题字体为14,默认的太大了*/
 .rateDiv .el-calendar-table thead th {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 /*calendar的height是写死70PX，垃圾饿了么*/
 .rateDiv .el-calendar-table .el-calendar-day {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  padding: 8px;
-  height: 38px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 8px;
+    height: 38px;
 }
+
 /* 上-右-下-左 */
 .el-card__header {
-  padding: 5px 5px; 
-  border-bottom: 1px solid #EBEEF5;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+    padding: 5px 5px;
+    border-bottom: 1px solid #EBEEF5;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
+
 .el-card__body {
-  padding: 10px;
+    padding: 10px;
 }
 
 /*删除按钮文字颜色*/
-#deleteButton{
-    color:#F56C6C
+#deleteButton {
+    color: #F56C6C
+}
+
+/*潮流线正向start-end*/
+@keyframes flow_forward {
+    0% {
+        stroke-dashoffset: 20;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+/*潮流线逆向*/
+@keyframes flow_reverse {
+    0% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: 20;
+    }
+}
+.canvas_loading{
+    width: 100px;
+    height: 100px;
+    /*  border: 1px solid red;*/
+    position: absolute;
+    text-align: center;
+    left:50%;
+    top: 50%;
+    margin: -50px 0 0 -50px;/*50%为自身尺寸的一半*/
 }

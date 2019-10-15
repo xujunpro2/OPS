@@ -9,7 +9,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 
-import '@/icons' // icon
+import '@/icons' // svg icon
 import '@/assets/css/globe.css'
 
 // set ElementUI lang to EN

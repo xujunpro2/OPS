@@ -1,7 +1,6 @@
 <template>
-  <div>
     <el-row>
-      <el-col :span="8">
+      <el-col :span="6">
         <div class="part" :style="{'background':this.items[0].color}"> <!--动态设置css-->
           <div class="part-name">{{this.items[0].name}}</div>
           <div class="part-count">{{this.items[0].count}}</div>
@@ -9,7 +8,7 @@
         </div>
       </el-col>
 
-    <el-col :span="8">
+    <el-col :span="6">
     <div class="part" :style="{'background':this.items[1].color}" > <!--动态设置css-->
       <div class="part-name">{{this.items[1].name}}</div>
       <div class="part-count">{{this.items[1].count}}</div>
@@ -17,31 +16,24 @@
     </div>
     </el-col>
 
-<el-col :span="8">
+<el-col :span="6">
     <div class="part" :style="{'background':this.items[2].color}" > <!--动态设置css-->
       <div class="part-name">{{this.items[2].name}}</div>
       <div class="part-count">{{this.items[2].count}}</div>
       <div class="part-icon"><i :class="items[2].icon"></i></div><!--动态设置class-->
     </div>
     </el-col>
-  </el-row>
-<el-row style="margin-top:20px">
-  <el-col :span="8">
+
+  <el-col :span="6">
     <div class="part" :style="{'background':this.items[3].color}" > <!--动态设置css-->
       <div class="part-name">{{this.items[3].name}}</div>
       <div class="part-count">{{this.items[3].count}}</div>
       <div class="part-icon"><i :class="items[3].icon"></i></div><!--动态设置class-->
     </div>
     </el-col>
-<el-col :span="8">
-    <div class="part" :style="{'background':this.items[4].color}"> <!--动态设置css-->
-      <div class="part-name">{{this.items[4].name}}</div>
-      <div class="part-count">{{this.items[4].count}}</div>
-      <div class="part-icon"><i :class="items[4].icon"></i></div><!--动态设置class-->
-    </div>
-    </el-col>
+
  </el-row>
-    </div>
+
 </template>
 
 <script>
@@ -54,7 +46,6 @@ export default {
         {name:"模型",count:"7",color:"#666633",icon:"el-icon-menu"},
         {name:"问题",count:"2",color:"#cc6600",icon:"el-icon-warning-outline"},
         {name:"隐患",count:"3",color:"#cc9933",icon:"el-icon-thumb"},
-        {name:"文件",count:"12",color:"#006666",icon:"el-icon-document"},
         {name:"人员",count:"4",color:"#009999",icon:"el-icon-s-custom"}
       ]
     };

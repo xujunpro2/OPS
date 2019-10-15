@@ -50,145 +50,74 @@ export const constantRoutes = [
 
 /** 动态路由，这里可以由服务端产生 */
 const dynamicRoutes = [
-  {
-    path: '/bim',
-    component: Layout,
-    redirect: '/bim',
-    meta: { title: '三维展示', icon: 'international' },
-    alwaysShow: true ,
-    children: [
+    {
+        path: '/scada',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: { title: '实时控制', icon: 'example' },
+        alwaysShow: true ,
+        children: [{
+            path: 'picture',
+            name: 'Picture',
+            component: () => import('@/views/scada/Picture'),
+            meta: { title: '监控画面', icon: 'icon' }
+          }]
+    },
+    {
+        path: '/docs',
+        component: Layout,
+        redirect: '/docs',
+        children: [{
+            path: 'docs',
+            name: 'Docs',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '档案管理', icon: 'education' }
+        }]
+    },
+    {
+        path: '/bbs',
+        component: Layout,
+        redirect: '/bbs',
+        children: [{
+            path: 'bbs',
+            name: 'Bbs',
+            component: () => import('@/views/bbs/Bbs'),
+            meta: { title: '沟通管理', icon: 'message' }
+        }]
+    },
+    {
+        path: '/sys',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: { title: '系统管理', icon: 'component' },
+        alwaysShow: true ,
+        children: [
         {
-            path: 'bim',
-            name: 'Bim',
-            component: () => import('@/views/bim/IFCShow'),
-            meta: { title: '三维展示', icon: 'international' }
+            path: 'user',
+            name: 'UserList',
+            component: () => import('@/views/sys/UserList'),
+            meta: { title: '用户管理', icon: 'peoples' }
         },
         {
-            path: 'ifcUpload',
-            name: 'IFCUpload',
-            component: () => import('@/views/bim/IFCUpload'),
-            meta: { title: '我的BIM', icon: 'documentation' }
+            path: 'rule',
+            name: 'Rule',
+            component: () => import('@/views/sys/Rule'),
+            meta: { title: '角色管理', icon: 'theme' }
+        },
+        {
+            path: 'dept',
+            name: 'Dept',
+            component: () => import('@/views/sys/Dept'),
+            meta: { title: '部门管理', icon: 'tree' }
+        },
+        {
+            path: 'specail',
+            name: 'Specail',
+            component: () => import('@/views/sys/Specail'),
+            meta: { title: '个性化设置', icon: 'people' }
         }
-    ]
-  },
-  {
-    path: '/rate',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: { title: '进度管理', icon: 'example' },
-    alwaysShow: true ,
-    children: [
-      {
-            path: 'rateCreate',
-            name: 'RateCreate',
-            component: () => import('@/views/rate/RateCreate'),
-            meta: { title: '进度计划制定', icon: 'edit' }
-      },
-      {
-        path: 'rateQuery',
-        name: 'RateQuery',
-        component: () => import('@/views/rate/RateQuery'),
-        meta: { title: '进度计划查询', icon: 'nested' }
-      }
-    ]
-  },
-  {
-    path: '/quality',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: { title: '质量管理', icon: 'eye-open' },
-    alwaysShow: true ,
-    children: [
-      {
-        path: 'qualityExcute',
-        name: 'QualiExcute',
-        component: () => import('@/views/quality/QualiExcute'),
-        meta: { title: '质量隐患处理', icon: 'link' }
-      },
-      {
-        path: 'qualityQuery',
-        name: 'QualiQuery',
-        component: () => import('@/views/quality/QualiQuery'),
-        meta: { title: '质量隐患查询', icon: 'table' }
-      }
-    ]
-  },
-  {
-    path: '/safety',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: { title: '安全隐患', icon: 'lock' },
-    alwaysShow: true ,
-    children: [
-      {
-        path: 'safetyExcute',
-        name: 'SafetyExcute',
-        component: () => import('@/views/safety/SafetyExcute'),
-        meta: { title: '安全隐患处理', icon: 'guide' }
-      },
-      {
-        path: 'safetyQuery',
-        name: 'SafetyQuery',
-        component: () => import('@/views/safety/SafetyQuery'),
-        meta: { title: '安全隐患查询', icon: 'skill' }
-      }
-    ]
-  },
-  {
-    path: '/docs',
-    component: Layout,
-    redirect: '/docs',
-    children: [{
-        path: 'docs',
-        name: 'Docs',
-        component: () => import('@/views/docs/Docs'),
-        meta: { title: '档案管理', icon: 'education' }
-      }]
-  },
-  {
-    path: '/bbs',
-    component: Layout,
-    redirect: '/bbs',
-    children: [{
-        path: 'bbs',
-        name: 'Bbs',
-        component: () => import('@/views/bbs/Bbs'),
-        meta: { title: '沟通管理', icon: 'message' }
-      }]
-  },
-  {
-    path: '/sys',
-    component: Layout,
-    redirect: 'noRedirect',
-    meta: { title: '系统管理', icon: 'component' },
-    alwaysShow: true ,
-    children: [
-      {
-        path: 'user',
-        name: 'UserList',
-        component: () => import('@/views/sys/UserList'),
-        meta: { title: '用户管理', icon: 'peoples' }
-      },
-      {
-        path: 'rule',
-        name: 'Rule',
-        component: () => import('@/views/sys/Rule'),
-        meta: { title: '角色管理', icon: 'theme' }
-      },
-      {
-        path: 'dept',
-        name: 'Dept',
-        component: () => import('@/views/sys/Dept'),
-        meta: { title: '部门管理', icon: 'tree' }
-      },
-      {
-        path: 'specail',
-        name: 'Specail',
-        component: () => import('@/views/sys/Specail'),
-        meta: { title: '个性化设置', icon: 'people' }
-      }
-    ]
-  }
+        ]
+    }
 ]
 
 /**白名单路由 */
