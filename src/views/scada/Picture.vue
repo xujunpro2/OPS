@@ -1,6 +1,22 @@
 <template>
-	<!--时间控件、echarts-->
+    <div id="rootDiv">
+	<!--echarts-->
 	<div id="picDiv" style="width: 100%;height:100%;overflow: hidden; background-color: #f8f8f8;" />
+    <!--时间范围widget采用elementUI重新实现-->
+    <el-dialog title="时间范围" :visible.sync="timeChooser"  width="30%">
+        <el-date-picker
+            v-model="timeChooserValues"
+            :type="timeChooserType"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+        </el-date-picker>
+        <span slot="footer" class="dialog-footer">
+            <el-button  @click="timeChooser = false">取 消</el-button>
+            <el-button  type="primary" @click="onTimeChooserSubmit">确 定</el-button>
+        </span>
+    </el-dialog>
+    </div>
 </template>
 
 <script>
@@ -14,6 +30,9 @@ export default {
 	name: "Picture",
 	data() {
 		return {
+            timeChooser: false,
+            timeChooserType:"daterange",//year/month/date/week/ datetime/datetimerange/daterange
+            timeChooserValues: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
             rtda:null//画面处理器
         };
 	},
@@ -27,12 +46,22 @@ export default {
 		},
 		initRtda() {
 			//构建画面运行处理对象
-            this.rtda = new RTDA($('#picDiv')[0]);
+            this.rtda = new RTDA($('#picDiv')[0],this);
             this.rtda.init();
 		},
 		loadCanvas() {
 			this.rtda.loadSVG(41);
-		}
+        },
+        //给timeChooser widget调用的api
+        showTimeChooser(type,values){
+            this.timeChooserType = type;
+            this.timeChooserValues = values;
+            this.timeChooser = true;
+        },
+        onTimeChooserSubmit(){
+            this.rtda.getRtdaWidget().setTimeChooserValues(this.timeChooserValues);
+            this.timeChooser = false;
+        }
 	},
 	mounted() {
 		this.initRtda();

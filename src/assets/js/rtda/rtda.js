@@ -9,7 +9,13 @@ import RtdaValuer from './rtdaValue';
 import RtdaOperator from './rtdaOper';
 import RtdaSocket from "./rtdaWebsocket";
 
-function RTDA(contentDiv) {
+/**
+ * RTDA是整个画面的管理者
+ * @param {* 放置画面SVG的div dom} contentDiv 
+ * @param {* 当前vue对象} vue 
+ */
+function RTDA(contentDiv,vue) {
+    this.vue = vue;
     this.contentDom = contentDiv;
     this.server = 'http://127.0.0.1:8080/xsw/';
     this.socketUrl = 'ws://127.0.0.1:8080/xsw/websocket';
@@ -286,6 +292,12 @@ function RTDA(contentDiv) {
      */
     RTDA.prototype.getRtdaValuer = function () {
         return rtdaValuer;
+    }
+    /**
+     * 获得RtdaWidget对象
+     */
+    RTDA.prototype.getRtdaWidget = function(){
+        return rtdaWidget;
     }
     RTDA.prototype.putTagValue = function (tagId, tagValue) {
         this.tagCache.put(tagId, tagValue);

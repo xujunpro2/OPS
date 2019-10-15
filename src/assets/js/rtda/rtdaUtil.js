@@ -61,6 +61,50 @@ RtdaUtil.prototype.formatNumber = function (num, pattern) {
     }
     return retstr.replace(/^,+/, '').replace(/\.$/, '');
 }
+//文本转Date，注意只支持formate： yyyy-MM-dd，yyyy-MM-dd HH，yyyy-MM-dd HH：mm ，  yyyy-MM-dd HH:mm:ss
+RtdaUtil.prototype.parseToDate = function(dateString){
+    //穿过的日期可能不带秒,做0补充
+    var dayAndTimeStrs = dateString.split(' ');
+    if(dayAndTimeStrs.length == 2)
+    {
+        var timeStrs = dayAndTimeStrs[1].split(":");
+        if(timeStrs.length == 1)
+        {
+            dateString +=":00:00";
+        }
+        else if(timeStrs.length == 2)
+        {
+            dateString +=":00";
+        }
+        
+    }
+    var DATE_REGEXP = new RegExp("(\\d{4})-(\\d{2})-(\\d{2})([T\\s](\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?)?.*");
+   if(DATE_REGEXP.test(dateString))
+   {
+       //$month-1因为月从0开始，而文本中月是1月开始
+       var timestamp = dateString.replace(DATE_REGEXP, function($all,$year,$month,$day,$part1,$hour,$minute,$second,$part2,$milliscond){
+           var date = new Date($year, $month-1,$day, $hour||"00", $minute||"00", $second||"00", $milliscond||"00");
+               return date.getTime();
+           });
+       var date = new Date();
+       date.setTime(timestamp);
+       return date;
+   }
+   return null;
+}
+
+ /**
+  * js获得Url参数,但在vue其实是没用的
+  */
+ RtdaUtil.prototype.getQueryStringByName = function(name)
+ {
+     var result = decodeURI(location.search).match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+     if(result == null || result.length < 1)
+     {
+         return "";
+     }
+     return result[1];
+ }
 
 RtdaUtil.prototype.getMapKeys = function(map){
     let keys = new Array();

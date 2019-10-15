@@ -1,6 +1,7 @@
 import SVG from "svgjs"
 import $ from "jquery";
 import rtdaUtil from "./rtdaUtil"
+require('./common.js')
 
 function RtdaWidget(rtda) {
 	var rtda = rtda;//rtda全局对象，用来取数操作
@@ -1022,11 +1023,12 @@ function RtdaWidget(rtda) {
 			var unit = rtdaDom.getAttribute('unit');
 			var showHour = rtdaDom.getAttribute('showhour').bool();//common.js中对String的扩展
 			var dateFormat = 'yyyy-MM-dd';
-			var my97pickerDateFormat = 'yyyy-MM-dd';//和format有点不同，HH和hh，写两个吧
+            var elementUIDateFormat = 'daterange';//elementUI需要的type定义
+            //显示时间
 			if(showHour)
 			{
 				dateFormat = 'yyyy-MM-dd hh:mm';
-				my97pickerDateFormat = 'yyyy-MM-dd HH:mm';
+				elementUIDateFormat = 'datetimerange';
 			}
 			var now = new Date();
 			now.setSeconds(0);
@@ -1060,17 +1062,35 @@ function RtdaWidget(rtda) {
 			//svg dom转为svg对象
 			var svgElement = SVG.adopt(textElement);
 			//只作文本填充，不需要tspan元素
-			svgElement.plain(preTimeStr+" - "+nowTimeStr);
+			svgElement.plain(preTimeStr+" ~ "+nowTimeStr);
 			//因为这里是解析阶段，echarts还未解析，所以增加一个画面初始化消息
 			var id = rtdaDom.getAttribute('id');
 			rtda.addInitEvent(rtda.RTDA_Event_TimeChanaged,id,{start:preTime.getTime(),end:now.getTime()});
-			textElement.addEventListener('click',function(){
-				// var timeChooser = new TimeChooser();
-				// timeChooser.newDialog(dateFormat,my97pickerDateFormat,id,textElement);
+			textElement.addEventListener('click',()=>{
+                //记录下当前时间控件的dom和id，方便确定按钮点击后处理
+                this.timeChooserTextElement = textElement;
+                this.timeChooserId = id;
+                this.dateFormat = dateFormat;
+                rtda.vue.showTimeChooser(elementUIDateFormat,[preTime,now]);
 			});
 		}
-		
-	}
+    }
+    //给vue调用的设置当前时间控件的确定按钮事件
+    RtdaWidget.prototype.setTimeChooserValues = function(values){
+        console.info(values);
+        if(this.timeChooserTextElement && this.timeChooserId)
+        {
+            var svgElement = SVG.adopt(this.timeChooserTextElement);
+            //只作文本填充，不需要tspan元素
+            svgElement.plain(values[0].format(this.dateFormat)+" ~ "+values[1].format(this.dateFormat));
+            rtda.notify(rtda.RTDA_Event_TimeChanaged,this.timeChooserId,{start:values[0].getTime(),end:values[1].getTime()});
+            //恢复
+            this.timeChooserTextElement = null;
+            this.timeChooserId = null;
+            this.dateFormat = null;
+        }
+        
+    }
 }
 
 export default RtdaWidget;
