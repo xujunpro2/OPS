@@ -1,5 +1,6 @@
 import SVG from "svgjs"
 import RtdaLineChart from './rtdaLineChart'
+import EChartsManager from './echarts/echartsManager'
 /**图元解释器*/
 function RtdaCellParser(rtda,widget,action) {
 	var rtdaWidget = widget;
@@ -118,11 +119,12 @@ function RtdaCellParser(rtda,widget,action) {
 		{
 			this.parseECharts(rtdaDom);
 		}
-	}
+    }
+    //echarts图元专用入口
 	RtdaCellParser.prototype.parseECharts = function(rtdaDom)
 	{
-		// var echartsManager = new EChartsManager();
-		// echartsManager.init(rtdaDom);
+		var echartsManager = new EChartsManager(rtda);
+		echartsManager.init(rtdaDom);
 	}
 	RtdaCellParser.prototype.parseLineChart =function(rtdaDom)
 	{

@@ -267,14 +267,14 @@ function RTDA(contentDiv,vue) {
         //解析器初始化
         svgParser.init();
         //遍历SVG文档中的rtda元素，形成我们自己的对象
-        $('svg').find('*').each(function () {
+        var svgDom = $(contentDiv).children()[0];//第一子节点就是svg
+        $(svgDom).find('*').each(function () {
             var domnode = $(this)[0];
             var nodeName = domnode.nodeName;
             var ns = nodeName.substr(0, 4);
             //如果是rtda元素，需要解析
             if (ns == 'rtda') {
                 svgParser.parse(domnode);
-
             }
         });
         //根据测点，将对象分组

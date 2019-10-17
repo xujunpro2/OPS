@@ -1,21 +1,21 @@
 <template>
-    <div id="rootDiv">
-	<!--echarts-->
-	<div id="picDiv" style="width: 100%;height:100%;overflow: hidden; background-color: #f8f8f8;" />
-    <!--时间范围widget采用elementUI重新实现-->
-    <el-dialog title="时间范围" :visible.sync="timeChooser"  width="30%">
-        <el-date-picker
-            v-model="timeChooserValues"
-            :type="timeChooserType"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-        </el-date-picker>
-        <span slot="footer" class="dialog-footer">
-            <el-button  @click="timeChooser = false">取 消</el-button>
-            <el-button  type="primary" @click="onTimeChooserSubmit">确 定</el-button>
-        </span>
-    </el-dialog>
+    <div style="width: 100%;height:100%">
+        <!--画面容器DIV-->
+        <div id="picDiv" style="width: 100%;height:100%;overflow: hidden; background-color: #f8f8f8;" />
+        <!--TimeChooser改为vue控件实现-->
+        <el-dialog title="时间范围" :visible.sync="timeChooser"  width="30%">
+            <el-date-picker
+                v-model="timeChooserValues"
+                :type="timeChooserType"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+            <span slot="footer" class="dialog-footer">
+                <el-button  @click="timeChooser = false">取 消</el-button>
+                <el-button  type="primary" @click="onTimeChooserSubmit">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -50,7 +50,7 @@ export default {
             this.rtda.init();
 		},
 		loadCanvas() {
-			this.rtda.loadSVG(41);
+			this.rtda.loadSVG(14);
         },
         //给timeChooser widget调用的api
         showTimeChooser(type,values){
