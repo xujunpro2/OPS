@@ -53,7 +53,7 @@ export default {
           }
         },
         radar: {
-          radius: '66%',
+          radius: '60%',
           center: ['50%', '42%'],
           splitNumber: 8,
           splitArea: {

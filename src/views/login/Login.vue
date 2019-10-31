@@ -4,7 +4,7 @@
 		<div class="login-box">
 			<div class="login-logo">
 				<a href="#">
-					<b>XCONTROL</b>
+					<b>iControl</b>
 				</a>
 			</div>
 			<div class="login-box-body">
@@ -81,7 +81,7 @@ export default {
 		// 	.onUpdate(object => {
 		// 		console.info(object);
 		// 	})
-		// 	.start();
+        // 	.start();
 	}
 };
 </script>

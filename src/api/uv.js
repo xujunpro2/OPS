@@ -9,13 +9,13 @@ var UVService = function(){
      * 登陆
      */
     UVService.prototype.login = function(userInfo){
-        return request.post('/uv/login.action', userInfo);
+        return request.post('uv/login.action', userInfo);
     }
     /**
      * 注销
      */
     UVService.prototype.logout = function(){
-        return request.post('/uv/logout.action');
+        return request.post('uv/logout.action');
     }
     /**
      * 获得当前用户信息

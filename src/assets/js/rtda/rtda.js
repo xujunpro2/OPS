@@ -8,7 +8,7 @@ import RtdaCellParser from './rtdaParser';
 import RtdaValuer from './rtdaValue';
 import RtdaOperator from './rtdaOper';
 import RtdaSocket from "./rtdaWebsocket";
-
+import Settings from '@/settings'
 /**
  * RTDA是整个画面的管理者
  * @param {* 放置画面SVG的div dom} contentDiv 
@@ -17,8 +17,8 @@ import RtdaSocket from "./rtdaWebsocket";
 function RTDA(contentDiv,vue) {
     this.vue = vue;
     this.contentDom = contentDiv;
-    this.server = 'http://127.0.0.1:8080/xsw/';
-    this.socketUrl = 'ws://127.0.0.1:8080/xsw/websocket';
+    this.server = Settings.server();
+    this.socketUrl = Settings.websocket();
     this.svgNS = "http://www.w3.org/2000/svg";
     //缓存当前测值
     this.tagCache = new Map();

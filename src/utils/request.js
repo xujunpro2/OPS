@@ -7,7 +7,7 @@ import {getToken} from '@/utils/auth'
 //axios.defaults.withCredentials = true
 // create an axios instance
 const service = axios.create({
-    baseURL: Settings.server
+    baseURL: Settings.server()
     //timeout: 5000 // request timeout
 })
 

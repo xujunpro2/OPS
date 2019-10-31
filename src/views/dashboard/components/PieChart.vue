@@ -45,6 +45,9 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        grid:{
+            top:120
+        },
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -52,21 +55,22 @@ export default {
         legend: {
             left: 'center',
             bottom: '10',
-            data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+            data: ['甘肃风电', '新疆风电', '海南风电', '江苏风电', '湖北风电','江西风电']
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '全国风力发电统计',
             type: 'pie',
             roseType: 'radius',
-            radius: [15, 95],
+            radius: [15, 90],
             center: ['50%', '38%'],
             data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
+              { value: 320, name: '甘肃风电' },
+              { value: 240, name: '新疆风电'},
+              { value: 149, name: '海南风电' },
+              { value: 100, name: '江苏风电' },
+              { value: 59, name: '湖北风电' },
+              { value: 35, name: '江西风电' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600
