@@ -1,5 +1,6 @@
 
 /**
+ * 是否是外链
  * @param {string} path
  * @returns {Boolean}
  */

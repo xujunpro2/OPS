@@ -63,7 +63,7 @@ export default {
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['洪山', '红谷', '富县中部', '富县西部', '三鸿泉', '上谷峡口', '枫泾'],
+          data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月'],
           boundaryGap: false,
           axisTick: {
             show: true

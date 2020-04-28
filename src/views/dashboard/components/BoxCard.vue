@@ -5,21 +5,21 @@
     </div>
     <div style="position:relative;">
         <pan-thumb :image="personPicture"  class="panThumb" />
-        <mallki class-name="mallki-text" text="清洁能源使用率统计" />
+        <mallki class-name="mallki-text" text="全年计划完成统计" />
         <div style="padding-top:35px;" class="progress-item" >
-            <span>光伏</span>
+            <span>生产</span>
             <el-progress :percentage="70" />
         </div>
         <div class="progress-item">
-            <span>风能</span>
+            <span>能耗</span>
             <el-progress :percentage="38"  color="#e6a23c"/>
         </div>
         <div class="progress-item">
-            <span>潮汐</span>
+            <span>故障</span>
             <el-progress :percentage="12"  color="#f56c6c"/>
         </div>
         <div class="progress-item">
-            <span>水电</span>
+            <span>销售</span>
             <el-progress :percentage="100" status="success" />
         </div>
     </div>

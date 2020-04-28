@@ -1,6 +1,6 @@
 
 export default {
-    title: 'iControl Demo System',
+    title: 'Dev OPS System',
     fixedHeader: true,
     websocket: () => {
         //js获得当前服务器IP和端口
@@ -10,11 +10,11 @@ export default {
         {
             //获取当前网址，
             var host = window.document.location.host; //ip:port
-            return 'ws://' + host + '/xsw/websocket';
+            return 'ws://' + host + '/ops/websocket';
         } 
         else 
         {
-            return 'ws://127.0.0.1:8080/xsw/websocket';
+            return 'ws://127.0.0.1:8080/ops/websocket';
         }
     },
     server:()=>{
@@ -27,7 +27,7 @@ export default {
          } 
          else 
          {
-             return 'http://127.0.0.1:8080/xsw/';
+             return 'http://127.0.0.1:8080/ops/';
          }
     }
     //websocket:'ws://127.0.0.1:8088/xsw/websocket',

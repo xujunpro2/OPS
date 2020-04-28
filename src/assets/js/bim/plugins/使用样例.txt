@@ -1,0 +1,37 @@
+所有查询必须在loaded之后注册
+FlashPlugin:
+            var ids = [42582];
+            let flashPlugin = viewerHelper.getViewer().getPlugin("flash");
+        	flashPlugin.addProds(ids);
+        	
+        	setTimeout(function(){
+        		flashPlugin.removeProds([42582]);
+        	},4000);
+
+TipPlugin:
+            var ids = [42582];
+            let tipPlugin = viewerHelper.getViewer().getPlugin('tip');
+            tipPlugin.addTip({id:104878,width:200,height:100,prodId:104878,html:'dfdfdfdf'});
+
+PointPlugin:
+            //构件顶点参数
+			var vertices = new Float32Array([
+				//2000.0,-250.0,1500.0,
+				0,0,0,
+				4000, 500, 3000,
+			]);
+			var ids = new Float32Array([
+				6000000, //ID通常设置的大一点，但不要超过8200005
+				6000001,
+			]);
+			var colors = new Float32Array([
+				1.0,0.0,0.0,1.0,
+				0.0,0.0,1.0,1.0,
+			]);
+			var pointPlugin = new PointPlugin({vertices:vertices,colors:colors,ids,ids});
+            viewer.addPlugin(pointPlugin);
+
+截图：
+            构造Viewer时指定true参数  new BimiViewer("bim", true);
+            var data = document.getElementById('bim').toDataURL();
+            this.img = data;//base64的img 

@@ -1,1 +1,0 @@
-[{"path":"/bim"},{"path":"/rate","children":["rateCreate", "rateQuery"]},{"path":"/quality","children":["qualityExcute", "qualityQuery"]},{"path":"/safety","children":["safetyExcute", "safetyQuery"]},{"path":"/docs"},{"path":"/bbs"},{"path":"/sys","children":["user","rule"]}]

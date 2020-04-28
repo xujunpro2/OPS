@@ -55,7 +55,7 @@ export default {
         legend: {
             left: 'center',
             bottom: '10',
-            data: ['甘肃风电', '新疆风电', '海南风电', '江苏风电', '湖北风电','江西风电']
+            data: ['线材', '钢板', '钢管', '钢丝', '螺纹钢']
         },
         series: [
           {
@@ -65,12 +65,11 @@ export default {
             radius: [15, 90],
             center: ['50%', '38%'],
             data: [
-              { value: 320, name: '甘肃风电' },
-              { value: 240, name: '新疆风电'},
-              { value: 149, name: '海南风电' },
-              { value: 100, name: '江苏风电' },
-              { value: 59, name: '湖北风电' },
-              { value: 35, name: '江西风电' }
+              { value: 320, name: '线材' },
+              { value: 240, name: '钢板'},
+              { value: 149, name: '钢管' },
+              { value: 100, name: '钢丝' },
+              { value: 59, name: '螺纹钢' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

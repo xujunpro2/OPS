@@ -51,17 +51,27 @@ export const constantRoutes = [
 /** 动态路由，这里可以由服务端产生 */
 const dynamicRoutes = [
     {
-        path: '/scada',
+        path: '/factory',
         component: Layout,
-        redirect: 'noRedirect',
-        meta: { title: '实时控制', icon: 'example' },
-        alwaysShow: true ,
+        redirect: '/factory',
         children: [{
-            path: 'picture',
-            name: 'Picture',
-            component: () => import('@/views/scada/Picture'),
-            meta: { title: '监控画面', icon: 'icon' }
+            path: 'factory',
+            name: 'Factory',
+            component: () => import('@/views/factory'),
+            meta: { title: '数字工厂', icon: 'deploymentunit' }
           }]
+    },
+    
+    {
+        path: '/bbs',
+        component: Layout,
+        redirect: '/bbs',
+        children: [{
+            path: 'bbs',
+            name: 'Bbs',
+            component: () => import('@/views/bbs/Bbs'),
+            meta: { title: '工作台', icon: 'comment' }
+        }]
     },
     {
         path: '/docs',
@@ -71,51 +81,114 @@ const dynamicRoutes = [
             path: 'docs',
             name: 'Docs',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '档案管理', icon: 'education' }
+            meta: { title: '物资管理', icon: 'filesearch' }
         }]
     },
     {
-        path: '/bbs',
+        path: '/personChk',
         component: Layout,
-        redirect: '/bbs',
+        redirect: '/personChk',
         children: [{
-            path: 'bbs',
-            name: 'Bbs',
-            component: () => import('@/views/bbs/Bbs'),
-            meta: { title: '沟通管理', icon: 'message' }
+            path: 'personChk',
+            name: 'PersonChk',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '人工巡检', icon: 'filesearch' }
+        }]
+    },
+    {
+        path: '/devEd',
+        component: Layout,
+        redirect: '/devEd',
+        children: [{
+            path: 'devEd',
+            name: 'DevEd',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '设备检修', icon: 'filesearch' }
+        }]
+    },
+    {
+        path: '/camera',
+        component: Layout,
+        redirect: '/camera',
+        children: [{
+            path: 'camera',
+            name: 'Camera',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '视频监控', icon: 'filesearch' }
         }]
     },
     {
         path: '/sys',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '系统管理', icon: 'component' },
+        meta: { title: '系统管理', icon: 'setting' },
         alwaysShow: true ,
         children: [
         {
             path: 'user',
             name: 'UserList',
             component: () => import('@/views/sys/UserList'),
-            meta: { title: '用户管理', icon: 'peoples' }
+            meta: { title: '用户管理', icon: 'user' }
         },
         {
             path: 'rule',
             name: 'Rule',
             component: () => import('@/views/sys/Rule'),
-            meta: { title: '角色管理', icon: 'theme' }
+            meta: { title: '角色管理', icon: 'team' }
         },
         {
             path: 'dept',
             name: 'Dept',
             component: () => import('@/views/sys/Dept'),
-            meta: { title: '部门管理', icon: 'tree' }
+            meta: { title: '部门管理', icon: 'apartment' }
         },
         {
             path: 'specail',
             name: 'Specail',
             component: () => import('@/views/sys/Specail'),
-            meta: { title: '个性化设置', icon: 'people' }
+            meta: { title: '个性化设置', icon: 'skin' }
         }
+        ]
+    },
+    // {
+    //     path: '/develop',
+    //     component: Layout,
+    //     redirect: '/develop',
+    //     children: [{
+    //         path: 'log',
+    //         name: 'Log',
+    //         component: () => import('@/views/develop/Log'),
+    //         meta: { title: '大屏', icon: 'bug' }
+    //     }]
+    // },
+    {
+        path: 'external-link',
+        component: Layout,
+        children: [
+          {
+            path: 'http://datav.jiaminghi.com/demo/construction-data/index.html',
+            meta: { title: '大屏1', icon: 'skin' }
+          }
+        ]
+    },
+    {
+        path: 'external-link',
+        component: Layout,
+        children: [
+          {
+            path: 'http://datav.jiaminghi.com/demo/electronic-file/index.html',
+            meta: { title: '大屏2', icon: 'skin' }
+          }
+        ]
+    },
+    {
+        path: 'external-link',
+        component: Layout,
+        children: [
+          {
+            path: 'http://datav.jiaminghi.com/demo/manage-desk/index.html',
+            meta: { title: '大屏3', icon: 'skin' }
+          }
         ]
     }
 ]

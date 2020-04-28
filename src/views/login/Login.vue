@@ -1,17 +1,16 @@
 <template>
 	<div class="login">
+        <div class="loginbg"/>
 		&nbsp;
 		<div class="login-box">
-			<div class="login-logo">
-				<a href="#">
-					<b>iControl</b>
-				</a>
+			<div class="login-label">
+				<a href="#">Dev OPS</a>
 			</div>
 			<div class="login-box-body">
 				<div class="logo">
 					<img src="../../assets/icons/logo.png" />
-					<p></p>
-					<span class="project">演示系统</span>
+					
+					<span class="project">欢 迎</span>
 				</div>
 				<el-input placeholder="用户" suffix-icon="el-icon-user" v-model="username"></el-input>
 				<p></p>
@@ -100,16 +99,17 @@ export default {
 	width: 360px;
 	/* margin: 10% auto; */
 }
-.login-logo {
-	font-size: 35px;
+.login-label {
 	text-align: center;
 	margin-bottom: 25px;
 }
-.login-logo a {
-	color: #444;
+.login-label a {
+    font-size: 35px;
+    font-weight: 400;
+	color: #fff;
 }
 .login-box-body {
-	background: rgba(255, 255, 255, 0.5);
+	background: rgba(255, 255, 255, 0.2);
 	padding: 20px;
 	border-top: 0;
 	color: #666;
@@ -117,14 +117,31 @@ export default {
 }
 .logo {
 	text-align: center;
-	width: calc(73% + 2px);
+	width: calc(73%);
 	margin-left: 10%;
 	margin-bottom: 5px;
+}
+.logo img{
+    width: 200px;
+    height: 200px;
 }
 .logo .project {
 	display: block;
 	width: 100%;
 	height: 30px;
 	font-size: 18px;
+    font-weight: 500;
+    color:#fff;
+}
+.loginbg {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color:  rgba(0, 0, 0, 0.8);
+        background-image: url('../../assets/icons/loginbg.png');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
 }
 </style>
