@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<title>视频播放器</title>
+
+		<script src="./js/jquery-1.7.2.js"></script>
+		<link href="./js/vedio-js.css" rel="stylesheet">
+		<script src="./js/vedeojs-ie8.min.js"></script>
+		<script src="./js/video.min.js"></script>
+		<script src="./js/videojs-flash.min.js"></script>
+		<script src="./js/videojs-contrib-hls.js"></script>
+		<style>
+			body,
+			html {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			.videoViewContent {
+                width: 100%;
+                height: 100%;
+                /* position: absolute;
+                top:0;
+                bottom: 0px; */
+            }
+			#vedio,
+			#vedioContainer {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.vjs-error-display {
+				display: none;
+			}
+			
+		</style>
+
+	</head>
+
+	<body onbeforeunload="onunloadPlayer()">
+
+		<div class="videoViewContent">
+			<video id="vedio" autoplay="autoplay" class="video-js vjs-big-play-centered vjs-default-skin" controls data-setup="{}">
+				<source src="" type="application/x-mpegURL">
+				<p class="vjs-no-js">浏览器禁用js或者不支持HTML5</a>
+				</p>
+			</video>
+		</div>
+		<!-- <div class="videoControlContent">
+			<div class="videoControlWrapper">
+				<div class="videoControlDirection">
+					<table>
+						<tr>
+							<td>&nbsp;</td>
+							<td><img class="controlImg" src="./img/up.png" onmousedown="videoControlSubmit('UP')" onmouseup="vedioControlStop('UP')" /></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td><img class="controlImg" src="./img/left.png" onmousedown="videoControlSubmit('LEFT')" onmouseup="vedioControlStop('LEFT')" /></td>
+							<td>&nbsp;</td>
+							<td><img class="controlImg" src="./img/right.png" onmousedown="videoControlSubmit('RIGHT')" onmouseup="vedioControlStop('RIGHT')" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td><img class="controlImg" src="./img/down.png" onmousedown="videoControlSubmit('DOWN')"  onmouseup="vedioControlStop('DOWN')"/></td>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+				</div>
+		
+				<div class="videoControlDirection">
+					<table>
+						<tr>
+							<td><img class="controlImg" src="./img/left_up.png" onmousedown="videoControlSubmit('LEFT_UP')" onmouseup="vedioControlStop('LEFT_UP')" /></td>
+							<td><img class="controlImg" src="./img/right_up.png" onmousedown="videoControlSubmit('RIGHT_UP')" onmouseup="vedioControlStop('RIGHT_UP')" /></td>
+						</tr>
+						<tr>
+							<td><img class="controlImg" src="./img/left_down.png" onmousedown="videoControlSubmit('LEFT_DOWN')" onmouseup="vedioControlStop('LEFT_DOWN')" /></td>
+							<td><img class="controlImg" src="./img/right_down.png" onmousedown="videoControlSubmit('RIGHT_DOWN')" onmouseup="vedioControlStop('RIGHT_DOWN')" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	 -->
+		<!--服务端配置-->
+		<script type="text/javascript" src="js/config.js?v=1.0.0" ></script>
+		<!--业务代码-->
+		<script type="text/javascript" src="js/index.js?v=1.0.0" ></script>
+	</body>
+
+</html>

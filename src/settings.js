@@ -1,6 +1,6 @@
 
 export default {
-    title: 'Dev OPS System',
+    title: 'LETS OPS System',
     fixedHeader: true,
     websocket: () => {
         //js获得当前服务器IP和端口

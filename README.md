@@ -28,3 +28,6 @@ npm install -g yarn
 # yarn命令 
 npm install === yarn 
 npm run serve === yarn serve
+
+# 参看package最新版本
+npm view 项目名称 version

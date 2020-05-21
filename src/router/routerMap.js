@@ -50,71 +50,209 @@ export const constantRoutes = [
 
 /** 动态路由，这里可以由服务端产生 */
 const dynamicRoutes = [
-    {
-        path: '/factory',
-        component: Layout,
-        redirect: '/factory',
-        children: [{
-            path: 'factory',
-            name: 'Factory',
-            component: () => import('@/views/factory'),
-            meta: { title: '数字工厂', icon: 'deploymentunit' }
-          }]
-    },
+    // {
+    //     path: '/factory',
+    //     component: Layout,
+    //     redirect: '/factory',
+    //     children: [{
+    //         path: 'factory',
+    //         name: 'Factory',
+    //         component: () => import('@/views/factory'),
+    //         meta: { title: '数字工厂', icon: 'deploymentunit' }
+    //       }]
+    // },
     
     {
-        path: '/bbs',
+        path: '/workbench',
         component: Layout,
-        redirect: '/bbs',
+        redirect: '/workbench',
         children: [{
             path: 'bbs',
             name: 'Bbs',
-            component: () => import('@/views/bbs/Bbs'),
-            meta: { title: '工作台', icon: 'comment' }
+            component: () => import('@/views/factory'),
+            meta: { title: '工作台', icon: 'desktop' }
         }]
     },
     {
-        path: '/docs',
+        path: '/scada',
         component: Layout,
-        redirect: '/docs',
+        redirect: '/index',
+        children: [{
+            path: 'index',
+            name: 'Scada',
+            component: () => import('@/views/scada/Picture'),
+            meta: { title: '工业控制', icon: 'alert' }
+        }]
+    },
+    {
+        path: '/video',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: { title: '智慧安防', icon: 'video' },
+        alwaysShow: true ,
+        children: [{
+            path: 'area',
+            name: 'AreaManager',
+            component: () => import('@/views/vedio/AreaManager'),
+            meta: { title: '区域管理', icon: 'border-outer' }
+        },
+        {
+            path: 'camera',
+            name: 'CameraManager',
+            component: () => import('@/views/vedio/CameraManager'),
+            meta: { title: '摄像头管理', icon: 'video' }
+        },
+        {
+            path: 'live',
+            name: 'Live',
+            component: () => import('@/views/vedio/VedioLive'),
+            meta: { title: '视频监控', icon: 'camera' }
+        },
+        {
+            path: 'vedioBack',
+            name: 'VedioBack',
+            component: () => import('@/views/vedio/VedioBack'),
+            meta: { title: '视频回放', icon: 'USB' }
+        },
+        // {
+        //     path: 'car',
+        //     name: 'Car',
+        //     component: () => import('@/views/vedio/VedioLive'),
+        //     meta: { title: '车牌识别', icon: 'car' }
+        // },
+        {
+            path: 'irruptAlarm',
+            name: 'IrruptAlarm',
+            component: () => import('@/views/vedio/IrruptAlarm'),
+            meta: { title: '入侵告警', icon: 'gateway' }
+        },
+        {
+            path: 'inSum',
+            name: 'InSum',
+            component: () => import('@/views/vedio/IrruptStatistical'),
+            meta: { title: '入侵统计', icon: 'bao' }
+        }]
+    },
+    {
+        path: '/simulation',
+        component: Layout,
+        redirect: '/simulation',
         children: [{
             path: 'docs',
             name: 'Docs',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '物资管理', icon: 'filesearch' }
+            meta: { title: '工艺仿真', icon: 'filesearch' }
         }]
     },
     {
-        path: '/personChk',
+        path: '/inspection',
         component: Layout,
-        redirect: '/personChk',
+        redirect: 'noRedirect',
+        meta: { title: '智慧巡检', icon: 'monitor' },
+        alwaysShow: true ,
         children: [{
-            path: 'personChk',
-            name: 'PersonChk',
+            path: 'plan',
+            name: 'Plan',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '人工巡检', icon: 'filesearch' }
+            meta: { title: '巡检计划管理', icon: 'edit-square' }
+        },
+        {
+            path: 'dev',
+            name: 'Dev',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '巡检设备台账', icon: 'check' }
+        },
+        {
+            path: 'workOrder',
+            name: 'WorkOrder',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '巡检工单管理', icon: 'unordered list' }
+        },
+        {
+            path: 'count',
+            name: 'Count',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '巡检工作统计', icon: 'bar chart' }
+        },
+        {
+            path: 'assess',
+            name: 'Assess',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '巡检员工考核', icon: 'switch user' }
         }]
     },
     {
-        path: '/devEd',
+        path: '/om',
         component: Layout,
-        redirect: '/devEd',
+        redirect: 'noRedirect',
+        meta: { title: '智慧运维', icon: 'wrench' },
         children: [{
-            path: 'devEd',
-            name: 'DevEd',
+            path: 'malfunction',
+            name: 'Malfunction',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '设备检修', icon: 'filesearch' }
+            meta: { title: '设备故障管理', icon: 'error' }
+        },
+        {
+            path: 'alert',
+            name: 'Alert',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '设备告警管理', icon: 'alert' }
+        },
+        {
+            path: 'keep',
+            name: 'Kepp',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '设备维保管理', icon: 'medicinebox' }
+        },
+        {
+            path: 'repairOrder',
+            name: 'RepairOrder',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '检修工单管理', icon: 'file-text' }
+        },
+        {
+            path: 'keepOrder',
+            name: 'KeppOrder',
+            component: () => import('@/views/docs/Docs'),
+            meta: { title: '维保工单管理', icon: 'file-zip' }
         }]
     },
     {
-        path: '/camera',
+        path: '/dev',
         component: Layout,
-        redirect: '/camera',
+        redirect: 'noRedirect',
+        meta: { title: '设备资产', icon: 'sever' },
+        alwaysShow: true ,
         children: [{
-            path: 'camera',
-            name: 'Camera',
-            component: () => import('@/views/docs/Docs'),
-            meta: { title: '视频监控', icon: 'filesearch' }
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/sys/UserList'),
+            meta: { title: '设备台账', icon: 'detail' }
+        },
+        {
+            path: 'backup',
+            name: 'Backup',
+            component: () => import('@/views/sys/UserList'),
+            meta: { title: '备件备件', icon: 'save' }
+        },
+        {
+            path: 'fail',
+            name: 'Fail',
+            component: () => import('@/views/sys/UserList'),
+            meta: { title: '故障信息', icon: 'file -exception' }
+        }]
+    },
+    {
+        path: '/reprot',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: { title: '统计报表', icon: 'report' },
+        alwaysShow: true ,
+        children: [{
+            path: 'demo',
+            name: 'Demo',
+            component: () => import('@/views/sys/UserList'),
+            meta: { title: '某某报表', icon: 'report' }
         }]
     },
     {
@@ -162,7 +300,7 @@ const dynamicRoutes = [
     //     }]
     // },
     {
-        path: 'external-link',
+        path: 'link1',
         component: Layout,
         children: [
           {
@@ -172,7 +310,7 @@ const dynamicRoutes = [
         ]
     },
     {
-        path: 'external-link',
+        path: 'link2',
         component: Layout,
         children: [
           {
@@ -182,7 +320,7 @@ const dynamicRoutes = [
         ]
     },
     {
-        path: 'external-link',
+        path: 'link3',
         component: Layout,
         children: [
           {

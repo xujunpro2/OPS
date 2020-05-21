@@ -2650,6 +2650,34 @@ BimiViewer.prototype.zoomTo = function (id) {
     return true;
 };
 
+//flyTo不直接调用setCameraTarget是因为，setCameraTarget()中直接讲计算出来的距离赋值给this.__distance了，这里需要逐步赋值
+BimiViewer.prototype.flyTo = function(id){
+	var self = this;
+	var curDist = this._distance;//setCameraTarget之前的距离，就是当前距离
+	this.setCameraTarget(id); //setCameraTarget内部已经设置了this._origin
+	var dstDist = this._distance;//setCameraTarget计算之后的距离
+	//计算flyTo构件的距离
+	var product = this.getProductMap(id);
+	if (product) 
+	{
+        //根据中心和摄像头位置，计算矩阵 
+        var eye = this.getCameraPosition();
+		var dir = vec3.create();
+		vec3.subtract(dir, eye, this._origin);
+		dir = vec3.normalize(vec3.create(), dir);
+					    
+        var tween = new TWEEN.Tween({value:curDist}).to({value:dstDist},2000).easing(TWEEN.Easing.Linear.None)
+    			.onUpdate(function(object) {
+	                	var tempDist = object.value;
+					    var translation = vec3.create();
+					    vec3.scale(translation, dir, tempDist);
+					    vec3.add(eye, translation, self._origin);
+					    mat4.lookAt(self._mvMatrix, eye, self._origin, [0, 0, 1]);
+            	});
+    	tween.start();
+   }
+}
+
 
 /**
 * Use this function to show default views.

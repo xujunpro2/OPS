@@ -4,7 +4,7 @@
 		&nbsp;
 		<div class="login-box">
 			<div class="login-label">
-				<a href="#">Dev OPS</a>
+				<a href="#">LETS OPS</a>
 			</div>
 			<div class="login-box-body">
 				<div class="logo">

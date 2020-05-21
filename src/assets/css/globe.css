@@ -146,3 +146,8 @@ strong {
     top: 50%;
     margin: -50px 0 0 -50px;/*50%为自身尺寸的一半*/
 }
+
+/*vedio.js鼠标click会暂停，这样禁用*/
+.vjs-tech {
+    pointer-events: none;
+  }

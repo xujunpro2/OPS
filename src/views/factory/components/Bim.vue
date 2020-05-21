@@ -44,7 +44,7 @@ export default {
 	name: "bim",
 	data() {
 		return {
-            debug:false,
+            debug:true,
             modelId: -1,
 			loadedBims: new Map(), //已加载的bim，key是guid，value是model id
 			ifcNameCache: new Map(), //bim名称缓存,key是guid,value是ifc名称
@@ -124,7 +124,6 @@ export default {
 				if (id) {
 					viewer.resetStates();
 					viewer.zoomTo(id);
-					viewer.setCameraTarget(id);
 					viewer.setState(ProductState.HIGHLIGHTED, [id]);
 				}
 			});
@@ -221,30 +220,31 @@ export default {
 			}
         },
         onThumbnailClick(canvasId){
+            console.info('canvasId:'+canvasId)
             let viewer = viewerHelper.getViewer();
             if(canvasId == 11)
             {
-                viewer.zoomTo(5860067);
-                viewer.setCameraTarget(5860067);
-                viewer.setCameraPosition([26561.6171875, 16810.826171875, 67974.0859375]);
+                 viewer.setCameraPosition([26561.6171875, 16810.826171875, 67974.0859375]);
+                viewer.flyTo(5860067);
+               
             }
             if(canvasId == 15)
             {
-               	viewer.zoomTo(5960400);
-                viewer.setCameraTarget(5960400);
-                viewer.setCameraPosition([9142.7451171875, 13734.3369140625, 77463.421875]);
+                 viewer.setCameraPosition([8959.3310546875, 13750.8017578125, 77533.171875]);
+               	viewer.flyTo(5960400);
+               
             }
             if(canvasId == 25)
             {
-               	viewer.zoomTo(7638397);
-                viewer.setCameraTarget(7638397);
                 viewer.setCameraPosition([46677.80078125, 9083.9072265625, 65250.125]);
+               	viewer.flyTo(7638397);
             }
              if(canvasId == 9)
             {
-               	viewer.zoomTo(3015605);
-                viewer.setCameraTarget(3015605);
-                viewer.setCameraPosition([35883.828125, 14765.751953125, 67174.75]);
+                 viewer.setCameraPosition([35883.828125, 14765.751953125, 67174.75]);
+               	viewer.flyTo(3015605);
+  
+               
             }
         },
         test()

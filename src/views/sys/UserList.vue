@@ -213,7 +213,7 @@ export default {
             if(this.curDeptId !== -1)
             {
                 this.$store.dispatch("dept/getUserCountByDept",this.curDeptId).then(data => {
-                    this.total = data;
+                    this.total = data.count;
                     return new Promise((resolve, reject) => {
                         resolve();
                     });
@@ -298,11 +298,11 @@ export default {
 				return new Promise((resolve, reject) => {
                     resolve();
 				});
-            })
-            //计算分页
-			.then(() => {
-                this.initUserTabel();
-            });
+        })
+        //计算分页
+		.then(() => {
+            this.initUserTabel();
+        });
         //加载系统角色
         this.$store.dispatch("uv/getRules").then(data => {
             this.ruleOptionList.length = 0;

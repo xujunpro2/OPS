@@ -5,6 +5,8 @@ import app from './modules/app'
 import settings from './modules/settings'
 import uv from './modules/uv'
 import dept from './modules/dept'
+import camera from './modules/camera'
+
 
 Vue.use(Vuex)
 
@@ -13,7 +15,8 @@ const store = new Vuex.Store({
     app,
     settings,
     uv,
-    dept
+    dept,
+    camera
   },
   getters
 })

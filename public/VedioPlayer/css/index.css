@@ -1,0 +1,49 @@
+
+
+.videoControlContent {
+	height: 140px;
+	width: 100%;
+/*	border-top: 1px solid #E6E6E6;*/
+	position: absolute;
+	bottom: 0px;
+	overflow: hidden;
+}
+
+.videoControlWrapper {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.videoControlDirection {
+	width: 40%;
+	height: 100%;
+	float: left;
+	text-align: center;
+}
+
+.videoControlDirection>table {
+	width: 120px !important;
+	height: 120px !important;
+	text-align: center !important;
+
+}
+
+.controlImg {
+	width: 36px;
+	height: 36px;
+	margin: 2px;
+}
+
+.videoControlStop {
+	width: 20%;
+	height: 100%;
+	float: left;
+}
+
+.videoControlStop>table {
+	width: 120px !important;
+	height: 120px !important;
+	text-align: center !important;
+	margin-top: 5px;
+	margin-left: calc(50% - 60px);
+}

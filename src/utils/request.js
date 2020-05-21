@@ -7,8 +7,8 @@ import {getToken} from '@/utils/auth'
 //axios.defaults.withCredentials = true
 // create an axios instance
 const service = axios.create({
-    baseURL: Settings.server()
-    //timeout: 5000 // request timeout
+    baseURL: Settings.server(),
+    //timeout: 10000, // request timeout开发debug阶段不要设置
 })
 
 // request interceptor
@@ -51,6 +51,7 @@ service.interceptors.response.use(
         return myResponse.data;
     },
     error => {
+        //服务器内部异常
         if (error.response && error.response.status !== 401) 
         {
             const res = error.response.data
@@ -66,6 +67,7 @@ service.interceptors.response.use(
                 duration: 5 * 1000
             })
         }
+        //网络中断
         else
         {
             Message({
