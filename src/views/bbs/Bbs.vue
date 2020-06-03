@@ -81,11 +81,11 @@
         <el-table-column prop="author" label="作者" width="80"></el-table-column>
         <el-table-column prop="time" label="发布时间" width="140"></el-table-column>
         <el-table-column prop="state" label="状态" width="80"></el-table-column>
-        <el-table-column width="130">
+        <el-table-column width="230">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row,'new')" type="text" >发布</el-button>
-            <el-button @click="handleClick(scope.row,'update')" type="text" >修改</el-button>
-            <el-button @click="handleClick(scope.row,'delete')" type="text" >删除</el-button>
+            <el-button @click="handleClick(scope.row,'new')" >发布</el-button>
+            <el-button @click="handleClick(scope.row,'update')" >修改</el-button>
+            <el-button @click="handleClick(scope.row,'delete')" type="danger" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

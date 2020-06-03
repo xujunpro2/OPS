@@ -19,12 +19,10 @@
                         <el-table-column prop="email" label="邮箱"></el-table-column>
                         <el-table-column prop="mobile" label="电话"></el-table-column>
                         <el-table-column prop="ruleName" label="角色"></el-table-column>
-                        <el-table-column label="操作" width="130">
+                        <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <el-button @click="onUpdateUser(scope.row)" type="text">修改</el-button>
-                                <el-button @click="onDeleteUser(scope.row)" type="text">
-                                    <span id="deleteButton">删除</span>
-                                </el-button>
+                                <el-button @click="onDeleteUser(scope.row)" type="danger">删除</el-button>
+                                <el-button @click="onUpdateUser(scope.row)">修改</el-button>
                             </template>
                         </el-table-column>
                     </el-table>

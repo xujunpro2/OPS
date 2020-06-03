@@ -6,7 +6,8 @@ import settings from './modules/settings'
 import uv from './modules/uv'
 import dept from './modules/dept'
 import camera from './modules/camera'
-
+import dev from './modules/dev'
+import ifc from './modules/ifc'
 
 Vue.use(Vuex)
 
@@ -16,7 +17,9 @@ const store = new Vuex.Store({
     settings,
     uv,
     dept,
-    camera
+    camera,
+    dev,
+    ifc
   },
   getters
 })

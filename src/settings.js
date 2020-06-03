@@ -5,8 +5,8 @@ export default {
     websocket: () => {
         //js获得当前服务器IP和端口
         var curPath = window.document.location.href;
-        //如果url中包含了xsw，那么表示是正式部署到tomcat上了,node开发环境下的url不会包含xsw的
-        if (curPath.indexOf('xsw') != -1) 
+        //如果url中包含了ops，那么表示是正式部署到tomcat上了,node开发环境下的url不会包含ops的
+        if (curPath.indexOf('ops') != -1) 
         {
             //获取当前网址，
             var host = window.document.location.host; //ip:port
@@ -14,19 +14,20 @@ export default {
         } 
         else 
         {
+            //return 'ws://111.229.194.36:8080/ops/websocket';
             return 'ws://127.0.0.1:8080/ops/websocket';
         }
     },
     server:()=>{
          //js获得当前服务器IP和端口
          var curPath = window.document.location.href;
-         //如果url中包含了xsw，那么表示是正式部署到tomcat上了,node开发环境下的url不会包含xsw的
-         if (curPath.indexOf('xsw') != -1) 
+         if (curPath.indexOf('ops') != -1) 
          {
             return '';//发行版本
          } 
          else 
          {
+             //return 'http://111.229.194.36:8080/ops/';
              return 'http://127.0.0.1:8080/ops/';
          }
     }

@@ -1,19 +1,16 @@
 <template>
-	<div :class="className" :style="{height:height,width:width}" />
+	<div :style="{height:height,width:width}" />
 </template>
 
 <script>
 import echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
-
-const animationDuration = 6000;
+import resize from "@/utils/resize.js";
 
 export default {
+    mixins: [resize],
 	props: {
-		className: {
-			type: String,
-			default: "chart"
-		},
+		
 		width: {
 			type: String,
 			default: "100%"
@@ -96,7 +93,7 @@ export default {
 						stack: "vistors",
 						barWidth: "60%",
 						data: [79, 52, 200, 334, 390, 330, 220],
-						animationDuration
+						animationDuration:6000
 					},
 					{
 						name: "告警次数",
@@ -104,7 +101,7 @@ export default {
 						stack: "vistors",
 						barWidth: "60%",
 						data: [80, 52, 200, 334, 390, 330, 220],
-						animationDuration
+						animationDuration:6000
 					}
 				]
             };

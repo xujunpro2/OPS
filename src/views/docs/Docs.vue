@@ -53,10 +53,10 @@
           label="更新时间"
           width="120">
         </el-table-column>
-        <el-table-column width="120">
+        <el-table-column width="200">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row,'download')" type="text" >下载</el-button>
-            <el-button @click="handleClick(scope.row,'delete')" type="text" >删除</el-button>
+            <el-button @click="handleClick(scope.row,'download')"  >下载</el-button>
+            <el-button @click="handleClick(scope.row,'delete')" type="danger" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

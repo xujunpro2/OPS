@@ -15,8 +15,8 @@
             </el-table-column>
             <el-table-column label="操作" width="230">
                 <template slot-scope="scope">
-                    <el-button @click="onUpdateArea(scope.row)" type="text" >修改</el-button>
-                    <el-button @click="onDeleteArea(scope.row)" type="text" ><span id="deleteButton">删除</span></el-button>
+                    <el-button @click="onDeleteArea(scope.row)" type="danger" >删除</el-button>
+                    <el-button @click="onUpdateArea(scope.row)">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -138,12 +138,7 @@ export default {
                 this.$store.dispatch('camera/deleteArea',areaId).then(data=>{
                     //刷新表格
                     this.getAreaTree();
-                    this.$notify({
-                        title: '消息',
-                        message: '删除成功',
-                        type: 'success',
-                        duration:3000
-                    });
+                    this.$notify({title: '消息', message: '删除成功', type: 'success',duration:3000});
                 });
             }).catch(() => {});
         },

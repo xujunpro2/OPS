@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import ExceptionPie from './components/IrruptExceptionChart'
+import ExceptionPie from './components/IrruptExceptionPie'
 import ExceptionTop5 from './components/IrruptExceptionTop5'
 import ExceptionMonth from './components/IrruptExceptionLine'
 import ExceptionArea from './components/IrruptExceptionBar'

@@ -10,8 +10,9 @@
             </el-table-column>
             <el-table-column prop="ruleId" label="操作" width="230">
                 <template slot-scope="scope">
-                <el-button @click="onUpdateDept(scope.row)" type="text" >修改</el-button>
-                <el-button @click="onDeleteDept(scope.row)" type="text" ><span id="deleteButton">删除</span></el-button>
+                    <el-button @click="onDeleteDept(scope.row)" type="danger" >删除</el-button>
+                    <el-button @click="onUpdateDept(scope.row)" >修改</el-button>
+                
                 </template>
             </el-table-column>
         </el-table>

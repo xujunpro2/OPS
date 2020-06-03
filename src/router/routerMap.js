@@ -227,7 +227,7 @@ const dynamicRoutes = [
             path: 'list',
             name: 'List',
             component: () => import('@/views/sys/UserList'),
-            meta: { title: '设备台账', icon: 'detail' }
+            meta: { title: '设备管理', icon: 'detail' }
         },
         {
             path: 'backup',
@@ -239,7 +239,12 @@ const dynamicRoutes = [
             path: 'fail',
             name: 'Fail',
             component: () => import('@/views/sys/UserList'),
-            meta: { title: '故障信息', icon: 'file -exception' }
+            meta: { title: '故障信息', icon: 'devFail' }
+        },{
+            path: 'devMeta',
+            name: 'DevMeat',
+            component: () => import('@/views/dev/DevMeta'),
+            meta: { title: '元数据', icon: 'devMeta' }
         }]
     },
     {
@@ -253,6 +258,25 @@ const dynamicRoutes = [
             name: 'Demo',
             component: () => import('@/views/sys/UserList'),
             meta: { title: '某某报表', icon: 'report' }
+        }]
+    },
+    {
+        path: '/bim',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: { title: 'BIM管理', icon: 'bim' },
+        alwaysShow: true ,
+        children: [{
+            path: 'ifcUpload',
+            name: 'IFCUpload',
+            component: () => import('@/views/bim/IFCUpload'),
+            meta: { title: 'IFC上传', icon: 'bimUpload' }
+        },
+        {
+            path: 'bimView',
+            name: 'BIMView',
+            component: () => import('@/views/bim/BIMView'),
+            meta: { title: '模型预览', icon: 'bimView' }
         }]
     },
     {
@@ -308,27 +332,27 @@ const dynamicRoutes = [
             meta: { title: '大屏1', icon: 'skin' }
           }
         ]
-    },
-    {
-        path: 'link2',
-        component: Layout,
-        children: [
-          {
-            path: 'http://datav.jiaminghi.com/demo/electronic-file/index.html',
-            meta: { title: '大屏2', icon: 'skin' }
-          }
-        ]
-    },
-    {
-        path: 'link3',
-        component: Layout,
-        children: [
-          {
-            path: 'http://datav.jiaminghi.com/demo/manage-desk/index.html',
-            meta: { title: '大屏3', icon: 'skin' }
-          }
-        ]
     }
+    // {
+    //     path: 'link2',
+    //     component: Layout,
+    //     children: [
+    //       {
+    //         path: 'http://datav.jiaminghi.com/demo/electronic-file/index.html',
+    //         meta: { title: '大屏2', icon: 'skin' }
+    //       }
+    //     ]
+    // },
+    // {
+    //     path: 'link3',
+    //     component: Layout,
+    //     children: [
+    //       {
+    //         path: 'http://datav.jiaminghi.com/demo/manage-desk/index.html',
+    //         meta: { title: '大屏3', icon: 'skin' }
+    //       }
+    //     ]
+    // }
 ]
 
 /**白名单路由 */
