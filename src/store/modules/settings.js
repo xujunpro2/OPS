@@ -2,7 +2,8 @@ import Settings from '@/settings'
 
 const state = {
   title:Settings.title,
-  fixedHeader: Settings.fixedHeader
+  fixedHeader: Settings.fixedHeader,
+  tagsView: Settings.tagsView,
 }
 
 const mutations = {

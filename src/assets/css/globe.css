@@ -111,7 +111,7 @@ strong {
 }
 
 /*删除按钮文字颜色*/
-#deleteButton {
+.redFont {
     color: #F56C6C
 }
 
@@ -151,3 +151,8 @@ strong {
 .vjs-tech {
     pointer-events: none;
   }
+/*el-table的current-row整行选中背景颜色有点浅*/
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row td, .el-table__body tr.current-row>td {
+    color: #fff;
+    background-color: #a2a4a7!important;
+}

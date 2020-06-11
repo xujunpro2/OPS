@@ -50,7 +50,7 @@
                 </el-form-item>
                 
                 <el-form-item label="类型">
-                     <el-select v-model="cameraForm.cameraType" placeholder="请选择">
+                    <el-select v-model="cameraForm.cameraType" placeholder="请选择">
                         <el-option
                         v-for="item in cameraTypeOptionList"
                         :key="item.cameraType"
@@ -229,12 +229,7 @@ export default {
                         this.$store.dispatch('camera/updateCamera',this.cameraForm).then(data=>{
                             //刷新表格
                             this.initTable();
-                            this.$notify({
-                                title: '消息',
-                                message: '修改成功',
-                                type: 'success',
-                                duration:3000
-                            });
+                            this.$notify({title: '消息',message: '修改成功',type: 'success',duration:3000});
                         });
                     }
                     //新建
@@ -243,12 +238,7 @@ export default {
                         this.$store.dispatch('camera/addCamera',this.cameraForm).then(data=>{
                             //刷新表格
                             this.initTable();
-                            this.$notify({
-                                title: '消息',
-                                message: '添加成功',
-                                type: 'success',
-                                duration:3000
-                            });
+                            this.$notify({title: '消息',message: '添加成功',type: 'success',duration:3000});
                         });
                     }
                 }
@@ -263,7 +253,7 @@ export default {
             this.dialogVisible =true
         },
         onDelete(row){
-             this.$confirm("确定删除该数据吗?", "提示", {
+            this.$confirm("确定删除该数据吗?", "提示", {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -3,7 +3,7 @@ import axios from 'axios'
 import Settings from '@/settings'
 import {Message} from 'element-ui'
 import {getToken} from '@/utils/auth'
-
+import qs from 'qs'
 //axios.defaults.withCredentials = true
 // create an axios instance
 const service = axios.create({
@@ -14,6 +14,14 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
     config => {
+        //如果是get请求，且params是数组类型如arr=[1,2]，则转换成arr=1&arr=2
+        //springMVC通过 @RequestParam("ids") List<Integer> ids 接受
+        if(config.method === 'get')
+        {
+            config.paramsSerializer = function(params) {
+                return qs.stringify(params, {arrayFormat: 'repeat'})
+            }
+        }
         const token = getToken();
         if (token) {
             config.headers['Authorization']=token;

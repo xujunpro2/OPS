@@ -153,7 +153,9 @@ export default {
 				});
 				modelIds.length = 0;
 				this.loadedBims.clear();
-			}
+            }
+            //清除ViewerHelper
+            viewerHelper.setViewer(null);
 		},
 		//加载默认模型的时候可能会一次加载多个bim
 		loadBim(guids) {

@@ -46,6 +46,14 @@ const actions = {
             })
         })
     },
+    
+    ifcUsedByUsedKey(context,usedKey) {
+        return new Promise((resolve,reject)=>{
+            request.get("ifc/ifcUsedByUsedKey.action",{params:{usedKey:usedKey}}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
 
     updateUsed(context,param){
         return new Promise((resolve,reject)=>{

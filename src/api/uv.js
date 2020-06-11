@@ -17,6 +17,18 @@ var UVService = function(){
     UVService.prototype.logout = function(){
         return request.post('uv/logout.action');
     }
+        /**
+     * 用户数量
+     */
+    UVService.prototype.count = function(){
+        return request.get('uv/count.action');
+    }
+    /**
+     * 用户分页
+     */
+    UVService.prototype.page = function(startIndex,rows){
+        return request.get('uv/page.action',{params:{startIndex:startIndex,rows:rows}});
+    }
     /**
      * 获得当前用户信息
      */

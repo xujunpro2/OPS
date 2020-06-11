@@ -16,7 +16,7 @@
             </el-steps>
             <div v-for="item of loading.progressDatas">
                 <span style="font-size:13px">{{item.name}}</span>
-                <el-progress :percentage="item.progress" color="#409eff'"></el-progress>
+                <el-progress :percentage="item.progress" color="#409eff"></el-progress>
             </div>
             <p></p>
             <div v-if="loading.progressStep === 1">
@@ -58,6 +58,8 @@ export default {
 				progressDatas: [], //下载bimi文件的进度条数据
 				waitCount: 0 //标志位：loading需要等待处理的bim数量，每个bim完全载入后-1，当到0的时候，销毁loading
             },
+            pickIfc:null,//当前选中构件所属的ifc
+            pickId:null,//当前选中的构件ID
         };
 	},
 
@@ -109,6 +111,8 @@ export default {
 			viewer.on("dblclick", args => {
                 var id = args.id;
 				if (id) {
+                    this.pickIfc = viewer.getProductTag(id);
+                    this.pickId = id;
 					viewer.resetStates();
 					viewer.zoomTo(id);
 					viewer.setState(ProductState.HIGHLIGHTED, [id]);
@@ -120,7 +124,8 @@ export default {
                 console.info(id);
 				if (id) {
 					//获得构件所属于的bim
-					var ifcName = viewer.getProductTag(id);
+                    this.pickIfc = viewer.getProductTag(id);
+                    this.pickId = id;
 					viewer.resetStates();
 					viewer.setState(ProductState.HIGHLIGHTED, [id]);
 				}
@@ -139,8 +144,10 @@ export default {
 					viewer.unload(id);
 				});
 				modelIds.length = 0;
-				this.loadedBims.clear();
-			}
+                this.loadedBims.clear();
+            }
+            //清除ViewerHelper
+            viewerHelper.setViewer(null);
 		},
 		//加载默认模型的时候可能会一次加载多个bim
 		loadBim(ifcNames) {
@@ -203,6 +210,26 @@ export default {
                 viewer.addPlugin(navCube);
 			}
         },
+
+        //flyTo
+        flyTo(productId){
+            let viewer = viewerHelper.getViewer();
+            if(viewer && productId)
+            {
+                viewer.flyTo(productId);
+                viewer.resetStates();
+                viewer.setState(ProductState.HIGHLIGHTED, [productId]);
+            }
+        },
+        zoomTo(productId){
+            let viewer = viewerHelper.getViewer();
+            if(viewer && productId)
+            {
+                viewer.zoomTo(productId);
+                viewer.resetStates();
+                viewer.setState(ProductState.HIGHLIGHTED, [productId]);
+            }
+        },
   
         test()
         {
@@ -216,9 +243,6 @@ export default {
 	},
 	mounted() {
         this.initView();
-       // this.loadBim(["管线布置场景"]); 
-       // this.loadBim(["生产车间场景"]); 
-      //this.loadBim(["OneWall"]);
         document.oncontextmenu = function() {
 			return false;
         };

@@ -172,3 +172,44 @@ export function debounce(func, wait, immediate) {
     })
     return targetObj
   }
+
+  /**
+   * 以arr集合中的每个item为参数，执行异步操作，并最终返回realResult
+   * 使用样例:
+   *                const list = [];
+                    for (let i = 0; i < 10; ++i) {
+                        list.push(i);
+                    }
+                    promiseForEach(list, (number) => {
+
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                console.log(number);
+                                return resolve(number);
+                            }, 100);
+                        })
+
+                    }).then((data) => {
+                        console.log("全部执行完毕成功");
+                        console.log(data);
+                    }).catch((err) => {
+                        console.log("失败");
+                        console.log(err)
+                    });
+   */
+  export function  promiseForEach(arr, func) {
+    //最终的执行结果保存在realResult中的
+    let realResult = []
+    let result = Promise.resolve()
+    arr.forEach((item, index) => {
+        result = result.then(() => {
+            return func(item).then((res) => {
+                realResult.push(res)
+            })
+        })
+    })
+
+    return result.then(() => {
+        return realResult
+    })
+}

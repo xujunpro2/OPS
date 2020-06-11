@@ -121,6 +121,22 @@ const actions = {
            
         }); 
     },
+    //用户数量
+    count(context){
+        return new Promise((resovle,reject)=>{
+            uvService.count().then(data=>{
+                resovle(data);
+            })
+        })
+    },
+        //用户分页查询
+    page(context,param){
+        return new Promise((resovle,reject)=>{
+            uvService.page(param.startIndex,param.rows).then(data=>{
+                resovle(data);
+            })
+        })
+    },
     getRules(context){
         return new Promise((resolve,reject)=>{
             uvService.getRules().then(data=>{

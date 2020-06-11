@@ -1,13 +1,13 @@
 <template>
 	<div class="rootDiv">
 		<el-row :gutter="5" style="height:100%">
-			<el-col :span="12" style="height:100%">
-				<el-card class="box-card" style="height:100%" :body-style="fullCardBody">
+			<el-col :span="8" style="height:100%">
+				<el-card class="box-card" style="height:49%" :body-style="fullCardBody">
 					<div slot="header" class="clearfix">
 						<span class="cardTitie">设备类型</span>
 						<el-button type="primary" icon="el-icon-plus" circle style="float: right;" @click="onAddType"></el-button>
 					</div>
-					<el-table :data="typeList" height="90%"  style="width: 100%">
+					<el-table :data="typeList" height="80%"  style="width: 100%">
 						<el-table-column prop="devTypeId" label="类型编码"></el-table-column>
 						<el-table-column prop="devTypeName" label="类型名称"></el-table-column>
                         <el-table-column label="操作" width="160">
@@ -19,16 +19,12 @@
 					</el-table>
 				</el-card>
                 
-                
-			</el-col>
-
-			<el-col :span="12" style="height:100%">
-               <el-card class="box-card" style="height:100%;" :body-style="fullCardBody">
+                <el-card class="box-card" style="height:49%;margin-top:5px" :body-style="fullCardBody">
 					<div slot="header" class="clearfix">
 						<span class="cardTitie">设备区域</span>
 						<el-button type="primary" icon="el-icon-plus" circle style="float: right;" @click="onAddSpace"></el-button>
 					</div>
-					    <el-table :data="spaceTree" height="90%"  style="width: 100%;" row-key="spaceId"  :default-expand-all="true"
+					    <el-table :data="spaceTree" height="80%"  style="width: 100%;" row-key="spaceId"  :default-expand-all="true"
                                 :tree-props="{children: 'children'}">
                             <el-table-column prop="spaceId" label="区域编码"></el-table-column>
 						    <el-table-column prop="spaceName" label="区域名称"></el-table-column>
@@ -39,6 +35,42 @@
                                 </template>
                             </el-table-column>
 					    </el-table>
+				</el-card>
+			</el-col>
+
+			<el-col :span="16" style="height:99%">
+				<el-card class="box-card" style="height:100%" :body-style="fullCardBody">
+					<div slot="header" class="clearfix">
+						<span class="cardTitie">设备</span>
+                        <el-dropdown style="float: right; margin-right:5px"  @command="onImportDev" trigger="click">
+                                <el-button type="primary" icon="el-icon-right" circle ></el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="byIFC">从模型导入</el-dropdown-item>
+                                </el-dropdown-menu>
+                        </el-dropdown>
+					</div>
+					    <el-table v-loading="devLoading" :data="devTable"  style="width: 100%;">
+                            <el-table-column prop="devName" label="名称"></el-table-column>
+                            <el-table-column prop="devCode" label="编码"></el-table-column>
+                            <el-table-column prop="devTypeName" label="类型"></el-table-column>
+                            <!-- <el-table-column prop="devState" label="状态">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.devState ==  1">在用</span>
+                                    <span class="redFont" v-if="scope.row.devState ==  0">报废</span>
+                                </template>
+                            </el-table-column> -->
+                            <el-table-column prop="spaceName" label="空间"></el-table-column>
+                            <el-table-column prop="ifc" label="模型"></el-table-column>
+                            <el-table-column prop="productId" label="构件ID"></el-table-column>
+                            <el-table-column prop="manufacturer" label="制造商"></el-table-column>
+                            
+					    </el-table>
+                        <el-row type="flex" justify="end" style="background:#fff">
+                            <el-pagination background layout="total, prev, pager, next" :page-size="pageSize" :total="total"
+                                @current-change="paginChange"></el-pagination>
+                        </el-row>
+                        <!--el-card有bug，body不计算header的高度，这里加个div，保证table超过card body的高度后，能看到分页-->
+                        <div style="height:32px"></div>
 				</el-card>
 			</el-col>
 		</el-row>
@@ -86,7 +118,18 @@
             </span>
         </el-dialog>
 
-       
+        <!--导入设备数据对话框-->
+        <el-dialog title="导入设备数据" :visible.sync="importDialogVisible"   width="400px" :close-on-click-modal="false">
+            <el-radio  v-for="item of ifcList" v-model="importIfc" :key="item.ifcName" :label="item.ifcName">{{item.ifcName}}</el-radio>
+            <br></br>
+            <transition name="fade">
+                <el-progress v-show="this.importStarting" :percentage="progress" color="#409eff"></el-progress>
+            </transition>
+            <span slot="footer" class="dialog-footer">
+                <el-button  @click="importDialogVisible = false">取 消</el-button>
+                <el-button  type="primary" @click="onImportSubmit">确 定</el-button>
+            </span>
+        </el-dialog>
 
 	</div>
 </template>
@@ -95,7 +138,7 @@
 
 
 export default {
-	name: "DevMeta",
+	name: "Empty",
 	data() {
 		return {
             //设备类型
@@ -132,7 +175,22 @@ export default {
                 ]
             },
             spaceOptionList:[], //区域选择框数据
-            fullCardBody: { height: "100%", overflow: "auto" },
+
+            //设备表格
+            fullCardBody:{height:'100%',overflow: 'auto'},
+            devLoading:false,
+            devTable:[],
+            total:0,
+            pageSize:Number(this.$store.state.uv.specail.pageSize), //设置都是varchar的，要转数字
+
+            //导入设备数据对话框
+            importDialogVisible:false,
+            importIfc:null,
+            ifcList:[],
+            importStarting:false,//开始导入，进度条出现
+            taskId:null,//导入任务ID
+            progress:0,//导入进度
+            interval:null,//定时器
 		};
 	},
 	methods: {
@@ -283,13 +341,134 @@ export default {
             })
         },
 
+        /**************************************设备*******************************/
+        //初始化Dev表格
+        initDevTabel(){
+            this.$store.dispatch("dev/getDevCount").then(data => {
+                this.total = data;
+                return new Promise((resolve, reject) => {
+                    resolve();
+                });
+            })
+            .then(()=>{
+                this.devTabelPagin(1);
+            });
+        },
+        //分页事件
+        paginChange(curPage) {
+			this.devTabelPagin(curPage);
+        },
+        //设备分页查询
+        devTabelPagin(curPage){
+            this.devLoading = true;
+            let startIndex = (curPage - 1) * this.pageSize;
+            let query = {startIndex:startIndex,rows:this.pageSize};
+            this.$store.dispatch("dev/getDevPage",query).then(data => {
+                this.devTable = data
+                this.devLoading = false
+            }).catch(()=>{
+                this.devLoading = false;
+            })
+        },
+
+        /*******************************设备数据导入***************************************** */
+        initIfcList(){
+            this.$store.dispatch('ifc/getAllIFC').then(data=>{
+                this.ifcList = data;
+            })
+        },
+        //导入设备
+        onImportDev(command){
+            if(command === 'byIFC')
+            {
+                //对话框初始化
+                this.importIfc = null;
+                this.importStarting = false;
+                this.progress = 0;
+
+                this.importDialogVisible = true;
+            }
+
+        },
+        //确认从模型导入
+        onImportSubmit(){
+            if(this.importIfc)
+            {
+                //确认对话框
+                this.$confirm("该操作将覆盖选中模型相关的所有设备数据，确认执行吗?", "提示", {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                .then(()=>{
+                    this.$store.dispatch('dev/importByIFC',this.importIfc).then(data=>{
+                        this.pollingTaskProgress(data);
+                    })
+                })
+                .catch(() => {});
+            }
+            else
+            {
+                this.$alert("请选择需要导入的模型!", "提示", {
+                    confirmButtonText: "确定",
+                    type: "info"
+                });
+            }
+        },
+        
+        //发起导入操作之后轮询任务执行进度
+        pollingTaskProgress(taskId){
+            this.importStarting = true;
+            this.taskId = taskId;
+            this.progress = 0,
+            this.interval = setInterval(this.polling,1000);
+        },
+        polling(){
+            //防止没有任务触发轮询
+            if(this.taskId == null)
+            {
+                return;
+            }
+            this.$store.dispatch('dev/getImportProgress',this.taskId).then(data=>{
+                if(data == -1)
+                {
+                     this.$notify({title: '消息',message: '设备数据导入发生错误',type: 'error',duration:3000});
+                     this.taskId = null;
+                }
+                else 
+                {
+                    this.progress = data;
+                    if(data == 100)
+                    {
+                        //停止轮询
+                        if(this.interval)
+                        {
+                            clearInterval(this.interval);
+                        }
+                        this.$store.dispatch('dev/deleteImportProgress',this.taskId).then(()=>{
+                            this.taskId = null;
+                        })
+                        setTimeout(() => {
+                            this.importDialogVisible = false;
+                            this.initDevTabel();
+                        }, 500);
+                        
+                    }
+                }
+            })
+        },
     },
 	mounted() {
         this.initTypeTabel();
         this.initSpace();
+        this.initDevTabel();
+        this.initIfcList();
     },
 	beforeDestroy() {
-       
+        if(this.interval)
+        {
+            clearInterval(this.interval);
+        }
     }
 };
 </script>
@@ -301,5 +480,12 @@ export default {
 	font-weight: 500;
 	color: #409eff;
 	line-height: 30px;
+}
+.devRow{
+    margin-top: 5px;
+    height:calc(100% - 330px);
+}
+.devTable{
+    height:calc(100% - 30px);
 }
 </style>

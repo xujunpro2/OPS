@@ -64,6 +64,73 @@ const actions = {
             })
         })
     },
+
+    getDevPage(context,query){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/page.action',{params:query}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    getDevCount(context,query){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/count.action',{params:query}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    //异步返回taskId
+    importByIFC(context,ifcName){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/importByIFC.action',{params:{ifcName:ifcName}}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    //获得导入任务的进度
+    getImportProgress(context,taskId){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/importProgress.action',{params:{taskId:taskId}}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+     //进度100%之后，删除服务器上的进度缓存
+     deleteImportProgress(context,taskId){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/deleteImportProgress.action',{params:{taskId:taskId}}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    addDevBasic(context,query){
+        return new Promise((resolve,reject)=>{
+            request.post('dev/addBasic.action',query).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    updateDevBasic(context,query){
+        return new Promise((resolve,reject)=>{
+            request.post('dev/updateBasic.action',query).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    deleteDev(context,devId){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/delete.action',{params:{devId:devId}}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
+    bindProduct(context,param){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/binding.action',{params:param}).then(data=>{
+                resolve(data);
+            })
+        })
+    },
 }
 
 export default {

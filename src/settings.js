@@ -2,6 +2,7 @@
 export default {
     title: 'LETS OPS System',
     fixedHeader: true,
+    tagsView:true, //是否需要tag-view
     websocket: () => {
         //js获得当前服务器IP和端口
         var curPath = window.document.location.href;

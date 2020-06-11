@@ -1878,6 +1878,32 @@ BimiViewer.prototype.getProdOrigin = function(prodId)
     }
     return null;
 }
+
+//helper function for setting of the distance based on camera field of view and size of the product's bounding box
+BimiViewer.prototype.setDistance = function(bBox)
+{
+    var size = Math.max(bBox[3], bBox[4], bBox[5]);
+    var ratio = Math.max(this._width, this._height) / Math.min(this._width, this._height);
+    //this._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.0;
+    this._distance = size / Math.tan(this.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.2;
+    //额外加的
+    if(this._baseDistance) 
+    {
+        this._distance += this._baseDistance * this.autoZoomRelationalDistance;
+    }
+}
+BimiViewer.prototype.setDefaultDistance = function(bBox)
+{
+    var size = Math.max(bBox[3], bBox[4], bBox[5]);
+    var ratio = Math.max(this._width, this._height) / Math.min(this._width, this._height);
+    //计算构件距离的时候，设为1.2，这样离的远一些，计算初始化场景的时候，距离太远了，所以改为0.5
+    this._distance = size / Math.tan(this.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 0.5;
+    //额外加的
+    if(this._baseDistance) 
+    {
+        this._distance += this._baseDistance * this.autoZoomRelationalDistance;
+    }
+}
 /**
 * This method sets navigation origin to the centroid of specified product's bounding box or to the centre of model if no product ID is specified.
 * This method doesn't affect the view itself but it has an impact on navigation. Navigation origin is used as a centre for orbiting and it is used
@@ -1888,17 +1914,10 @@ BimiViewer.prototype.getProdOrigin = function(prodId)
 */
 BimiViewer.prototype.setCameraTarget = function (prodId) {
     var viewer = this;
-    //helper function for setting of the distance based on camera field of view and size of the product's bounding box
-    var setDistance = function (bBox) {
-        var size = Math.max(bBox[3], bBox[4], bBox[5]);
-        var ratio = Math.max(viewer._width, viewer._height) / Math.min(viewer._width, viewer._height);
-        //viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.0;
-    	        viewer._distance = size / Math.tan(viewer.perspectiveCamera.fov * Math.PI / 180.0) * ratio * 1.2;
-        if(viewer._baseDistance) viewer._distance += viewer._baseDistance * viewer.autoZoomRelationalDistance;
-    }
-
     //set navigation origin and default distance to the product BBox
-    if (typeof (prodId) != 'undefined' && prodId != null) {
+    //定位到构件
+    if (typeof (prodId) != 'undefined' && prodId != null) 
+    {
         //get product BBox and set it's centre as a navigation origin
         var bbox = null;
         this._handles.every(function (handle) {
@@ -1911,21 +1930,23 @@ BimiViewer.prototype.setCameraTarget = function (prodId) {
         });
         if (bbox) {
             this._origin = [bbox[0] + bbox[3] / 2.0, bbox[1] + bbox[4] / 2.0, bbox[2] + bbox[5] / 2.0];
-            setDistance(bbox);
+            this.setDistance(bbox);
             return true;
         }
         else
             return false;
     }
-        //set navigation origin and default distance to the most populated region from the first model
-    else {
+    //set navigation origin and default distance to the most populated region from the first model
+    //XUJUN 初始化场景视角
+    else 
+    {
         //get region extent and set it's centre as a navigation origin
         var handle = this._handles[0];
         if (handle) {
             var region = handle.region
             if (region) {
                 this._origin = [region.centre[0], region.centre[1], region.centre[2]]
-                setDistance(region.bbox);
+                this.setDefaultDistance(region.bbox);
                 if(!viewer._baseDistance) viewer._baseDistance = viewer._distance;
             }
         }

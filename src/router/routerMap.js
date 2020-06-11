@@ -5,17 +5,16 @@ import Layout from '@/layout'
 /**
  * Note: 考虑到权限控制的简洁，现在导航菜单只支持2级,并且注意path全局唯一
  *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
+ * hidden: true                   是否显示，默认值false
+ * alwaysShow: true               强制显示，如果false，那么当只有一个子菜单的时候，它将不显示
+ * redirect: noRedirect           是否在导航面包屑breadcrumb控件上显示
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
     roles: ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+    affix:false                  tag-view上是否可关闭,true为不可关闭
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
  */
@@ -35,7 +34,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'home',affix:true }
     }]
   },
   {
@@ -49,7 +48,7 @@ export const constantRoutes = [
 ]
 
 /** 动态路由，这里可以由服务端产生 */
-const dynamicRoutes = [
+export const dynamicRoutes = [
     // {
     //     path: '/factory',
     //     component: Layout,
@@ -190,31 +189,32 @@ const dynamicRoutes = [
             path: 'malfunction',
             name: 'Malfunction',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '设备故障管理', icon: 'error' }
+            meta: { title: '设备故障', icon: 'error' }
         },
         {
             path: 'alert',
             name: 'Alert',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '设备告警管理', icon: 'alert' }
+            meta: { title: '设备告警', icon: 'alert' }
         },
-        {
-            path: 'keep',
-            name: 'Kepp',
-            component: () => import('@/views/docs/Docs'),
-            meta: { title: '设备维保管理', icon: 'medicinebox' }
-        },
+        
         {
             path: 'repairOrder',
             name: 'RepairOrder',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '检修工单管理', icon: 'file-text' }
+            meta: { title: '检修工单', icon: 'file-text' }
+        },
+        {
+            path: 'keep',
+            name: 'KeppPlan',
+            component: () => import('@/views/ops/KeepPlan'),
+            meta: { title: '维保计划', icon: 'medicinebox' }
         },
         {
             path: 'keepOrder',
             name: 'KeppOrder',
             component: () => import('@/views/docs/Docs'),
-            meta: { title: '维保工单管理', icon: 'file-zip' }
+            meta: { title: '维保工单', icon: 'file-zip' }
         }]
     },
     {
@@ -226,7 +226,7 @@ const dynamicRoutes = [
         children: [{
             path: 'list',
             name: 'List',
-            component: () => import('@/views/sys/UserList'),
+            component: () => import('@/views/dev/DevList'),
             meta: { title: '设备管理', icon: 'detail' }
         },
         {
@@ -240,11 +240,12 @@ const dynamicRoutes = [
             name: 'Fail',
             component: () => import('@/views/sys/UserList'),
             meta: { title: '故障信息', icon: 'devFail' }
-        },{
+        }
+        ,{
             path: 'devMeta',
             name: 'DevMeat',
             component: () => import('@/views/dev/DevMeta'),
-            meta: { title: '元数据', icon: 'devMeta' }
+            meta: { title: '类型和区域', icon: 'devMeta' }
         }]
     },
     {
@@ -261,7 +262,7 @@ const dynamicRoutes = [
         }]
     },
     {
-        path: '/bim',
+        path: '/ifc',
         component: Layout,
         redirect: 'noRedirect',
         meta: { title: 'BIM管理', icon: 'bim' },
@@ -269,13 +270,13 @@ const dynamicRoutes = [
         children: [{
             path: 'ifcUpload',
             name: 'IFCUpload',
-            component: () => import('@/views/bim/IFCUpload'),
+            component: () => import('@/views/ifc/IFCUpload'),
             meta: { title: 'IFC上传', icon: 'bimUpload' }
         },
         {
             path: 'bimView',
             name: 'BIMView',
-            component: () => import('@/views/bim/BIMView'),
+            component: () => import('@/views/ifc/BIMView'),
             meta: { title: '模型预览', icon: 'bimView' }
         }]
     },
@@ -297,12 +298,6 @@ const dynamicRoutes = [
             name: 'Rule',
             component: () => import('@/views/sys/Rule'),
             meta: { title: '角色管理', icon: 'team' }
-        },
-        {
-            path: 'dept',
-            name: 'Dept',
-            component: () => import('@/views/sys/Dept'),
-            meta: { title: '部门管理', icon: 'apartment' }
         },
         {
             path: 'specail',
@@ -329,7 +324,7 @@ const dynamicRoutes = [
         children: [
           {
             path: 'http://datav.jiaminghi.com/demo/construction-data/index.html',
-            meta: { title: '大屏1', icon: 'skin' }
+            meta: { title: '大屏', icon: 'dashboard' }
           }
         ]
     }
