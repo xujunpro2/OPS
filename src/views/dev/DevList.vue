@@ -66,10 +66,10 @@
 				<el-table-column prop="spaceName" label="所属区域"></el-table-column>
 				<!-- <el-table-column prop="ifc" label="模型"></el-table-column>-->
 				<el-table-column prop="productId" label="构件ID"></el-table-column>
-				<el-table-column prop="preInspectTime" label="上次巡检时间"></el-table-column>
-                <el-table-column prop="preRepairTime" label="上次检修时间"></el-table-column>
+				<el-table-column  label="上次巡检时间"></el-table-column>
+                <el-table-column  label="上次检修时间"></el-table-column>
                 <el-table-column  label="下次维保时间"></el-table-column>
-                <el-table-column prop="preFaultTime" label="上次故障时间"></el-table-column>
+                <el-table-column  label="上次故障时间"></el-table-column>
 			</el-table>
 		</el-row>
 
@@ -178,6 +178,8 @@ export default {
             queryForm:{
                 spaceId:null,
                 devCode:null,
+                devName:null,//目前没用
+                devType:null,//目前没用到
             },
             spaceQueryOptions:[],//设备区域查询，需要增加一个全部
            
@@ -307,6 +309,8 @@ export default {
                 rows: this.pageSize ,
                 spaceId:this.queryForm.spaceId,
                 devCode:this.queryForm.devCode,
+                devName:this.queryForm.devName,
+                devType:this.queryForm.devType,
             };
 			this.$store
 				.dispatch("dev/getDevPage", query)
@@ -505,15 +509,15 @@ export default {
 						type: "warning"
 					}
 				)
-					.then(() => {
-						this.$store
-							.dispatch("dev/importByIFC", this.importIfc)
-							.then(data => {
-								this.pollingTaskProgress(data);
-							});
-					})
-					.catch(() => {});
-			} else {
+				.then(() => {
+					this.$store.dispatch("dev/importByIFC", this.importIfc).then(data => {
+						this.pollingTaskProgress(data);
+					});
+				})
+				.catch(() => {});
+            } 
+            else 
+            {
 				this.$alert("请选择需要导入的模型!", "提示", {
 					confirmButtonText: "确定",
 					type: "info"
@@ -525,8 +529,8 @@ export default {
 		pollingTaskProgress(taskId) {
 			this.importStarting = true;
 			this.taskId = taskId;
-			(this.progress = 0),
-				(this.interval = setInterval(this.polling, 1000));
+			this.progress = 0;
+			this.interval = setInterval(this.polling, 1000);
 		},
 		polling() {
 			//防止没有任务触发轮询
@@ -536,29 +540,30 @@ export default {
 			this.$store
 				.dispatch("dev/getImportProgress", this.taskId)
 				.then(data => {
-					if (data == -1) {
-						this.$notify({
-							title: "消息",
-							message: "设备数据导入发生错误",
-							type: "error",
-							duration: 3000
-						});
-						this.taskId = null;
-					} else {
+                    if (data == -1) 
+                    {
+						this.$notify({title: "消息",message: "设备数据导入发生错误",type: "error",duration: 3000});
+                        this.taskId = null;
+                        //停止轮询
+                        if (this.interval) 
+                        {
+							clearInterval(this.interval);
+						}
+                    } 
+                    else 
+                    {
 						this.progress = data;
-						if (data == 100) {
+                        if (data == 100) 
+                        {
 							//停止轮询
-							if (this.interval) {
+                            if (this.interval) 
+                            {
 								clearInterval(this.interval);
 							}
-							this.$store
-								.dispatch(
-									"dev/deleteImportProgress",
-									this.taskId
-								)
-								.then(() => {
-									this.taskId = null;
-								});
+							this.$store.dispatch("dev/deleteImportProgress",this.taskId).then(() => {
+								this.taskId = null;
+                            });
+                            //延迟一会关闭进度条并刷新表格
 							setTimeout(() => {
 								this.importDialogVisible = false;
 								this.initDevTabel();
@@ -590,6 +595,6 @@ export default {
 	background: rgb(240, 242, 245);
 }
 .devTableRow {
-	height: calc(50% - 100px);
+	height: calc(50% - 105px);
 }
 </style>

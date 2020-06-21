@@ -3,6 +3,8 @@ export default {
     title: 'LETS OPS System',
     fixedHeader: true,
     tagsView:true, //是否需要tag-view
+    pageSize:10,//分页每页默认rows
+    pageSizeList:[10,20,30,40,50],//分页
     websocket: () => {
         //js获得当前服务器IP和端口
         var curPath = window.document.location.href;

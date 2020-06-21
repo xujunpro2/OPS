@@ -1,4 +1,5 @@
 function CommonTool(){}
+
 /**
  * formatData(date,"yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423 
  * formatData(date,"yyyy-M-d h:m:s.S") ==> 2006-7-2 8:9:4.18 

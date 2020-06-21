@@ -34,8 +34,13 @@
                     </el-table>
                 </el-row>
                 <el-row type="flex" justify="end" style="background:#fff">
-                    <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                        @current-change="paginChange"></el-pagination>
+                    <el-pagination background layout="total, sizes,prev, pager, next"
+                        :page-sizes="pageSizeList"
+                        :page-size="pageSize" 
+                        :total="total"
+                        @size-change="sizeChange"
+                        @current-change="paginChange">
+                    </el-pagination>
                 </el-row>
             </el-col>
         </el-row>
@@ -95,7 +100,7 @@ export default {
             },
             queryName: "",
             tableData:[],
-            pageSize:Number(this.$store.state.uv.specail.pageSize), //设置都是varchar的，要转数字
+            pageSizeList:this.$store.state.settings.pageSizeList, //分页列表
             total:0,
             loading:true, //table的loading
             dialogVisible:false,
@@ -120,7 +125,12 @@ export default {
                 ],
             }
         };
-	},
+    },
+    computed:{
+        pageSize() {
+            return this.$store.state.settings.pageSize
+        },
+    },
 	methods: {
         //生成区域Tree和查询所有的摄像头列表
         init(){
@@ -179,6 +189,10 @@ export default {
             }).catch(()=>{
                 this.loading = false;
             })
+        },
+        sizeChange(rows){
+            this.$store.dispatch('settings/changePageSize',rows);
+            this.tabelPagin(1);
         },
         //分页
         paginChange(curPage) {

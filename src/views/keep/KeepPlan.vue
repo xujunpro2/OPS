@@ -1,6 +1,6 @@
 <template>
 	<div class="rootDiv">
-         <el-form :model="queryForm" label-width="80px">
+        <el-form :model="queryForm" label-width="80px">
             <el-row :gutter="10">
                 <el-col :span="5">
                     <el-form-item label="计划名称">
@@ -39,10 +39,11 @@
                 </el-col>
             </el-row>
         </el-form>
+
         <el-table v-loading="loading" border :data="tableData" tooltip-effect="dark" style="width: 100%">
             <el-table-column prop="planName" label="计划名称"></el-table-column>
             <el-table-column prop="period" label="保养周期">
-               <template slot-scope="scope">
+                <template slot-scope="scope">
                     {{getIntervalText(scope.row.planInterval,scope.row.period)}}
                 </template>
             </el-table-column>
@@ -153,7 +154,7 @@ export default {
         },
         query(){
             this.loading = true;
-            this.$store.dispatch('ops/queryPlan',this.queryForm).then(data=>{
+            this.$store.dispatch('keep/queryPlan',this.queryForm).then(data=>{
                 this.loading = false;
                 this.tableData = data;
             }).catch(()=>{this.loading=false})
@@ -198,7 +199,7 @@ export default {
                 type: 'warning'
             }).then(()=>{
                 let planId = row.planId
-                this.$store.dispatch('ops/deletePlan',planId).then(()=>{
+                this.$store.dispatch('keep/deletePlan',planId).then(()=>{
                     //刷新表格
                     this.query();
                     this.$notify({title: '消息', message: '删除成功',type: 'success',duration:3000});
@@ -229,7 +230,7 @@ export default {
                     this.dialogVisible = false;
                     if(this.curRow)
                     {
-                        this.$store.dispatch('ops/updatePlan',this.planForm).then(data=>{
+                        this.$store.dispatch('keep/updatePlan',this.planForm).then(data=>{
                             if(data == 1)
                             {
                                 this.query();
@@ -239,7 +240,7 @@ export default {
                     }
                     else
                     {
-                        this.$store.dispatch('ops/addPlan',this.planForm).then(data=>{
+                        this.$store.dispatch('keep/addPlan',this.planForm).then(data=>{
                             if(data == 1)
                             {
                                   this.query();

@@ -156,3 +156,7 @@ strong {
     color: #fff;
     background-color: #a2a4a7!important;
 }
+/*el-table的表格线条不对齐*/
+.el-table th.gutter {
+    display: table-cell !important
+}

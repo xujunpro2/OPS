@@ -37,6 +37,8 @@ const actions = {
             request.get('camera/playback.action',{ params: param }).then(data=>{
                 resolve(data);
             })
+        }).catch(()=>{
+            reject();
         }) 
     },
 
@@ -45,6 +47,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/areaTree.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },
@@ -53,6 +57,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/areaList.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },
@@ -61,6 +67,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.post('camera/addArea.action',param).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -69,6 +77,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.post('camera/updateArea.action',param).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -77,6 +87,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/deleteArea.action',{params:{areaId:areaId}}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -85,6 +97,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/cameraPageCount.action',{params:param}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -93,6 +107,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/cameraPage.action',{params:param}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -101,6 +117,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/cameraTypes.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -110,6 +128,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.post('camera/addCamera.action',param).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -118,6 +138,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.post('camera/updateCamera.action',param).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -126,6 +148,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/deleteCamera.action',{params:{cameraId:cameraId}}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -134,6 +158,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/eventPageCount.action',{params:param}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -142,6 +168,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/eventPage.action',{params:param}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -150,6 +178,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/eventById.action',{params:param}).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -158,6 +188,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.post('camera/eventConfirm.action',param).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },
@@ -166,6 +198,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/yesterdayEvents.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },
@@ -174,6 +208,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/top5.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },
@@ -182,6 +218,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/month.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },
@@ -190,6 +228,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/monthArea.action').then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },

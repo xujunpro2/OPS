@@ -63,8 +63,12 @@
             </el-table>
         </el-row>
         <el-row type="flex" justify="end" style="background:#fff">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                 @current-change="paginChange"></el-pagination>
+            <el-pagination background layout="total, sizes,prev, pager, next"
+                :page-sizes="pageSizeList"
+                :page-size="pageSize" 
+                :total="total"
+                @size-change="sizeChange"
+                @current-change="paginChange"></el-pagination>
         </el-row>
         <!--确认对话框-->
         <el-dialog title="确认告警" :visible.sync="dialogVisible" @open="onDialogOpen"  width="30%" :close-on-click-modal="false">
@@ -104,7 +108,7 @@ export default {
             confirmOptionList:[],
             areaOptionList: [],
             tableData:[],
-            pageSize:Number(this.$store.state.uv.specail.pageSize), //设置都是varchar的，要转数字
+            pageSizeList:this.$store.state.settings.pageSizeList, //分页列表
             total:0,
             loading:false, //table的loading
 
@@ -123,7 +127,11 @@ export default {
             }
 		};
     },
-
+    computed:{
+        pageSize() {
+            return this.$store.state.settings.pageSize
+        },
+    },
 	methods: {
         initConfirmOptions(){
             this.confirmOptionList.push({label:'全部',value:null})
@@ -178,6 +186,7 @@ export default {
                 this.tabelPagin(1)
             })
         },
+        
          //curPage从第一页开始
         tabelPagin(curPage){
             this.loading = true;
@@ -192,6 +201,10 @@ export default {
             }).catch(()=>{
                 this.loading = false;
             })
+        },
+        sizeChange(rows){
+            this.$store.dispatch('settings/changePageSize',rows);
+            this.tabelPagin(1);
         },
         //分页
         paginChange(curPage) {

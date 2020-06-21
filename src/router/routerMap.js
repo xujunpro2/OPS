@@ -15,6 +15,7 @@ import Layout from '@/layout'
     icon: 'svg-name'             the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
     affix:false                  tag-view上是否可关闭,true为不可关闭
+    cache: true                  启用keep-alive(default is false)
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
  */
@@ -132,17 +133,17 @@ export const dynamicRoutes = [
             meta: { title: '入侵统计', icon: 'bao' }
         }]
     },
-    {
-        path: '/simulation',
-        component: Layout,
-        redirect: '/simulation',
-        children: [{
-            path: 'docs',
-            name: 'Docs',
-            component: () => import('@/views/docs/Docs'),
-            meta: { title: '工艺仿真', icon: 'filesearch' }
-        }]
-    },
+    // {
+    //     path: '/simulation',
+    //     component: Layout,
+    //     redirect: '/simulation',
+    //     children: [{
+    //         path: 'docs',
+    //         name: 'Docs',
+    //         component: () => import('@/views/docs/Docs'),
+    //         meta: { title: '工艺仿真', icon: 'filesearch' }
+    //     }]
+    // },
     {
         path: '/inspection',
         component: Layout,
@@ -152,31 +153,31 @@ export const dynamicRoutes = [
         children: [{
             path: 'plan',
             name: 'Plan',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '巡检计划管理', icon: 'edit-square' }
         },
         {
             path: 'dev',
             name: 'Dev',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '巡检设备台账', icon: 'check' }
         },
         {
             path: 'workOrder',
             name: 'WorkOrder',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '巡检工单管理', icon: 'unordered list' }
         },
         {
             path: 'count',
             name: 'Count',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '巡检工作统计', icon: 'bar chart' }
         },
         {
             path: 'assess',
             name: 'Assess',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '巡检员工考核', icon: 'switch user' }
         }]
     },
@@ -184,37 +185,51 @@ export const dynamicRoutes = [
         path: '/om',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '智慧运维', icon: 'wrench' },
+        alwaysShow: true ,
+        meta: { title: '设备检修', icon: 'wrench' },
         children: [{
             path: 'malfunction',
             name: 'Malfunction',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '设备故障', icon: 'error' }
         },
         {
             path: 'alert',
             name: 'Alert',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '设备告警', icon: 'alert' }
         },
         
         {
             path: 'repairOrder',
             name: 'RepairOrder',
-            component: () => import('@/views/docs/Docs'),
+            component: () => import('@/views/Empty'),
             meta: { title: '检修工单', icon: 'file-text' }
-        },
-        {
-            path: 'keep',
+        }]
+    },
+    {
+        path: '/keep',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: { title: '设备维保', icon: 'medicinebox' },
+        alwaysShow: true ,
+        children: [{
+            path: 'keepPlan',
             name: 'KeppPlan',
-            component: () => import('@/views/ops/KeepPlan'),
-            meta: { title: '维保计划', icon: 'medicinebox' }
+            component: () => import('@/views/keep/KeepPlan'),
+            meta: { title: '维保计划', icon: 'keepPlan' }
         },
         {
             path: 'keepOrder',
             name: 'KeppOrder',
-            component: () => import('@/views/docs/Docs'),
-            meta: { title: '维保工单', icon: 'file-zip' }
+            component: () => import('@/views/keep/KeepOrder'),
+            meta: { title: '维保工单', icon: 'keepOrder' }
+        },
+        {
+            path: 'keepSubmit',
+            name: 'KeepSubmit',
+            component: () => import('@/views/keep/KeepSubmit'),
+            meta: { title: '维保确认', icon: 'keepSubmit' }
         }]
     },
     {
@@ -225,20 +240,20 @@ export const dynamicRoutes = [
         alwaysShow: true ,
         children: [{
             path: 'list',
-            name: 'List',
+            name: 'DevList',
             component: () => import('@/views/dev/DevList'),
-            meta: { title: '设备管理', icon: 'detail' }
+            meta: { title: '设备管理', icon: 'detail',cache:true }
         },
         {
             path: 'backup',
-            name: 'Backup',
-            component: () => import('@/views/sys/UserList'),
+            name: 'DevBak',
+            component: () => import('@/views/dev/DevBak'),
             meta: { title: '备件备件', icon: 'save' }
         },
         {
             path: 'fail',
             name: 'Fail',
-            component: () => import('@/views/sys/UserList'),
+            component: () => import('@/views/Empty'),
             meta: { title: '故障信息', icon: 'devFail' }
         }
         ,{
@@ -257,7 +272,7 @@ export const dynamicRoutes = [
         children: [{
             path: 'demo',
             name: 'Demo',
-            component: () => import('@/views/sys/UserList'),
+            component: () => import('@/views/Empty'),
             meta: { title: '某某报表', icon: 'report' }
         }]
     },
@@ -300,10 +315,10 @@ export const dynamicRoutes = [
             meta: { title: '角色管理', icon: 'team' }
         },
         {
-            path: 'specail',
-            name: 'Specail',
-            component: () => import('@/views/sys/Specail'),
-            meta: { title: '个性化设置', icon: 'skin' }
+            path: 'member',
+            name: 'Member',
+            component: () => import('@/views/sys/Member'),
+            meta: { title: '运维人员', icon: 'monitor' }
         }
         ]
     },

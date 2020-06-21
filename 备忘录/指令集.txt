@@ -30,12 +30,13 @@
 也是用于根据条件展示元素。和v-if不同的是，if是创建或销毁dom。v-show只是简单的切换css的dispaly属性。
 
 //v-for
-<div v-for="(item,index) in items"></div>   //使用in，index是一个可选参数，表示当前项的索引
-<div v-for="item of items"></div>   //使用of
+<div v-for="(item,index) in items" :key="index"></div>   //使用in，index是一个可选参数，表示当前项的索引 需要加上key属性
+<div v-for="item of items" :key="item.id"></div>   //使用of 需要加上key属性
 注意：当v-for和v-if同处于一个节点时，v-for的优先级比v-if更高。这意味着v-if将运行在每个v-for循环中
 
+
 <!-- 对象遍历 -->
-<div v-for="(value, key, index) in object">
+<div v-for="(value, key, index) in object" >
     {{ index }}. {{ key }} - {{ value }}
 </div>
 

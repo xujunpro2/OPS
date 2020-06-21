@@ -17,12 +17,17 @@
             </el-table-column>
         </el-table>
         <el-row type="flex" justify="end" style="background:#fff">
-            <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                @current-change="paginChange"></el-pagination>
+            <el-pagination background layout="total, sizes, prev, pager, next" 
+                :page-sizes="pageSizeList"
+                :page-size="pageSize"  
+                :total="total"
+                @size-change="sizeChange"
+                @current-change="paginChange">
+            </el-pagination>
         </el-row>
         <!--上传-->
         <el-row type="flex" justify="start">
-            <el-upload class="upload-demo" :action="this.bimServer" 
+            <el-upload  :action="this.bimServer" 
                 ref="upload"
                 :auto-upload="true"
                 :multiple="false"
@@ -64,7 +69,7 @@ export default {
             bimServer : this.$store.state.uv.bimServer,
             tableData:[],
             loading:false, //table的loading
-            pageSize:Number(this.$store.state.uv.specail.pageSize), //设置都是varchar的，要转数字
+            pageSizeList:this.$store.state.settings.pageSizeList, //分页列表
             total:0,
 
             ifc:{
@@ -83,7 +88,12 @@ export default {
                Authorization:"bimi"
             }
         };
-	},
+    },
+    computed:{
+        pageSize() {
+            return this.$store.state.settings.pageSize
+        },
+    },
 	methods: {
         //on-change绑定事件，文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
         onFileChange(file, fileList){
@@ -154,6 +164,10 @@ export default {
             .then(()=>{
                 this.tabelPagin(1);
             });
+        },
+        sizeChange(rows){
+            this.$store.dispatch('settings/changePageSize',rows);
+            this.tabelPagin(1);
         },
         //分页事件
         paginChange(curPage) {

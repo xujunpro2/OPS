@@ -1,5 +1,7 @@
 <template>
-	<div class="rootDiv"></div>
+	<div class="rootDiv">
+        待开发
+    </div>
 </template>
 
 <script>
