@@ -1,10 +1,10 @@
 <template>
 	<div class="rootDiv">
-		<el-row class="bimRow" :gutter="10">
-			<el-col :span="15" style="height:100%;padding-top:5px;padding-bottom:5px">
+		<el-row class="bimRow" :gutter="5">
+			<el-col :span="16" style="height:100%;padding-top:5px;padding-bottom:5px">
                 <bim ref="bim"></bim>
             </el-col>
-			<el-col :span="5" style="margin-top:5px">
+			<el-col :span="4" style="margin-top:5px">
                 <dev-card ref="devCard"></dev-card>
             </el-col>
 			<el-col :span="4">
@@ -14,12 +14,18 @@
         <!--按钮行 -->
         <el-row style="margin:5px ">
             <!--查询列-->
-            <el-col :span="15">
+            <el-col :span="18">
                 <el-form :inline="true" ref="queryForm" :model="queryForm" label-width="80px">
                     <el-form-item label="区域划分">
                         <el-select v-model="queryForm.spaceId" filterable placeholder="请选择">
                             <el-option v-for="item in spaceQueryOptions" :key="item.spaceId" :label="item.spaceName"
                                 :value="item.spaceId"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="设备类型">
+                        <el-select v-model="queryForm.devType" filterable placeholder="请选择">
+                            <el-option v-for="item in queryTypeOptins" :key="item.devTypeId" :label="item.devTypeName"
+                                :value="item.devTypeId"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="设备编号">
@@ -31,14 +37,22 @@
                 </el-form>
             </el-col>
             <!--操作列-->
-            <el-col :span="9">
+            <el-col :span="6">
                 <el-row type="flex" justify="end">
-                    <el-button type="danger" icon="el-icon-delete" @click="onDelete">删除</el-button>
-                    <el-button type="primary" icon="el-icon-circle-plus-outline" @click="onAdd">新增</el-button>
-                    <el-button type="primary" icon="el-icon-edit" @click="onUpdate">修改</el-button>
-                    <el-button type="primary" icon="el-icon-location-outline" @click="onBinding">绑定构件</el-button>
+                    <el-dropdown   @command="onOperate" trigger="click">
+                        <el-button type="primary">
+                            操作
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item icon="el-icon-circle-plus-outline" command="delete">新增设备</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-edit" command="add">修改设备</el-dropdown-item>
+                            <el-dropdown-item :disabled="curRow == null || curRow.canDelete === 0" icon="el-icon-delete" command="update">删除设备</el-dropdown-item>
+                            <el-dropdown-item divided icon="el-icon-location-outline" command="binding">绑定构件</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                     &emsp;
-                    <el-dropdown  @command="onImportDev" trigger="click">
+                    <el-dropdown   @command="onImportDev" trigger="click">
                         <el-button type="primary">
                             设备数据导入
                             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -53,7 +67,8 @@
 		
         <!--设备Table行 -->
 		<el-row class="devTableRow">
-			<el-table ref="devTable" highlight-current-row @current-change="onRowSelectedChange" height="100%" v-loading="devLoading" :data="devTable" style="width: 100%;">
+			<el-table ref="devTable" highlight-current-row @current-change="onRowSelectedChange" @row-dblclick="onRowDoubleClick"
+                height="100%" v-loading="devLoading" :data="devTable" style="width: 100%;">
 				<el-table-column prop="devName" label="名称"></el-table-column>
 				<el-table-column prop="devCode" label="编码"></el-table-column>
 				<el-table-column prop="devTypeName" label="类型"></el-table-column>
@@ -68,8 +83,17 @@
 				<el-table-column prop="productId" label="构件ID"></el-table-column>
 				<el-table-column  label="上次巡检时间"></el-table-column>
                 <el-table-column  label="上次检修时间"></el-table-column>
-                <el-table-column  label="下次维保时间"></el-table-column>
                 <el-table-column  label="上次故障时间"></el-table-column>
+                <el-table-column prop="preKeepTime"  label="上次维保时间">
+                    <template slot-scope="scope">
+						{{getTimeStr(scope.row.preKeepTime,'yyyy-MM-dd hh:mm')}}
+					</template>
+                </el-table-column>
+                <el-table-column prop="nextKeepTime"  label="下次维保时间">
+                    <template slot-scope="scope">
+						{{getTimeStr(scope.row.nextKeepTime,'yyyy-MM-dd hh:mm')}}
+					</template>
+                </el-table-column>
 			</el-table>
 		</el-row>
 
@@ -169,6 +193,7 @@ import DevRunningState from "./components/DevRunningState";
 import DevCard from './components/DevCard';
 import viewerHelper from "@/utils/viewHelper";
 import { BimiViewer, ProductState } from "@/assets/js/bim/bim";
+import CommonTool from '@/utils/commonTool.js';
 
 export default {
 	name: "DevList",
@@ -179,10 +204,10 @@ export default {
                 spaceId:null,
                 devCode:null,
                 devName:null,//目前没用
-                devType:null,//目前没用到
+                devType:null,
             },
             spaceQueryOptions:[],//设备区域查询，需要增加一个全部
-           
+            queryTypeOptins:[],//设备类型选择
 			
 			//设备表格
 			fullCardBody: { height: "100%", overflow: "auto" },
@@ -234,10 +259,20 @@ export default {
 		};
 	},
 	methods: {
-        //初始化设备类型Options
+
+          //初始化设备类型Options
 		initTypeOptions() {
 			this.$store.dispatch("dev/getDevTypeList").then(data => {
-				this.typeOptions = data;
+                this.typeOptions = data;//对话框表单使用的
+                //查询使用的
+                this.queryTypeOptins.length = 0;
+                this.queryTypeOptins.push({devTypeId:null,devTypeName:'全部'});
+				data.forEach(item=>{
+                    this.queryTypeOptins.push({
+                        devTypeId:item.devTypeId,
+                        devTypeName:item.devTypeName
+                    })
+                })
 			});
 		},
 
@@ -322,7 +357,25 @@ export default {
 					this.devLoading = false;
 				});
         },
-        //设备表格行选中事件
+        getTimeStr(timestamp,format){
+            if(timestamp && timestamp != 0)
+            {
+                let time = new Date(timestamp);
+                return CommonTool.formatData(time,format);
+            }
+            return '';
+        },
+        //双击row，bim定位，这样就可以将单击和双击隔离开了
+        onRowDoubleClick(row, column, event){
+            //BIM定位
+            let productId = row.productId;
+            if(productId)
+            {
+                if(this.$refs.bim)
+                    this.$refs.bim.flyTo(productId);
+            }
+        },
+        //设备表格行单击选中事件
         onRowSelectedChange(curRow,oldRow){
             //表格init刷新之后，elementUI默认还会选中这行，从而触发该事件
             if(curRow)
@@ -339,13 +392,6 @@ export default {
                     phone:curRow.phone
                 }
                 this.$refs.devCard.setBasicInfo(info);
-                //BIM定位
-                let productId = curRow.productId;
-                if(productId)
-                {
-                    if(this.$refs.bim)
-                    this.$refs.bim.flyTo(productId);
-                }
             }
         },
         onDevDialogOpen(){
@@ -361,6 +407,27 @@ export default {
                     this.devForm[key] = this.curRow[key];
                 }
             }
+        },
+        //操作菜单
+        onOperate(command){
+            switch(command)
+            {
+                case 'add':
+                    this.onAdd();
+                    break;
+                case 'update':
+                    this.onUpdate();
+                    break;
+                case 'delete':
+                    this.onDelete();
+                    break;
+                case 'binding':
+                    this.onBinding();
+                    break;
+                default:
+                    break;
+            }
+           
         },
         onAdd(){
             //设置devTable清除选中状态，处理用户选中了row，但点击的是新建按钮的情况

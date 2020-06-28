@@ -7,7 +7,7 @@
             <el-form-item label="工单名称">
                 <el-input v-model="queryForm.keepName" placeholder="支持模糊查询" clearable></el-input>
             </el-form-item>
-            <el-form-item label="生成时间">
+            <el-form-item label="创建时间">
                 <el-date-picker v-model="queryForm.createTime" type="datetimerange" range-separator="至"
                     start-placeholder="开始日期" end-placeholder="结束日期">
                 </el-date-picker>
@@ -141,7 +141,12 @@
                 </el-form-item>
                 <el-form-item v-if="infoForm.pictureList.length >0" label="现场照片">
                     <div style="float:left;padding:3px" v-for="(item,index) of infoForm.pictureList" :key="index">
-                        <el-image style="width: 150px; height: 100px" :src="item" fit="fill" :preview-src-list="infoForm.pictureList"></el-image>
+                        <el-image style="width: 150px; height: 100px" :src="item" fit="fill" :preview-src-list="infoForm.pictureList">
+                            <!--图片未加载的占位内容-->
+                            <div slot="placeholder"><i class="el-icon-loading"></i></div>
+                            <!--加载失败的内容-->
+                            <div slot="error"><i class="el-icon-error"></i></div>
+                        </el-image>
                     </div>
                 </el-form-item>
             </el-form>

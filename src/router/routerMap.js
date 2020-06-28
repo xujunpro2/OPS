@@ -148,13 +148,19 @@ export const dynamicRoutes = [
         path: '/inspection',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '智慧巡检', icon: 'monitor' },
+        meta: { title: '设备巡检', icon: 'monitor' },
         alwaysShow: true ,
         children: [{
+            path: 'templete',
+            name: 'Templete',
+            component: () => import('@/views/inspection/Templete'),
+            meta: { title: '巡检线路', icon: 'templete' }
+        },
+        {
             path: 'plan',
             name: 'Plan',
             component: () => import('@/views/Empty'),
-            meta: { title: '巡检计划管理', icon: 'edit-square' }
+            meta: { title: '巡检工单', icon: 'edit-square' }
         },
         {
             path: 'dev',
@@ -211,14 +217,9 @@ export const dynamicRoutes = [
         path: '/keep',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '设备维保', icon: 'medicinebox' },
+        meta: { title: '设备维保', icon: 'keep' },
         alwaysShow: true ,
-        children: [{
-            path: 'keepPlan',
-            name: 'KeppPlan',
-            component: () => import('@/views/keep/KeepPlan'),
-            meta: { title: '维保计划', icon: 'keepPlan' }
-        },
+        children: [
         {
             path: 'keepOrder',
             name: 'KeppOrder',
@@ -230,6 +231,18 @@ export const dynamicRoutes = [
             name: 'KeepSubmit',
             component: () => import('@/views/keep/KeepSubmit'),
             meta: { title: '维保确认', icon: 'keepSubmit' }
+        },
+        {
+            path: 'keepAlarm',
+            name: 'KeepAlarm',
+            component: () => import('@/views/keep/KeepAlarm'),
+            meta: { title: '维保提醒', icon: 'keepAlarm' }
+        },
+        {
+            path: 'keepPlan',
+            name: 'KeppPlan',
+            component: () => import('@/views/keep/KeepPlan'),
+            meta: { title: '维保计划', icon: 'keepPlan' }
         }]
     },
     {

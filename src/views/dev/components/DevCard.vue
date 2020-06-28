@@ -1,5 +1,5 @@
 <template>
-    <el-card class="box-card" style="height:100%" :body-style="fullCardBody">
+    <el-card class="box-card" :body-style="fullCardBody">
         <div slot="header" class="clearfix">
             <span class="cardTitie">基本信息</span>
         </div>
@@ -54,6 +54,10 @@ export default {
 </script>
 
 <style scoped>
+.box-card{
+    min-width: 206px;
+    height:100%;
+}
 .cardTitie {
 	margin-left: 10px;
 	color: rgba(0, 0, 0, 0.45);

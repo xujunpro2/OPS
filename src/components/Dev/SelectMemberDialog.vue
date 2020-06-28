@@ -25,6 +25,7 @@
 
         <el-table ref="table" highlight-current-row @row-click="onRowClick" height="300" v-loading="loading"
             :data="tableData" style="width: 100%;">
+            <el-table-column prop="memberCode" label="工号"></el-table-column>
             <el-table-column prop="memberName" label="姓名"></el-table-column>
             <el-table-column prop="memberSex" label="性别">
                 <template slot-scope="scope">

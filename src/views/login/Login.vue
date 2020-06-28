@@ -53,11 +53,12 @@ export default {
 					password: password
 				})
 				.then(() => {
-					this.loading = false;
+					
 					this.$router.push({
 						name: "Dashboard" //注意这里不是路由的path，而是要用路由的name
 						// params: { user: username, password: password }
-					});
+                    });
+                    this.loading = false;
 				})
 				.catch(error => {
 					this.loading = false;
@@ -92,10 +93,10 @@ export default {
 }
 .login-box {
 	position: absolute;
-	left: 20%;
+	left: 70%;
 	top: 50%;
-	margin: -150px 0 0 -150px; /*50%为自身尺寸的一半*/
-	width: 300px;
+	margin: -160px 0 0 -160px; /*50%为自身尺寸的一半*/
+	width: 320px;
 	/* margin: 10% auto; */
 }
 .login-label {
@@ -139,7 +140,7 @@ export default {
         left: 0;
         right: 0;
         background-color:  rgba(0, 0, 0, 0.8);
-        background-image: url('../../assets/icons/loginbg.jpg');
+        background-image: url('../../assets/icons/loginbg.png');
         background-size: 100% 100%;
         background-repeat: no-repeat;
 }

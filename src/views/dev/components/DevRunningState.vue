@@ -60,8 +60,9 @@ export default {
 
 <style lang="scss" scoped>
 .panel-group {
-  margin-top: 5px;
-  margin-right: 5px;
+    min-width: 206px;
+    margin-top: 5px;
+    margin-right: 5px;
 
   .card-panel-col {
     margin-bottom: 5px;

@@ -32,9 +32,10 @@
                     <i v-if="scope.row.timeout == 1" class="el-icon-circle-check" style="color:#d40000"></i>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="230px">
                 <template slot-scope="scope">
-                     <el-button @click="onComplete(scope.row)">提交</el-button>
+                     <el-button @click="onComplete(scope.row)">维保提交</el-button>
+                     <el-button @click="onMalfunction(scope.row)" type="danger">故障上报</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -56,14 +57,7 @@
                 保养纪录
             </el-row>
             <el-row style="margin-top:5px">
-                <el-input type="textarea" :rows="4" placeholder="请输入内容" clearable="" v-model="keepContext">
-                </el-input>
-            </el-row>
-            <el-row style="margin-top:10px">
-                故障报修
-            </el-row>
-            <el-row style="margin-top:5px">
-                <el-switch v-model="addMalfunction" @change="malfunctionChange"></el-switch>
+                <el-input type="textarea" :rows="4" placeholder="请输入内容" clearable="" v-model="keepContext"></el-input>
             </el-row>
             <span slot="footer" class="dialog-footer">
                 <el-button  @click="dialogVisible = false">取 消</el-button>
@@ -92,7 +86,6 @@ export default {
             dialogVisible:false,
             keepContext:null, //维保文字纪录
             uploadedFile:new Map(),//上传成功的图片，key是文件名称，value是服务端的文件名称.用来最终提交  set delete get
-            addMalfunction:false,//触发设备故障检修
 
             //照片查看对话框
             upload:this.$store.state.settings.server+"upload/keep.action",
@@ -110,7 +103,6 @@ export default {
                 this.$refs.elUpload.clearFiles();//上传控件清空上次的文件列表 
             }
             this.keepContext = null;
-            this.addMalfunction = false;
         },
         handleRemove(file, fileList) {
             let fileName = file.name;
@@ -138,21 +130,9 @@ export default {
         onUploadError(err, file, fileList){
             this.$notify({title: '消息',message: '图片上传失败',type: 'error',duration:3000});
         },
-        //触发故障报修switch按钮事件
-        malfunctionChange(curState){
-            if(curState)
-            {
-                this.$confirm("故障报修将会在提交维保记录之后，创建设备检修工单，确定选择吗?", "提示", {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'info'
-                }).then(()=>{
-                    
-                })
-                .catch(()=>{
-                    this.addMalfunction = false;
-                })
-            }
+        //触发故障报修
+        onMalfunction(row){
+            this.$alert('后续开发，这里先把流程串起来');
         },
         onQuery(){
             this.loading = true;
@@ -199,8 +179,8 @@ export default {
             
             if(this.curRow)
             {
-                //数据校验
-                if(this.uploadedFile.size() == 0)
+                //数据校验 Map size属性
+                if(this.uploadedFile.size == 0)
                 {
                     this.$alert("请上传保养现场照片!", "提示", {confirmButtonText: "确定",type: "error"});
                     return;
@@ -232,11 +212,6 @@ export default {
                             this.onQuery();
                         }
                         this.$notify({title: '消息', message: '维保确认提交成功',type: 'success',duration:3000});
-                        //如果选择了故障报修，还需要弹出故障报修对话框
-                        if(this.addMalfunction)
-                        {
-                            this.$alert("这里将来会触发故障报修,目前先把流程串起来了，后面要开发", "提示", {confirmButtonText: "确定",type: "info"});
-                        }
                     }
                 })
                 
