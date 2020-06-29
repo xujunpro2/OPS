@@ -34,7 +34,7 @@
             </el-table-column>
             <el-table-column label="操作" width="230px">
                 <template slot-scope="scope">
-                     <el-button @click="onComplete(scope.row)">维保提交</el-button>
+                     <el-button :disabled="scope.row.keepState != 1" @click="onComplete(scope.row)">维保提交</el-button>
                      <el-button @click="onMalfunction(scope.row)" type="danger">故障上报</el-button>
                 </template>
             </el-table-column>

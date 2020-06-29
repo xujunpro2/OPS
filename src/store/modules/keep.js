@@ -127,6 +127,28 @@ const actions = {
             })
         })
     },
+
+    //根据状态查询工单
+    byState(context,state){
+        return new Promise((resolve,reject)=>{
+            request.get('keep/byState.action',{params:{state:state}}).then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
+
+    //获得3天内逾期的待保养设备
+    threeDay(context){
+        return new Promise((resolve,reject)=>{
+            request.get('keep/threeDay.action').then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
 }
 
 export default {

@@ -120,6 +120,9 @@
                         <el-form-item label="当前状态">
                             <el-input :readonly="true" v-model="infoForm.keepState"></el-input>
                         </el-form-item>
+                        <el-form-item label="完成时间">
+                            <el-input :readonly="true" v-model="infoForm.completeTime"></el-input>
+                        </el-form-item>
                     </el-col>
                 </el-row>
                 <el-form-item label="保养设备">
@@ -225,6 +228,7 @@ export default {
                 keepState:null,
                 createTime:null,
                 deadline:null,// 最后期限时间
+                completeTime:null,//完成时间
                 devList:[],//保养设备
                 memberList:[],//保养人员
 
@@ -299,8 +303,12 @@ export default {
         },
         //row 选中操作
         onRowSelectedChange(curRow,oldRow){
-            this.curRow = curRow
-            this.dynamicButtons(curRow)
+            if(curRow != null)
+            {
+                this.curRow = curRow
+                this.dynamicButtons(curRow)
+            }
+           
         },
         //动态按钮
         dynamicButtons(curRow){
@@ -323,12 +331,17 @@ export default {
                     this.buttonEnable.canTimeout = true;
                     this.buttonEnable.canArchive = true;
                     break;
-                }
-                //如果执行过超时标记,那么超时按钮不可用
-                if(this.buttonEnable.canTimeout && curRow.timeout == 1)
-                {
-                    this.buttonEnable.canTimeout = false;
-                }
+            }
+            //如果执行过超时标记,那么超时按钮不可用
+            if(this.buttonEnable.canTimeout && curRow.timeout == 1)
+            {
+                this.buttonEnable.canTimeout = false;
+            }
+            //如果工单已完成，并且完成时间<=最后期限，那么超时按钮也不可用
+            if(curRow.completeTime && curRow.completeTime<=curRow.deadline)
+            {
+                this.buttonEnable.canTimeout = false;
+            }
         },
         //表格时间格式化
         timestampFormat(timestamp,formate){
@@ -365,7 +378,7 @@ export default {
             let keepId = row.keepId;
             this.$store.dispatch('keep/findKeep',keepId).then(data=>{
                 this.infoDialogVisible = true;
-                console.info(data);
+                // console.info(data);
                 if(data)
                 {
                     this.infoForm.keepId = data.keepId
@@ -374,6 +387,10 @@ export default {
                     this.infoForm.keepState = this.keepStateStr(data.keepState);
                     this.infoForm.deadline = CommonTool.formatData(new Date(data.deadline),'yyyy-MM-dd hh:mm:ss')
                     this.infoForm.createTime = CommonTool.formatData(new Date(data.createTime),'yyyy-MM-dd hh:mm:ss')
+                    if(data.completeTime)
+                    {
+                        this.infoForm.completeTime = CommonTool.formatData(new Date(data.completeTime),'yyyy-MM-dd hh:mm:ss')
+                    }
                     this.infoForm.devList = data.devList
                     this.infoForm.memberList = data.memberList
 
