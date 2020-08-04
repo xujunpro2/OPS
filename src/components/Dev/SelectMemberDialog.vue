@@ -39,7 +39,11 @@
                 </template>
             </el-table-column>
             <el-table-column prop="memberPhone" label="电话"></el-table-column>
-            <el-table-column prop="memberTypeName" label="工种"></el-table-column>
+            <el-table-column prop="memberTypeName" label="工种">
+                <template slot-scope="scope">
+                    <span v-html="getMemberTypeDescHtml(scope.row)"></span>
+                </template>
+            </el-table-column>
         </el-table>
 
         <el-row type="flex" justify="end" style="background:#fff">
@@ -72,7 +76,11 @@ export default {
                 memberSex:null,
             },
             querySexOptions:[{value:null,label:'全部'},{value:1,label:'男'},{value:0,label:'女'}],
-            queryMemberTypeOptions:[],
+            queryMemberTypeOptions:[
+                {value:null,label:'全部'},
+                {label:'巡检人员',value:'inspect'},
+                {label:'检修人员',value:'repair'}
+            ],
 
             loading: false,
 			tableData: [],
@@ -88,6 +96,10 @@ export default {
         inner:{
             type:Boolean,
             default:true,
+        },
+        memberType:{
+            type:String,
+            default:null,
         }
     },
 	methods: {
@@ -165,24 +177,22 @@ export default {
             let time = new Date(birthday);
             return CommonTool.formatData(time,'yyyy-MM-dd')
         },
-        
-        initMemberTypeOptions(){
-            this.$store.dispatch('system/getDictionary','memberType').then(data=>{
-                if(data)
-                {
-                    this.queryMemberTypeOptions.push({value:null,label:'全部'})
-                    for(let key in data)
-                    {
-                       this.queryMemberTypeOptions.push({value:key,label:data[key]})
-                    }
-                }
-            })
+        getMemberTypeDescHtml(row){
+            let desc = '';
+            if(row.inspect == 1)
+            {
+                desc +="巡检&emsp;";
+            }
+            if(row.repair == 1)
+            {
+                desc +="检修&emsp;";
+            }
+            return desc;
         },
-        
     },
 	mounted() {
+        this.queryForm.memberType = this.memberType
         this.$nextTick(()=>{
-            this.initMemberTypeOptions();
             this.onQuery();
         })
        

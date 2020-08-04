@@ -149,9 +149,9 @@ const actions = {
             })
         })
     },
-    deleteDev(context,devId){
+    deleteDev(context,devCode){
         return new Promise((resolve,reject)=>{
-            request.get('dev/delete.action',{params:{devId:devId}}).then(data=>{
+            request.get('dev/delete.action',{params:{devCode:devCode}}).then(data=>{
                 resolve(data);
             }).catch(()=>{
                 reject();
@@ -217,6 +217,15 @@ const actions = {
     bakChange(context,param){
         return new Promise((resolve,reject)=>{
             request.get('dev/bakChange.action',{params:param}).then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
+    isUseing(context,devCode){
+        return new Promise((resolve,reject)=>{
+            request.get('dev/isUseing.action',{params:{devCode:devCode}}).then(data=>{
                 resolve(data);
             }).catch(()=>{
                 reject();

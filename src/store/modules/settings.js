@@ -6,7 +6,8 @@ const state = {
     tagsView: Settings.tagsView,
     pageSize: Settings.pageSize,
     pageSizeList: Settings.pageSizeList,
-    server:Settings.server()
+    server:Settings.server(),
+    uploadStore:Settings.server()+"uploadStore/pictures/",
 }
 
 const mutations = {

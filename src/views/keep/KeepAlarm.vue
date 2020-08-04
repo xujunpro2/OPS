@@ -2,7 +2,7 @@
 	<div class="rootDiv">
         <el-row :gutter="5" style="height:100%">
 			<el-col :span="12" style="height:100%">
-				<el-card class="box-card" style="height:100%" :body-style="fullCardBody">
+				<el-card  style="height:100%" :body-style="fullCardBody">
 					<div slot="header" class="clearfix">
 						<span class="cardTitie">待处理工单</span>
 					</div>
@@ -26,7 +26,7 @@
 			</el-col>
 
 			<el-col :span="12" style="height:100%">
-               <el-card class="box-card" style="height:100%;" :body-style="fullCardBody">
+               <el-card style="height:100%;" :body-style="fullCardBody">
 					<div slot="header" class="clearfix">
 						<span class="cardTitie">待保养设备</span>
 					</div>

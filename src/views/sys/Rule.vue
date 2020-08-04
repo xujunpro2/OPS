@@ -4,9 +4,8 @@
       <el-table-column prop="ruleName" label="角色"></el-table-column>
       <el-table-column prop="ruleId" label="操作" width="230">
         <template slot-scope="scope">
-            <el-button @click="onDeleteRule(scope.row)" type="danger" >删除</el-button>
-          <el-button @click="onUpdateRule(scope.row)">修改</el-button>
-          
+            <el-button @click="onDeleteRule(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+            <el-button @click="onUpdateRule(scope.row)" icon="el-icon-edit" circle ></el-button>
         </template>
       </el-table-column>
     </el-table>

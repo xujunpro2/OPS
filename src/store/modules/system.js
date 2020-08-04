@@ -11,6 +11,15 @@ const actions = {
             })
         })
     },
+    allMember(context,type){
+        return new Promise((resolve,reject)=>{
+            request.get('sys/allMember.action',{params:{type:type}}).then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
     memberCount(context,query){
         return new Promise((resolve,reject)=>{
             request.get('sys/memberCount.action',{params:query}).then(data=>{

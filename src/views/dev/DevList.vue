@@ -45,10 +45,10 @@
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item icon="el-icon-circle-plus-outline" command="delete">新增设备</el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-edit" command="add">修改设备</el-dropdown-item>
-                            <el-dropdown-item :disabled="curRow == null || curRow.canDelete === 0" icon="el-icon-delete" command="update">删除设备</el-dropdown-item>
-                            <el-dropdown-item divided icon="el-icon-location-outline" command="binding">绑定构件</el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-circle-plus-outline" command="add">新增设备</el-dropdown-item>
+                            <el-dropdown-item :disabled="curRow == null" icon="el-icon-edit" command="update">修改设备</el-dropdown-item>
+                            <el-dropdown-item :disabled="curRow == null" icon="el-icon-delete" command="delete">删除设备</el-dropdown-item>
+                            <el-dropdown-item :disabled="curRow == null" divided icon="el-icon-location-outline" command="binding">绑定构件</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     &emsp;
@@ -69,29 +69,44 @@
 		<el-row class="devTableRow">
 			<el-table ref="devTable" highlight-current-row @current-change="onRowSelectedChange" @row-dblclick="onRowDoubleClick"
                 height="100%" v-loading="devLoading" :data="devTable" style="width: 100%;">
-				<el-table-column prop="devName" label="名称"></el-table-column>
-				<el-table-column prop="devCode" label="编码"></el-table-column>
-				<el-table-column prop="devTypeName" label="类型"></el-table-column>
+				<el-table-column prop="devName" label="名称" header-align="center"></el-table-column>
+				<el-table-column prop="devCode" label="编码" align="center"></el-table-column>
+				<el-table-column prop="devTypeName" label="类型" align="center"></el-table-column>
 				<!-- <el-table-column prop="devState" label="状态">
 					<template slot-scope="scope">
 						<span v-if="scope.row.devState ==  1">在用</span>
 						<span class="redFont" v-if="scope.row.devState ==  0">报废</span>
 					</template>
 				</el-table-column> -->
-				<el-table-column prop="spaceName" label="所属区域"></el-table-column>
+				<el-table-column prop="spaceName" label="所属区域" align="center"></el-table-column>
 				<!-- <el-table-column prop="ifc" label="模型"></el-table-column>-->
-				<el-table-column prop="productId" label="构件ID"></el-table-column>
-				<el-table-column  label="上次巡检时间"></el-table-column>
-                <el-table-column  label="上次检修时间"></el-table-column>
-                <el-table-column  label="上次故障时间"></el-table-column>
-                <el-table-column prop="preKeepTime"  label="上次维保时间">
+				<el-table-column prop="productId" label="构件ID" align="center"></el-table-column>
+				<el-table-column prop="preInspectTime" label="上次巡检时间" align="center">
+                    <template slot-scope="scope" >
+						{{getTimeStr(scope.row.preInspectTime,'yyyy-MM-dd hh:mm')}}
+					</template>
+                </el-table-column>
+                <el-table-column prop="preFaultTime"  label="上次故障时间" align="center">
+                    <template slot-scope="scope">
+						{{getTimeStr(scope.row.preFaultTime,'yyyy-MM-dd hh:mm')}}
+					</template>
+                </el-table-column>
+                <el-table-column  label="上次检修时间" align="center">
+
+                </el-table-column>
+                <el-table-column prop="preKeepTime"  label="上次维保时间" align="center">
                     <template slot-scope="scope">
 						{{getTimeStr(scope.row.preKeepTime,'yyyy-MM-dd hh:mm')}}
 					</template>
                 </el-table-column>
-                <el-table-column prop="nextKeepTime"  label="下次维保时间">
+                <el-table-column prop="nextKeepTime"  label="下次维保时间" align="center">
                     <template slot-scope="scope">
 						{{getTimeStr(scope.row.nextKeepTime,'yyyy-MM-dd hh:mm')}}
+					</template>
+                </el-table-column>
+                <el-table-column  label="" align="center">
+                    <template slot-scope="scope">
+						<el-button type="text" @click="onQrCode(scope.row)">二维码</el-button>
 					</template>
                 </el-table-column>
 			</el-table>
@@ -121,7 +136,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="设备编码" prop="devCode">
-                            <el-input v-model="devForm.devCode"></el-input>
+                            <el-input :readonly="curRow != null" v-model="devForm.devCode"></el-input>
                         </el-form-item>
                          <el-form-item label="设备类型" >
                             <el-select v-model="devForm.devType" placeholder="请选择" style="width:100%">
@@ -163,7 +178,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="投产日期" >
+                        <el-form-item label="投产日期" prop="usedTime">
                             <el-date-picker v-model="devForm.usedTime" type="date" style="width:100%" placeholder="选择日期">
                             </el-date-picker>
                         </el-form-item>
@@ -184,6 +199,17 @@
 				<el-button type="primary" @click="onSubmitDev">确 定</el-button>
 			</span>
 		</el-dialog>
+
+        <!--设备二维码对话框-->
+        <el-dialog title="设备二维码" :visible.sync="codeDialogVisible" @open="onCodeDialogOpen" width="300px" :close-on-click-modal="false">
+            <el-row type="flex" justify="center">
+                <vue-qr ref="qrcode"  :text="codeText" :size="200"></vue-qr>
+            </el-row>
+            
+            <span slot="footer" class="dialog-footer">
+				<el-button type="primary" @click="onDownload">下 载</el-button>
+			</span>
+        </el-dialog>
 	</div>
 </template>
 
@@ -194,10 +220,11 @@ import DevCard from './components/DevCard';
 import viewerHelper from "@/utils/viewHelper";
 import { BimiViewer, ProductState } from "@/assets/js/bim/bim";
 import CommonTool from '@/utils/commonTool.js';
+import vueQr from 'vue-qr';
 
 export default {
 	name: "DevList",
-	components: { Bim,DevRunningState,DevCard },
+	components: { Bim,DevRunningState,DevCard,vueQr },
 	data() {
 		return {
             queryForm:{
@@ -246,6 +273,9 @@ export default {
                 warranty:[
                     {type:'number',min:1, message: '请输入大于0的整数', trigger: 'blur'}
                 ],
+                usedTime:[
+                    {required: true, message: '请输入设备投产日期,以便自动计算保养周期', trigger: 'blur' }
+                ]
             },
 
 			//导入设备数据对话框
@@ -255,7 +285,11 @@ export default {
 			importStarting: false, //开始导入，进度条出现
 			taskId: null, //导入任务ID
 			progress: 0, //导入进度
-			interval: null //定时器
+            interval: null, //定时器
+            
+            //二维码
+            codeDialogVisible:false,
+            codeText:"",//二维码文本
 		};
 	},
 	methods: {
@@ -291,7 +325,7 @@ export default {
 						spaceId: item.spaceId,
 						spaceName: item.spaceName
 					});
-				});
+                });
 			});
         },
         
@@ -350,7 +384,7 @@ export default {
 			this.$store
 				.dispatch("dev/getDevPage", query)
 				.then(data => {
-					this.devTable = data;
+                    this.devTable = data;
                     this.devLoading = false;
 				})
 				.catch(() => {
@@ -406,6 +440,8 @@ export default {
                 {
                     this.devForm[key] = this.curRow[key];
                 }
+                //最后要把日期处理下，
+                this.devForm.usedTime = new Date(this.devForm.usedTime)
             }
         },
         //操作菜单
@@ -433,11 +469,37 @@ export default {
             //设置devTable清除选中状态，处理用户选中了row，但点击的是新建按钮的情况
             this.curRow = null;
             this.$refs.devTable.setCurrentRow(null);
+            //表单初始化
+            this.devForm.devId = null
+            this.devForm.devCode = null
+            this.devForm.devName = null
+            this.devForm.devType = null
+            this.devForm.spaceId = null
+            this.devForm.manufacturer = null
+            this.devForm.usedTime = null
+            this.devForm.warranty = null
+            this.devForm.phone = null
+            this.devForm.power = null
+            this.devForm.voltage = null
+            this.devForm.warranty = null
+            this.devForm.ifc = null
+            this.devForm.productId = null
             this.devDialogVisible = true;
+
+            //设置默认选中一个
+            if(this.typeOptions.length > 0)
+            {
+                this.devForm.devType = this.typeOptions[0].devTypeId
+            }
+            if(this.spaceOptions.length > 0)
+            {
+                this.devForm.spaceId = this.spaceOptions[0].spaceId
+            }
         },
         onUpdate(){
             this.devDialogVisible = true;
         },
+        //删除设备,UI上已经做了是否能删除的判断
         onDelete(){
             if(this.curRow)
             {
@@ -446,12 +508,24 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(()=>{
-                    let devId = this.curRow.devId;
-                    this.$store.dispatch('dev/deleteDev',devId).then(data=>{
+                    let devCode = this.curRow.devCode;
+                    this.$store.dispatch('dev/deleteDev',devCode).then(data=>{
                         if(data == 1)
                         {
                             this.$notify({title: '消息',message: '删除成功',type: 'success',duration:3000});
                             this.initDevTabel();
+                        }
+                        else if(data == -1)
+                        {
+                            this.$notify({title: '消息',message: '该设备已关联维保工单，不能删除!',type: 'error',duration:3000});
+                        }
+                        else if(data == -2)
+                        {
+                            this.$notify({title: '消息',message: '该设备已关联巡检计划，不能删除!',type: 'error',duration:3000});
+                        }
+                        else if(data == -3)
+                        {
+                            this.$notify({title: '消息',message: '该设备已关联巡检任务，不能删除!',type: 'error',duration:3000});
                         }
                     })
                 })
@@ -502,9 +576,8 @@ export default {
             this.$refs.form.validate(valid=>{
                 if(valid)
                 {
+                    let time = this.devForm.usedTime.getTime();
                     this.devDialogVisible = false;
-                    //日期改为timestamp
-                    let usedTimeStamp = this.devForm.usedTime.getTime();
                     let dev = {
                         devId:this.devForm.devId,
                         devName : this.devForm.devName,
@@ -512,7 +585,7 @@ export default {
                         devType : this.devForm.devType,
                         spaceId : this.devForm.spaceId,
                         manufacturer :this.devForm.manufacturer,
-                        usedTime:usedTimeStamp,
+                        usedTime:time,
                         warranty:Number(this.devForm.warranty), 
                         phone:this.devForm.phone,
                         power:this.devForm.power, //额定功率 KW
@@ -638,7 +711,24 @@ export default {
 						}
 					}
 				});
-		}
+        },
+        
+        //二维码按钮事件
+        onQrCode(row){
+            this.codeText = row.devCode
+            this.codeDialogVisible = true
+        },
+        onCodeDialogOpen(){
+
+        },
+        onDownload(){
+            const iconUrl = this.$refs.qrcode.$el.src
+            let a = document.createElement('a')
+            let event = new MouseEvent('click')
+            a.download = this.codeText
+            a.href = iconUrl
+            a.dispatchEvent(event)
+        },
 	},
 	mounted() {
         this.initDevBim();

@@ -86,30 +86,29 @@ const actions = {
         })
     },
     //派单
+    sendOrder(context,param){
+        return new Promise((resolve,reject)=>{
+            request.post('keep/sendOrder.action',param).then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
+    //接单
     assignOrder(context,param){
         return new Promise((resolve,reject)=>{
-            request.post('keep/assignOrder.action',param).then(data=>{
+            request.get('keep/assignOrder.action',{params:param}).then(data=>{
                 resolve(data);
             }).catch(()=>{
                 reject();
             })
         })
     },
-    //超时
-    timeout(context,keepId){
-        return new Promise((resolve,reject)=>{
-            request.get('keep/timeout.action',{params:{keepId:keepId}}).then(data=>{
-                resolve(data);
-            }).catch(()=>{
-                reject();
-            })
-        })
-    },
-
     //根据人员ID查询对应的工单列表
-    byMemeber(context,memberCode){
+    byMemeber(context,memberId){
         return new Promise((resolve,reject)=>{
-            request.get('keep/byMemeber.action',{params:{memberCode:memberCode}}).then(data=>{
+            request.get('keep/byMemeber.action',{params:{memberId:memberId}}).then(data=>{
                 resolve(data);
             }).catch(()=>{
                 reject();
@@ -143,6 +142,36 @@ const actions = {
     threeDay(context){
         return new Promise((resolve,reject)=>{
             request.get('keep/threeDay.action').then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
+
+    //查询维保工单关联的设备,用于提交设备故障
+    devByKeep(context,keepId){
+        return new Promise((resolve,reject)=>{
+            request.get('keep/devByKeep.action',{params:{keepId:keepId}}).then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
+    //提交设备故障数据
+    addDevException(context,param){
+        return new Promise((resolve,reject)=>{
+            request.post('keep/addDevException.action',param).then(data=>{
+                resolve(data);
+            }).catch(()=>{
+                reject();
+            })
+        })
+    },
+    forException(context,param){
+        return new Promise((resolve,reject)=>{
+            request.get('keep/forException.action',{params:param}).then(data=>{
                 resolve(data);
             }).catch(()=>{
                 reject();

@@ -4,13 +4,17 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/list.action').then(data=>{
                 resolve(data);
-            });
+            }).catch(()=>{
+                reject();
+            })
         })
     },
     getCameraPlayUrl(context,param){
         return new Promise((resolve,reject)=>{
             request.get('camera/play.action',{ params: param }).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         })
     },
@@ -29,6 +33,8 @@ const actions = {
         return new Promise((resolve,reject)=>{
             request.get('camera/control.action',{ params: param }).then(data=>{
                 resolve(data);
+            }).catch(()=>{
+                reject();
             })
         }) 
     },

@@ -86,10 +86,9 @@ export default {
             //感觉不需要cmmand
             if(this.curCommand)
             {
-                
+                this.$emit('action',{command:this.curCommand,action:1,speed:this.speed});
             }
-            this.$emit('action',{command:'LEFT',action:1,speed:this.speed});
-            
+
         }
     },
 	mounted() {},

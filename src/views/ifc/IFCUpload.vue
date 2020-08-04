@@ -12,7 +12,7 @@
             <el-table-column prop="uploadTimeFmt" label="上传时间"></el-table-column>
             <el-table-column prop="ruleId" label="操作" width="100">
                 <template slot-scope="scope">
-                <el-button @click="onDeleteIfc(scope.row)" type="text" ><span  class="redFont">删除</span></el-button>
+                    <el-button @click="onDeleteIfc(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
                 </template>
             </el-table-column>
         </el-table>

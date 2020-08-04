@@ -15,9 +15,13 @@ import router from './router'
 
 
 
-// set ElementUI lang to EN
-//Vue.use(ElementUI)
 Vue.use(ElementUI, { size: 'small'});
+//百度地图
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+    // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+    ak: 'kbYcYGzqdUtmRZ1eTwxf8SfXssmI7CYG'
+});
 
 Vue.config.productionTip = false
 

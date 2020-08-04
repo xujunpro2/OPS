@@ -160,3 +160,13 @@ strong {
 .el-table th.gutter {
     display: table-cell !important
 }
+
+/*el-image的preview对话框的右上角关闭按钮默认是灰色的，和对话框背景色融合在一起,不容易看到，现在改为白色的，比较醒目*/
+.el-image-viewer__close {
+    color: #fff;
+    top: 40px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+}

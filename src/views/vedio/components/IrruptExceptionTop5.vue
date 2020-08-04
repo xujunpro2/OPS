@@ -10,7 +10,7 @@
                 <el-progress :percentage="scope.row.countPercent" :show-text="false"></el-progress>
                 </template>
             </el-table-column>
-            <el-table-column width="20" prop="count">
+            <el-table-column width="40" prop="exceptionCount" align="center">
             </el-table-column>
         </el-table>
     </div>

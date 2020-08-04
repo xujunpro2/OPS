@@ -42,9 +42,11 @@
             </el-table-column>
             <el-table-column label="操作" width="240">
                 <template slot-scope="scope">
-                    <el-button @click="onDelete(scope.row)" type="danger">删除</el-button>
-                    <el-button @click="onUpdate(scope.row)">修改</el-button>
-                    <el-button @click="onUsed(scope.row)">投用</el-button>
+                    <el-button @click="onDelete(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+                    <el-button @click="onUpdate(scope.row)" icon="el-icon-edit" circle ></el-button>
+                    <el-tooltip effect="dark" content="投用" placement="bottom">
+                        <el-button @click="onUsed(scope.row)" icon="el-icon-open" circle ></el-button>
+                    </el-tooltip>
                 </template>
             </el-table-column>
         </el-table>
@@ -64,7 +66,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="设备编码" prop="devCode">
-                            <el-input v-model="devForm.devCode"></el-input>
+                            <el-input :readonly="curRow != null" v-model="devForm.devCode"></el-input>
                         </el-form-item>
                         <el-form-item label="设备类型" >
                             <el-select v-model="devForm.devType" placeholder="请选择" style="width:100%">
@@ -263,8 +265,12 @@ export default {
         },
 
         getCreateTimeStr(createTime){
-            let time = new Date(createTime);
-            return CommonTool.formatData(time,'yyyy-MM-dd hh:mm:ss')
+            if(createTime)
+            {
+                let time = new Date(createTime);
+                return CommonTool.formatData(time,'yyyy-MM-dd hh:mm:ss')
+            }
+            return ''
         },
 
         onDevDialogOpen(){
@@ -285,6 +291,11 @@ export default {
                 for(let key in this.devForm)
                 {
                     this.devForm[key] = null;
+                }
+                //设置默认选中一个
+                if(this.typeOptions.length > 0)
+                {
+                    this.devForm.devType = this.typeOptions[0].devTypeId
                 }
             }
         },
@@ -408,22 +419,28 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(()=>{
-                    let devId = this.changeDev.devId;
-                    let bakId = this.curRow.devId;
-                    let param = {
-                        devId:devId,
-                        bakId:bakId,
-                    }
-                    this.usedDialogVisible = false;
-                    this.$store.dispatch('dev/bakChange',param).then(data=>{
-                        if(data)
+                    let devCode = this.changeDev.devCode;
+                    //先判断是否关联其他模块(譬如巡检计划)
+                    this.$store.dispatch('dev/isUseing',devCode).then(data=>{
+                        //和巡检计划关联
+                        if(data == 1)
                         {
-                            this.$notify({title: '消息',message: '备件投用成功',type: 'success',duration:3000});
-                            this.initTable();
+                            this.$confirm("当前设备已和巡检计划关联。如果替换，关联的巡检计划将以新设备为巡检目标，确定替换设备吗?", "提示", {
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(()=>{
+                                this.changeDev(devCode,1);
+                            })
+                            .catch(()=>{})
+                        }
+                        //无关联，直接替换
+                        if(data == 0)
+                        {
+                            this.changeDev(devCode,0);
                         }
                     })
-                    this.changeDev = null;
-                    this.curRow = null;
+                    
                 })
                 .catch(()=>{})
             }
@@ -431,6 +448,25 @@ export default {
             {
                 this.$alert("请选择需要替换的设备!", "提示", {confirmButtonText: "确定",type: "info"});
             }
+        },
+        //执行备件替换
+        changeDev(devCode,useing){
+            let bakCode = this.curRow.devCode;
+            let param = {
+                devCode:devCode,
+                bakCode:bakCode,
+                useing:useing,
+            }
+            this.usedDialogVisible = false;
+            this.$store.dispatch('dev/bakChange',param).then(data=>{
+                if(data)
+                {
+                    this.$notify({title: '消息',message: '备件投用成功',type: 'success',duration:3000});
+                    this.initTable();
+                }
+            })
+            this.changeDev = null;
+            this.curRow = null;
         },
     },
 	mounted() {

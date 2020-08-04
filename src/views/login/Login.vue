@@ -64,7 +64,16 @@ export default {
 					this.loading = false;
 					console.info(error);
 				});
-		},
+        },
+        keyboardLogin(event){
+            var theEvent = window.event || e;
+            var code = theEvent.keyCode || theEvent.which;
+            //回车键的键值为13
+            if (code==13) 
+            {  
+                this.login();
+            }
+        },
 		//测试tweenjs
 		// animate() {
 		// 	requestAnimationFrame(this.animate);
@@ -72,6 +81,9 @@ export default {
 		// }
 	},
 	mounted() {
+        this.$nextTick(()=>{
+            document.addEventListener('keydown',this.keyboardLogin);
+        })
 		// this.animate(); //启动tween动画
 		// //构建一个tween实例对象
 		// new TWEEN.Tween({ x: 100 })
@@ -81,7 +93,11 @@ export default {
 		// 		console.info(object);
 		// 	})
         // 	.start();
-	}
+    },
+    beforeDestroy() {
+        //注销enter key事件
+        document.removeEventListener('keydown',this.keyboardLogin)
+    }
 };
 </script>
 

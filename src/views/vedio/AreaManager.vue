@@ -15,8 +15,8 @@
             </el-table-column>
             <el-table-column label="操作" width="230">
                 <template slot-scope="scope">
-                    <el-button @click="onDeleteArea(scope.row)" type="danger" >删除</el-button>
-                    <el-button @click="onUpdateArea(scope.row)">修改</el-button>
+                    <el-button @click="onDeleteArea(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+                    <el-button @click="onUpdateArea(scope.row)" icon="el-icon-edit" circle ></el-button>
                 </template>
             </el-table-column>
         </el-table>

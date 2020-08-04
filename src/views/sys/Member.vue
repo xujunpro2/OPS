@@ -2,19 +2,19 @@
     <div class="rootDiv">
         <el-form :inline="true" :model="queryForm" label-width="80px">
             <el-form-item label="工号">
-                <el-input v-model="queryForm.memberCode" clearable></el-input>
+                <el-input v-model="queryForm.memberCode" clearable style="width:150px"></el-input>
             </el-form-item>
             <el-form-item label="姓名">
-                <el-input v-model="queryForm.memberName" placeholder="支持模糊查询" clearable></el-input>
+                <el-input v-model="queryForm.memberName" placeholder="支持模糊查询" clearable style="width:150px"></el-input>
             </el-form-item>
             <el-form-item label="性别">
-                <el-select v-model="queryForm.memberSex" placeholder="请选择" style="width: 100%;">
+                <el-select v-model="queryForm.memberSex" placeholder="请选择" style="width: 150px;">
                     <el-option v-for="item in querySexOptions" :key="item.value" :label="item.label"
                         :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="工种">
-                <el-select v-model="queryForm.memberType" filterable placeholder="请选择" style="width: 100%;">
+                <el-select v-model="queryForm.memberType" filterable placeholder="请选择" style="width: 150px">
                     <el-option v-for="item in queryMemberTypeOptions" :key="item.value" :label="item.label"
                         :value="item.value"></el-option>
                 </el-select>
@@ -42,11 +42,15 @@
                 </template>
             </el-table-column>
             <el-table-column prop="memberPhone" label="电话"></el-table-column>
-            <el-table-column prop="memberTypeName" label="工种"></el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="工种">
                 <template slot-scope="scope">
-                    <el-button @click="onDelete(scope.row)" type="danger">删除</el-button>
-                    <el-button @click="onUpdate(scope.row)">修改</el-button>
+                    <span v-html="getMemberTypeDescHtml(scope.row)"></span>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button @click="onDelete(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+                    <el-button @click="onUpdate(scope.row)" icon="el-icon-edit" circle ></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -83,10 +87,10 @@
                         <el-input v-model="memberForm.memberPhone"></el-input>
                     </el-form-item>
                     <el-form-item label="工种">
-                        <el-select v-model="memberForm.memberType" placeholder="请选择" style="width:100%">
-                            <el-option v-for="item in memberTypeOptions" :key="item.value" :label="item.label"
-                                :value="item.value"></el-option>
-                        </el-select>
+                        <el-checkbox-group v-model="typeList">
+                            <el-checkbox label="inspect">巡检人员</el-checkbox>
+                            <el-checkbox label="repair">检修人员</el-checkbox>
+                        </el-checkbox-group>
                     </el-form-item>
                 </el-row>
             </el-form>
@@ -112,7 +116,11 @@ export default {
                 memberSex:null,
             },
             querySexOptions:[{value:null,label:'全部'},{value:1,label:'男'},{value:0,label:'女'}],
-            queryMemberTypeOptions:[],
+            queryMemberTypeOptions:[
+                {value:null,label:'全部'},
+                {label:'巡检人员',value:'inspect'},
+                {label:'检修人员',value:'repair'}
+            ],
 
             //表格
             tableData:[],
@@ -127,7 +135,6 @@ export default {
                 memberId:null,
                 memberCode:null,
                 memberName:null,
-                memberType:null,
                 memberSex:null,
                 memberBirthday:null,
                 memberPhone:null,
@@ -144,7 +151,11 @@ export default {
                 ],
             },
             sexOptions:[{value:1,label:'男'},{value:0,label:'女'}],
-            memberTypeOptions:[],
+            memberTypeOptions:[
+                {label:'巡检人员',value:'inspect'},
+                {label:'检修人员',value:'repair'}
+            ],
+            typeList:[],
 
         }
     },
@@ -194,6 +205,9 @@ export default {
             {
                 this.$refs.form.clearValidate();
             }
+            //工种清空
+            this.typeList.length = 0;
+            //修改
             if(this.curRow)
             {
                 for(let key in this.memberForm)
@@ -202,7 +216,17 @@ export default {
                     //日期处理成date
                     this.memberForm.memberBirthday = new Date(this.memberForm.memberBirthday);
                 }
+                //工种要特殊处理
+                if(this.curRow.inspect == 1)
+                {
+                    this.typeList.push('inspect');
+                }
+                if(this.curRow.repair == 1)
+                {
+                    this.typeList.push('repair');
+                }
             }
+            //新建
             else
             {
                 for(let key in this.memberForm)
@@ -226,20 +250,27 @@ export default {
                 if(valid)
                 {
                     this.dialogVisible = false;
+                    //数据拷贝
+                    let param={
+                        memberId:this.memberForm.memberId,
+                        memberCode:this.memberForm.memberCode,
+                        memberName:this.memberForm.memberName,
+                        memberSex:this.memberForm.memberSex,
+                        memberBirthday:this.memberForm.memberBirthday.getTime(),
+                        memberPhone:this.memberForm.memberPhone,
+                        inspect:this.typeList.indexOf('inspect') != -1? 1:0,
+                        repair:this.typeList.indexOf('repair') != -1? 1:0
+                    }
                     if(this.curRow)
                     {
-                        let memberBirthday = this.memberForm.memberBirthday.getTime();
-                        this.memberForm.memberBirthday = memberBirthday;
-                        this.$store.dispatch('system/updateMember',this.memberForm).then(data=>{
+                        this.$store.dispatch('system/updateMember',param).then(data=>{
                             this.$notify({title: '消息',message: '修改成功',type: 'success',duration:3000});
                             this.initTable();
                         })
                     }
                     else
                     {
-                        let memberBirthday = this.memberForm.memberBirthday.getTime();
-                        this.memberForm.memberBirthday = memberBirthday;
-                        this.$store.dispatch('system/addMember',this.memberForm).then(data=>{
+                        this.$store.dispatch('system/addMember',param).then(data=>{
                             this.$notify({title: '消息',message: '添加成功',type: 'success',duration:3000});
                             this.initTable();
                         })
@@ -248,26 +279,25 @@ export default {
             });
             
         },
-        initMemberTypeOptions(){
-            this.$store.dispatch('system/getDictionary','memberType').then(data=>{
-                if(data)
-                {
-                    this.queryMemberTypeOptions.push({value:null,label:'全部'})
-                    for(let key in data)
-                    {
-                       this.queryMemberTypeOptions.push({value:key,label:data[key]})
-                       this.memberTypeOptions.push({value:key,label:data[key]})
-                    }
-                }
-            })
-        },
+        
         getBirthdayStr(birthday){
             let time = new Date(birthday);
             return CommonTool.formatData(time,'yyyy-MM-dd')
         },
+        getMemberTypeDescHtml(row){
+            let desc = '';
+            if(row.inspect == 1)
+            {
+                desc +="巡检&emsp;";
+            }
+            if(row.repair == 1)
+            {
+                desc +="检修&emsp;";
+            }
+            return desc;
+        },
   },
   mounted() {
-      this.initMemberTypeOptions();
       this.query();
   },
   beforeDestroy() {}

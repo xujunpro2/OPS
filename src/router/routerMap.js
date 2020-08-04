@@ -145,72 +145,71 @@ export const dynamicRoutes = [
     //     }]
     // },
     {
-        path: '/inspection',
+        path: '/dev',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '设备巡检', icon: 'monitor' },
+        meta: { title: '设备资产', icon: 'sever' },
         alwaysShow: true ,
         children: [{
-            path: 'templete',
-            name: 'Templete',
-            component: () => import('@/views/inspection/Templete'),
-            meta: { title: '巡检线路', icon: 'templete' }
+            path: 'list',
+            name: 'DevList',
+            component: () => import('@/views/dev/DevList'),
+            meta: { title: '设备管理', icon: 'detail',cache:true }
         },
         {
-            path: 'plan',
-            name: 'Plan',
-            component: () => import('@/views/Empty'),
-            meta: { title: '巡检工单', icon: 'edit-square' }
+            path: 'backup',
+            name: 'DevBak',
+            component: () => import('@/views/dev/DevBak'),
+            meta: { title: '备件备件', icon: 'save' }
         },
         {
-            path: 'dev',
-            name: 'Dev',
-            component: () => import('@/views/Empty'),
-            meta: { title: '巡检设备台账', icon: 'check' }
-        },
-        {
-            path: 'workOrder',
-            name: 'WorkOrder',
-            component: () => import('@/views/Empty'),
-            meta: { title: '巡检工单管理', icon: 'unordered list' }
-        },
-        {
-            path: 'count',
-            name: 'Count',
-            component: () => import('@/views/Empty'),
-            meta: { title: '巡检工作统计', icon: 'bar chart' }
-        },
-        {
-            path: 'assess',
-            name: 'Assess',
-            component: () => import('@/views/Empty'),
-            meta: { title: '巡检员工考核', icon: 'switch user' }
+            path: 'devMeta',
+            name: 'DevMeat',
+            component: () => import('@/views/dev/DevMeta'),
+            meta: { title: '类型和区域', icon: 'devMeta' }
         }]
     },
     {
-        path: '/om',
+        path: '/inspection',
         component: Layout,
         redirect: 'noRedirect',
+        meta: { title: '智慧巡检', icon: 'monitor' },
         alwaysShow: true ,
-        meta: { title: '设备检修', icon: 'wrench' },
         children: [{
-            path: 'malfunction',
-            name: 'Malfunction',
-            component: () => import('@/views/Empty'),
-            meta: { title: '设备故障', icon: 'error' }
+            path: 'plan',
+            name: 'InspectPlan',
+            component: () => import('@/views/inspection/InspectPlan'),
+            meta: { title: '巡检计划', icon: 'inspect_plan' }
         },
         {
-            path: 'alert',
-            name: 'Alert',
-            component: () => import('@/views/Empty'),
-            meta: { title: '设备告警', icon: 'alert' }
+            path: 'task',
+            name: 'InspectTask',
+            component: () => import('@/views/inspection/InspectTask'),
+            meta: { title: '巡检任务', icon: 'inspect_task' }
         },
-        
         {
-            path: 'repairOrder',
-            name: 'RepairOrder',
-            component: () => import('@/views/Empty'),
-            meta: { title: '检修工单', icon: 'file-text' }
+            path: 'postion',
+            name: 'InspectPostion',
+            component: () => import('@/views/inspection/InspectPostion'),
+            meta: { title: '工程位置', icon: 'inspect_position' }
+        },
+        {
+            path: 'recordInput',
+            name: 'InspectRecord',
+            component: () => import('@/views/inspection/InspectRecord'),
+            meta: { title: '巡检记录填报', icon: 'inspect_record' }
+        },
+        {
+            path: 'statistical',
+            name: 'Statistical',
+            component: () => import('@/views/inspection/InspectStatistical'),
+            meta: { title: '巡检工作统计', icon: 'inspect_statistical' }
+        },
+        {
+            path: 'memberStatistical',
+            name: 'MemberStatistical',
+            component: () => import('@/views/inspection/MemberStatistical'),
+            meta: { title: '巡检考核', icon: 'inspect_member_statistical' }
         }]
     },
     {
@@ -246,34 +245,28 @@ export const dynamicRoutes = [
         }]
     },
     {
-        path: '/dev',
+        path: '/om',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '设备资产', icon: 'sever' },
         alwaysShow: true ,
+        meta: { title: '设备检修', icon: 'wrench' },
         children: [{
-            path: 'list',
-            name: 'DevList',
-            component: () => import('@/views/dev/DevList'),
-            meta: { title: '设备管理', icon: 'detail',cache:true }
+            path: 'alarm',
+            name: 'Alarm',
+            component: () => import('@/views/repair/Alarm'),
+            meta: { title: '设备告警', icon: 'alarm' }
         },
         {
-            path: 'backup',
-            name: 'DevBak',
-            component: () => import('@/views/dev/DevBak'),
-            meta: { title: '备件备件', icon: 'save' }
+            path: 'malfunction',
+            name: 'Malfunction',
+            component: () => import('@/views/repair/Exception'),
+            meta: { title: '设备故障', icon: 'error' }
         },
         {
-            path: 'fail',
-            name: 'Fail',
+            path: 'repairOrder',
+            name: 'RepairOrder',
             component: () => import('@/views/Empty'),
-            meta: { title: '故障信息', icon: 'devFail' }
-        }
-        ,{
-            path: 'devMeta',
-            name: 'DevMeat',
-            component: () => import('@/views/dev/DevMeta'),
-            meta: { title: '类型和区域', icon: 'devMeta' }
+            meta: { title: '检修工单', icon: 'file-text' }
         }]
     },
     {

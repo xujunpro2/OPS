@@ -5,15 +5,15 @@
 				<el-card class="box-card" style="height:100%" :body-style="fullCardBody">
 					<div slot="header" class="clearfix">
 						<span class="cardTitie">设备类型</span>
-						<el-button type="primary" icon="el-icon-plus" circle style="float: right;" @click="onAddType"></el-button>
+						<el-button  style="float: right;" @click="onAddType">新增</el-button>
 					</div>
 					<el-table :data="typeList" height="90%"  style="width: 100%">
 						<el-table-column prop="devTypeId" label="类型编码"></el-table-column>
 						<el-table-column prop="devTypeName" label="类型名称"></el-table-column>
                         <el-table-column label="操作" width="160">
                             <template slot-scope="scope">
-                                <el-button @click="onDeleteType(scope.row)" type="danger" >删除</el-button>
-                                <el-button @click="onUpdateType(scope.row)">修改</el-button>
+                                <el-button @click="onDeleteType(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+                                <el-button @click="onUpdateType(scope.row)" icon="el-icon-edit" circle ></el-button>
                             </template>
                         </el-table-column>
 					</el-table>
@@ -26,7 +26,7 @@
                <el-card class="box-card" style="height:100%;" :body-style="fullCardBody">
 					<div slot="header" class="clearfix">
 						<span class="cardTitie">设备区域</span>
-						<el-button type="primary" icon="el-icon-plus" circle style="float: right;" @click="onAddSpace"></el-button>
+						<el-button style="float: right;" @click="onAddSpace">新增</el-button>
 					</div>
 					    <el-table :data="spaceTree" height="90%"  style="width: 100%;" row-key="spaceId"  :default-expand-all="true"
                                 :tree-props="{children: 'children'}">
@@ -34,8 +34,8 @@
 						    <el-table-column prop="spaceName" label="区域名称"></el-table-column>
                             <el-table-column label="操作" width="160">
                                 <template slot-scope="scope">
-                                    <el-button @click="onDeleteSpace(scope.row)" type="danger" >删除</el-button>
-                                    <el-button @click="onUpdateSpace(scope.row)">修改</el-button>
+                                    <el-button @click="onDeleteSpace(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+                                    <el-button @click="onUpdateSpace(scope.row)" icon="el-icon-edit" circle ></el-button>
                                 </template>
                             </el-table-column>
 					    </el-table>

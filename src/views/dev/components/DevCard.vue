@@ -43,9 +43,13 @@ export default {
             this.basicForm.phone = info.phone
         },
         getTimeFormatter(time){
-            var date = new Date(time);
-            var formatStr = CommonTool.formatData(date,'yyyy-MM-dd');
-            return formatStr;
+            if(time)
+            {
+                var date = new Date(time);
+                var formatStr = CommonTool.formatData(date,'yyyy-MM-dd');
+                return formatStr;
+            }
+            return ''
         },
     },
 	mounted() {},

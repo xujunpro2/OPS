@@ -1,5 +1,5 @@
 {
-  "name": "bimx",
+  "name": "ops",
   "version": "1.0.0",
   "author": "xujun",
   "scripts": {
@@ -28,7 +28,9 @@
     "video.js": "^7.7.6",
     "videojs-contrib-hls": "^5.15.0",
     "videojs-flash": "^2.2.1",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "vue-qr": "^2.2.1",
+    "vue-baidu-map": "^0.21.14"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",

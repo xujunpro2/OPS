@@ -26,38 +26,57 @@
                  <el-button type="primary" icon="el-icon-circle-plus-outline" @click="onAdd">新增</el-button>
             </el-form-item>
         </el-form>
+        <!--
         <el-row type="flex" justify="end">
             <el-button :disabled="!this.buttonEnable.canDelete" @click="onDelete()" type="danger">删除</el-button>
-            <el-button :disabled="!this.buttonEnable.canAssign" @click="onAssign()" type="primary">派单</el-button>
-            <el-button :disabled="!this.buttonEnable.canTimeout" @click="onTimeout()" type="primary">超时</el-button>
             <el-button :disabled="!this.buttonEnable.canArchive" @click="onInfo()" type="primary">归档</el-button>
         </el-row>
-        <el-table v-loading="loading" border :data="tableData" highlight-current-row @current-change="onRowSelectedChange"  style="width: 100%;margin-top:3px">
-            <el-table-column prop="keepCode" label="工单编号"></el-table-column>
-			<el-table-column prop="keepName" label="工单名称"></el-table-column>
-            <el-table-column prop="createTime" label="创建时间">
-                <template slot-scope="scope">
-                    {{timestampFormat(scope.row.createTime,'yyyy-MM-dd hh:mm:ss')}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="deadline" label="完成期限">
-                <template slot-scope="scope">
-                    {{timestampFormat(scope.row.deadline,'yyyy-MM-dd hh:mm:ss')}}
-                </template>
-            </el-table-column>
-            <el-table-column prop="keepState" label="工单状态">
+        -->
+        <el-table v-loading="loading" border :data="tableData" style="width: 100%;margin-top:3px">
+            <el-table-column prop="keepCode" label="工单编号" align="center" width="180px"></el-table-column>
+			<el-table-column prop="keepName" label="工单名称" header-align="center"></el-table-column>
+            <el-table-column prop="keepState" label="工单状态" align="center" width="120px">
                 <template slot-scope="scope">
                     {{keepStateStr(scope.row.keepState)}}
                 </template>
             </el-table-column>
-            <el-table-column prop="timeout" label="超时标记">
+            <el-table-column prop="timeout" label="是否超时" align="center" width="120px">
                 <template slot-scope="scope">
-                    <i v-if="scope.row.timeout == 1" class="el-icon-circle-check" style="color:#d40000"></i>
+                    <span v-if="scope.row.timeout == 1" style="color:#d40000">超时</span>
+                    <span v-else>正常</span>
                 </template>
             </el-table-column>
-            <el-table-column label="">
+            <el-table-column prop="createTime" label="创建时间" align="center" width="150px">
                 <template slot-scope="scope">
-                     <el-button @click="onInfo(scope.row)" type="text">详细信息</el-button>
+                    {{timestampFormat(scope.row.createTime,'yyyy-MM-dd hh:mm')}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="sendTime" label="派单时间" align="center" width="150px">
+                <template slot-scope="scope">
+                    {{timestampFormat(scope.row.sendTime,'yyyy-MM-dd hh:mm')}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="assignTime" label="接单时间" align="center" width="150px">
+                <template slot-scope="scope">
+                    {{timestampFormat(scope.row.assignTime,'yyyy-MM-dd hh:mm')}}
+                </template>
+            </el-table-column>
+            <el-table-column prop="deadline" label="完成期限" align="center" width="150px">
+                <template slot-scope="scope">
+                    {{timestampFormat(scope.row.deadline,'yyyy-MM-dd hh:mm')}}
+                </template>
+            </el-table-column>
+           
+            <el-table-column label="操作" header-align="center" min-width="160px">
+                <template slot-scope="scope">
+                    <el-tooltip effect="dark" content="查看维保记录" placement="bottom">
+                        <el-button @click="onInfo(scope.row)" icon="el-icon-view" circle ></el-button>
+                    </el-tooltip>
+                    <!-- //工单状态 0 创建 1派单 2已完成 3归档 -->
+                    <el-tooltip v-if="scope.row.keepState == 0" effect="dark" content="派单" placement="bottom">
+                        <el-button @click="onAssign(scope.row)" icon="el-icon-user" circle ></el-button>
+                    </el-tooltip>
+                    <el-button v-if="scope.row.keepState == 0" @click="onDelete(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -72,7 +91,7 @@
             </el-pagination>
         </el-row>
 
-        <el-dialog title="新建工单"  :visible.sync="dialogVisible"   width="450px" :close-on-click-modal="false">
+        <el-dialog title="新建工单"  :visible.sync="dialogVisible" @open="onDialogOpen"   width="450px"  :close-on-click-modal="false">
             <select-dev-dialog ref="selectDevDialog" :inner="true" @selected="onDevDialogSelected"></select-dev-dialog>
             <el-form ref="addOrderForm" :model="orderForm" :rules="orderFormRules"  label-width="80px" >
                 <el-form-item label="工单编号" prop="keepCode">
@@ -81,7 +100,7 @@
                 <el-form-item label="工单名称" prop="keepName">
                     <el-input v-model="orderForm.keepName"></el-input>
                 </el-form-item>
-                <el-form-item label="完成时限" prop="deadline">
+                <el-form-item label="完成时限">
                     <el-date-picker v-model="orderForm.deadline" type="datetime" placeholder="请选择时间" style="width:100%"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="保养设备">
@@ -104,51 +123,57 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="工单编号:">
-                            <el-input :readonly="true" v-model="infoForm.keepCode"></el-input>
+                            {{this.infoForm.keepCode}}
                         </el-form-item>
-                        <el-form-item label="创建时间">
-                            <el-input :readonly="true" v-model="infoForm.createTime"></el-input>
+                        <el-form-item label="当前状态:">
+                             {{this.infoForm.keepState}}
                         </el-form-item>
-                        <el-form-item label="完成时限">
-                            <el-input :readonly="true" v-model="infoForm.deadline"></el-input>
+                        <el-form-item label="完成时限:">
+                            {{timestampFormat(this.infoForm.deadline,'yyyy-MM-dd hh:mm')}}
+                        </el-form-item>
+                        <el-form-item label="接单时间:">
+                            {{timestampFormat(this.infoForm.assignTime,'yyyy-MM-dd hh:mm')}}
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="工单名称">
-                            <el-input :readonly="true" v-model="infoForm.keepName"></el-input>
+                        <el-form-item label="工单名称:">
+                            {{this.infoForm.keepName}}
                         </el-form-item>
-                        <el-form-item label="当前状态">
-                            <el-input :readonly="true" v-model="infoForm.keepState"></el-input>
+                        <el-form-item label="创建时间:">
+                            {{timestampFormat(this.infoForm.createTime,'yyyy-MM-dd hh:mm')}}
                         </el-form-item>
-                        <el-form-item label="完成时间">
-                            <el-input :readonly="true" v-model="infoForm.completeTime"></el-input>
+                        <el-form-item label="派单时间:">
+                            {{timestampFormat(this.infoForm.sendTime,'yyyy-MM-dd hh:mm')}}
+                        </el-form-item>
+                        <el-form-item label="完成时间:">
+                            {{timestampFormat(this.infoForm.completeTime,'yyyy-MM-dd hh:mm')}}
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-form-item label="保养设备">
+                <el-form-item label="保养设备:">
                     <div>
                     <el-tag v-for="tag in this.infoForm.devList"  :key="tag.devId" >
                         {{tag.devCode+" "+ tag.devName}}
                     </el-tag>
                     </div>
                 </el-form-item>
-                <el-form-item label="保养人员">
+                <el-form-item label="保养人员:">
                     <div>
                     <el-tag v-for="tag in this.infoForm.memberList"  :key="tag.memberId" >
                         {{tag.memberName}}
                     </el-tag>
                     </div>
                 </el-form-item>
-                <el-form-item v-if="infoForm.keepContext != null &&infoForm.keepContext != ''" label="保养记录">
-                    <el-input type="textarea" :rows="4" placeholder="请输入内容" clearable="" v-model="this.infoForm.keepContext"></el-input>
+                <el-form-item v-if="infoForm.keepContext != null &&infoForm.keepContext != ''" label="保养记录:">
+                    {{this.infoForm.keepContext}}
                 </el-form-item>
-                <el-form-item v-if="infoForm.pictureList.length >0" label="现场照片">
+                <el-form-item v-if="infoForm.pictureList.length >0" label="现场照片:">
                     <div style="float:left;padding:3px" v-for="(item,index) of infoForm.pictureList" :key="index">
                         <el-image style="width: 150px; height: 100px" :src="item" fit="fill" :preview-src-list="infoForm.pictureList">
                             <!--图片未加载的占位内容-->
-                            <div slot="placeholder"><i class="el-icon-loading"></i></div>
+                            <div slot="placeholder" class="image-solt"><i class="el-icon-loading"></i></div>
                             <!--加载失败的内容-->
-                            <div slot="error"><i class="el-icon-error"></i></div>
+                            <div slot="error" class="image-solt"><i class="el-icon-picture-outline"></i> </div>
                         </el-image>
                     </div>
                 </el-form-item>
@@ -156,7 +181,7 @@
         </el-dialog>
 
         <!--选择保养人员对话框-->
-        <select-member-dialog ref="selectMemberDialog" @selected="submitAssign"></select-member-dialog>
+        <select-member-dialog ref="selectMemberDialog" @selected="submitAssign" memberType="repair"></select-member-dialog>
     </div>
 </template>
 
@@ -179,9 +204,9 @@ export default {
             queryStateOptions:[
                 {value:null,label:'全部'},
                 {value:0,label:'创建'},
-                {value:1,label:'派单'},
-                {value:2,label:'已完成'},
-                {value:3,label:'归档'}
+                {value:1,label:'已派单'},
+                {value:2,label:'已接单'},
+                {value:3,label:'已完成'}
             ],
 
             //表格
@@ -189,13 +214,6 @@ export default {
             tableData:[],
             pageSizeList:this.$store.state.settings.pageSizeList, //分页列表
             total:0,
-            buttonEnable:{
-                canDelete:false,
-                canDelete:false, //删除
-                canTimeout:false, //超时
-                canArchive:false, //归档
-                canAssign:false //派单
-            },
 
             //对话框
             curRow:null,
@@ -229,6 +247,8 @@ export default {
                 createTime:null,
                 deadline:null,// 最后期限时间
                 completeTime:null,//完成时间
+                sendTime:null,//派单时间
+                assignTime:null,//接单时间
                 devList:[],//保养设备
                 memberList:[],//保养人员
 
@@ -243,9 +263,6 @@ export default {
         },
     },
 	methods: {
-        openBigPicture(pictureName){
-            console.info(pictureName);
-        },
         sizeChange(rows){
             this.$store.dispatch('settings/changePageSize',rows);
             this.tabelPagin(1);
@@ -301,51 +318,14 @@ export default {
         onQuery(){
             this.initTable();
         },
-        //row 选中操作
-        onRowSelectedChange(curRow,oldRow){
-            if(curRow != null)
-            {
-                this.curRow = curRow
-                this.dynamicButtons(curRow)
-            }
-           
-        },
-        //动态按钮
-        dynamicButtons(curRow){
-            this.buttonEnable.canDelete = false;
-            this.buttonEnable.canAssign = false;
-            this.buttonEnable.canTimeout = false;
-            this.buttonEnable.canArchive = false;
-            //工单状态 0 创建 1派单 2已完成 3归档
-            let keepState = curRow.keepState;
-            switch(keepState)
-            {
-                case 0: 
-                    this.buttonEnable.canDelete = true;
-                    this.buttonEnable.canAssign = true; 
-                    break;
-                case 1: 
-                    this.buttonEnable.canTimeout = true;
-                    break;
-                case 2: 
-                    this.buttonEnable.canTimeout = true;
-                    this.buttonEnable.canArchive = true;
-                    break;
-            }
-            //如果执行过超时标记,那么超时按钮不可用
-            if(this.buttonEnable.canTimeout && curRow.timeout == 1)
-            {
-                this.buttonEnable.canTimeout = false;
-            }
-            //如果工单已完成，并且完成时间<=最后期限，那么超时按钮也不可用
-            if(curRow.completeTime && curRow.completeTime<=curRow.deadline)
-            {
-                this.buttonEnable.canTimeout = false;
-            }
-        },
+        
         //表格时间格式化
         timestampFormat(timestamp,formate){
-            return CommonTool.formatData(new Date(timestamp),formate)
+            if(timestamp)
+            {
+                return CommonTool.formatData(new Date(timestamp),formate)
+            }
+            return ''
         },
         //表格状态格式化 工单状态 0 创建 1派单 2已完成 3超时 4 归档
         keepStateStr(keepState){
@@ -354,11 +334,13 @@ export default {
                 case 0:
                     return '创建'
                 case 1:
-                    return '派单'
+                    return '已派单'
                 case 2:
-                    return '已完成'
+                    return '已接单'
                 case 3:
-                    return '归档'
+                    return '已完成'
+                case 4:
+                    return '已归档'
                 default:
                     return '未知'
             }
@@ -385,12 +367,11 @@ export default {
                     this.infoForm.keepCode = data.keepCode
                     this.infoForm.keepName = data.keepName
                     this.infoForm.keepState = this.keepStateStr(data.keepState);
-                    this.infoForm.deadline = CommonTool.formatData(new Date(data.deadline),'yyyy-MM-dd hh:mm:ss')
-                    this.infoForm.createTime = CommonTool.formatData(new Date(data.createTime),'yyyy-MM-dd hh:mm:ss')
-                    if(data.completeTime)
-                    {
-                        this.infoForm.completeTime = CommonTool.formatData(new Date(data.completeTime),'yyyy-MM-dd hh:mm:ss')
-                    }
+                    this.infoForm.deadline = data.deadline
+                    this.infoForm.createTime = data.createTime
+                    this.infoForm.completeTime = data.completeTime
+                    this.infoForm.sendTime = data.sendTime
+                    this.infoForm.assignTime = data.assignTime
                     this.infoForm.devList = data.devList
                     this.infoForm.memberList = data.memberList
 
@@ -404,8 +385,7 @@ export default {
                 }
             })
         },
-        onDelete(){
-            let row = this.curRow;
+        onDelete(row){
             this.$confirm("确定删除该工单吗?", "提示", {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -420,7 +400,13 @@ export default {
             .catch(()=>{})
         },
        
-
+        onDialogOpen(){
+            //清除之前验证消息，否则会保留
+            if(this.$refs.addOrderForm)
+            {
+                this.$refs.addOrderForm.clearValidate();
+            }
+        },
         onSubmit(){
             this.$refs.addOrderForm.validate(valid=>{
                 if(valid)
@@ -460,7 +446,8 @@ export default {
         },
         
         //派单按钮
-        onAssign(){
+        onAssign(row){
+            this.curRow = row
             this.$refs.selectMemberDialog.dialogVisible = true;
         },
         //提交派单
@@ -479,36 +466,9 @@ export default {
                     keepId:this.curRow.keepId,
                     members:members
                 }
-                this.$store.dispatch('keep/assignOrder',param).then(data=>{
+                this.$store.dispatch('keep/sendOrder',param).then(data=>{
                     this.onQuery();
                     this.$notify({title: '消息', message: '派单成功',type: 'success',duration:3000});
-                })
-            })
-            .catch(()=>{ })
-        },
-
-       
-        //超时按钮
-        onTimeout(){
-            let row = this.curRow;
-            let deadline = row.deadline;
-            if(deadline > new Date().getTime())
-            {
-                this.$alert('未到工单完成期限，暂不能执行超时操作!','提示',{confirmButtonText:'确定',type:'error'});
-                return;
-            }
-            //如果确实超时了,二次确认
-            this.$confirm("确定标记超时吗?", "提示", {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'info'
-            }).then(()=>{
-                this.$store.dispatch('keep/timeout',row.keepId).then(data=>{
-                    if(data == 1)
-                    {
-                        this.onQuery();
-                        this.$notify({title: '消息', message: '标记超时成功',type: 'success',duration:3000});
-                    }
                 })
             })
             .catch(()=>{ })
@@ -522,8 +482,14 @@ export default {
 </script>
 
 <style scoped>
-.thumbnail{
-        width:100%;
-        /* height: 200px; */
-    }
+.image-solt{
+    width:150px;
+    height:100px;
+    background-color:#f5f7fa;
+    text-align: center;
+    line-height: 110px;
+}
+.image-solt i{
+    font-size: 28px;
+}
 </style>

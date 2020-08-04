@@ -55,9 +55,11 @@
                         <el-switch v-model="scope.row.confirm" disabled></el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="100">
+                <el-table-column label="操作" width="130">
                     <template slot-scope="scope">
-                        <el-button @click="onConfrim(scope.row)">确认</el-button>
+                        <el-tooltip effect="dark" content="确认" placement="bottom">
+                            <el-button @click="onConfrim(scope.row)" icon="el-icon-check" circle ></el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>

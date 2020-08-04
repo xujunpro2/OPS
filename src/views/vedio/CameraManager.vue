@@ -27,8 +27,8 @@
                         <el-table-column prop="areaName" label="区域" width="150"></el-table-column>
                         <el-table-column label="操作" width="200">
                             <template slot-scope="scope">
-                                <el-button @click="onDelete(scope.row)" type="danger">删除</el-button>
-                                <el-button @click="onUpdate(scope.row)">修改</el-button>
+                                <el-button @click="onDelete(scope.row)" type="danger" icon="el-icon-delete" circle></el-button>
+                                <el-button @click="onUpdate(scope.row)" icon="el-icon-edit" circle ></el-button>
                             </template>
                         </el-table-column>
                     </el-table>

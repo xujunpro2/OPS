@@ -10,7 +10,7 @@
                         <el-table-column prop="name" label="名称"></el-table-column>
                         <el-table-column label="播放" width="70">
                             <template slot-scope="scope">
-                                <el-button @click="play(scope.row.indexCode)" icon="el-icon-caret-right" circle  size="mini"></el-button>
+                                <el-button type="primary" @click="play(scope.row.indexCode)" icon="el-icon-caret-right" circle  size="mini"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
